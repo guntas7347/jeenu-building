@@ -1,26 +1,250 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+
+/* ─── Light Mode Tokens (default) ─────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-primary:                   #8a6900;
+  --color-on-primary:                #ffffff;
+  --color-primary-container:         #ffdea6;
+  --color-on-primary-container:      #2a1f00;
+  --color-primary-fixed:             #ffdea6;
+  --color-primary-fixed-dim:         #f5c14a;
+  --color-on-primary-fixed:          #2a1f00;
+  --color-on-primary-fixed-variant:  #694f00;
+
+  --color-secondary:                 #6b5d3f;
+  --color-on-secondary:              #ffffff;
+  --color-secondary-container:       #f5e0b9;
+  --color-on-secondary-container:    #241b04;
+  --color-secondary-fixed:           #f5e0b9;
+  --color-secondary-fixed-dim:       #d8c49b;
+  --color-on-secondary-fixed:        #241b04;
+  --color-on-secondary-fixed-variant:#524730;
+
+  --color-tertiary:                  #4a6547;
+  --color-on-tertiary:               #ffffff;
+  --color-tertiary-container:        #ccebc6;
+  --color-on-tertiary-container:     #062009;
+  --color-tertiary-fixed:            #ccebc6;
+  --color-tertiary-fixed-dim:        #b1cead;
+  --color-on-tertiary-fixed:         #062009;
+  --color-on-tertiary-fixed-variant: #334d31;
+
+  --color-error:                     #ba1a1a;
+  --color-on-error:                  #ffffff;
+  --color-error-container:           #ffdad6;
+  --color-on-error-container:        #410002;
+
+  --color-background:                #fef9f0;
+  --color-on-background:             #1e1b13;
+  --color-surface:                   #fef9f0;
+  --color-on-surface:                #1e1b13;
+  --color-surface-variant:           #ede1cf;
+  --color-on-surface-variant:        #4d4638;
+  --color-surface-tint:              #8a6900;
+
+  --color-surface-dim:               #e0dbd0;
+  --color-surface-bright:            #fef9f0;
+  --color-surface-container-lowest:  #ffffff;
+  --color-surface-container-low:     #f8f3e9;
+  --color-surface-container:         #f2ece3;
+  --color-surface-container-high:    #ede7dd;
+  --color-surface-container-highest: #e7e1d8;
+
+  --color-outline:                   #7f7461;
+  --color-outline-variant:           #d1c5b3;
+
+  --color-inverse-surface:           #332f27;
+  --color-inverse-on-surface:        #f7f2e8;
+  --color-inverse-primary:           #f5c14a;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ─── Dark Mode Token Overrides ────────────────────────────── */
+.dark {
+  --color-primary:                   #f2ca50;
+  --color-on-primary:                #3c2f00;
+  --color-primary-container:         #d4af37;
+  --color-on-primary-container:      #554300;
+  --color-primary-fixed:             #ffe088;
+  --color-primary-fixed-dim:         #e9c349;
+  --color-on-primary-fixed:          #241a00;
+  --color-on-primary-fixed-variant:  #574500;
+
+  --color-secondary:                 #bcc7de;
+  --color-on-secondary:              #263143;
+  --color-secondary-container:       #3e495d;
+  --color-on-secondary-container:    #aeb9d0;
+  --color-secondary-fixed:           #d8e3fb;
+  --color-secondary-fixed-dim:       #bcc7de;
+  --color-on-secondary-fixed:        #111c2d;
+  --color-on-secondary-fixed-variant:#3c475a;
+
+  --color-tertiary:                  #cccfd1;
+  --color-on-tertiary:               #2d3133;
+  --color-tertiary-container:        #b0b3b5;
+  --color-on-tertiary-container:     #424547;
+  --color-tertiary-fixed:            #e0e3e5;
+  --color-tertiary-fixed-dim:        #c4c7c9;
+  --color-on-tertiary-fixed:         #191c1e;
+  --color-on-tertiary-fixed-variant: #444749;
+
+  --color-error:                     #ffb4ab;
+  --color-on-error:                  #690005;
+  --color-error-container:           #93000a;
+  --color-on-error-container:        #ffdad6;
+
+  --color-background:                #0d1322;
+  --color-on-background:             #dde2f8;
+  --color-surface:                   #0d1322;
+  --color-on-surface:                #dde2f8;
+  --color-surface-variant:           #2f3445;
+  --color-on-surface-variant:        #d0c5af;
+  --color-surface-tint:              #e9c349;
+
+  --color-surface-dim:               #0d1322;
+  --color-surface-bright:            #33394a;
+  --color-surface-container-lowest:  #080e1d;
+  --color-surface-container-low:     #151b2b;
+  --color-surface-container:         #191f2f;
+  --color-surface-container-high:    #242a3a;
+  --color-surface-container-highest: #2f3445;
+
+  --color-outline:                   #99907c;
+  --color-outline-variant:           #4d4635;
+
+  --color-inverse-surface:           #dde2f8;
+  --color-inverse-on-surface:        #2a3040;
+  --color-inverse-primary:           #735c00;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --color-primary:                   var(--color-primary);
+  --color-on-primary:                var(--color-on-primary);
+  --color-primary-container:         var(--color-primary-container);
+  --color-on-primary-container:      var(--color-on-primary-container);
+  --color-primary-fixed:             var(--color-primary-fixed);
+  --color-primary-fixed-dim:         var(--color-primary-fixed-dim);
+  --color-on-primary-fixed:          var(--color-on-primary-fixed);
+  --color-on-primary-fixed-variant:  var(--color-on-primary-fixed-variant);
+
+  --color-secondary:                 var(--color-secondary);
+  --color-on-secondary:              var(--color-on-secondary);
+  --color-secondary-container:       var(--color-secondary-container);
+  --color-on-secondary-container:    var(--color-on-secondary-container);
+  --color-secondary-fixed:           var(--color-secondary-fixed);
+  --color-secondary-fixed-dim:       var(--color-secondary-fixed-dim);
+  --color-on-secondary-fixed:        var(--color-on-secondary-fixed);
+  --color-on-secondary-fixed-variant:var(--color-on-secondary-fixed-variant);
+
+  --color-tertiary:                  var(--color-tertiary);
+  --color-on-tertiary:               var(--color-on-tertiary);
+  --color-tertiary-container:        var(--color-tertiary-container);
+  --color-on-tertiary-container:     var(--color-on-tertiary-container);
+  --color-tertiary-fixed:            var(--color-tertiary-fixed);
+  --color-tertiary-fixed-dim:        var(--color-tertiary-fixed-dim);
+  --color-on-tertiary-fixed:         var(--color-on-tertiary-fixed);
+  --color-on-tertiary-fixed-variant: var(--color-on-tertiary-fixed-variant);
+
+  --color-error:                     var(--color-error);
+  --color-on-error:                  var(--color-on-error);
+  --color-error-container:           var(--color-error-container);
+  --color-on-error-container:        var(--color-on-error-container);
+
+  --color-background:                var(--color-background);
+  --color-on-background:             var(--color-on-background);
+  --color-surface:                   var(--color-surface);
+  --color-on-surface:                var(--color-on-surface);
+  --color-surface-variant:           var(--color-surface-variant);
+  --color-on-surface-variant:        var(--color-on-surface-variant);
+  --color-surface-tint:              var(--color-surface-tint);
+
+  --color-surface-dim:               var(--color-surface-dim);
+  --color-surface-bright:            var(--color-surface-bright);
+  --color-surface-container-lowest:  var(--color-surface-container-lowest);
+  --color-surface-container-low:     var(--color-surface-container-low);
+  --color-surface-container:         var(--color-surface-container);
+  --color-surface-container-high:    var(--color-surface-container-high);
+  --color-surface-container-highest: var(--color-surface-container-highest);
+
+  --color-outline:                   var(--color-outline);
+  --color-outline-variant:           var(--color-outline-variant);
+
+  --color-inverse-surface:           var(--color-inverse-surface);
+  --color-inverse-on-surface:        var(--color-inverse-on-surface);
+  --color-inverse-primary:           var(--color-inverse-primary);
+
+  --font-headline: "Manrope", sans-serif;
+  --font-body:     "Manrope", sans-serif;
+  --font-label:    "Manrope", sans-serif;
+
+  --radius-default: 0.125rem;
+  --radius-lg:      0.25rem;
+  --radius-xl:      0.5rem;
+  --radius-full:    0.75rem;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+  font-family: var(--font-body);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.gold-gradient {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-surface-tint)
+  );
+}
+.bg-gradient-gold {
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-surface-tint)
+  );
+}
+.text-gradient-gold {
+  background: linear-gradient(135deg, var(--color-primary), #fff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Light mode glass panel */
+:root .glass-panel,
+:root:not(.dark) .glass-panel {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Minimal Admin Form Elements */
+@layer components {
+  .form-input {
+    @apply w-full bg-surface-container border border-outline-variant/30 rounded-md px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant;
+  }
+  
+  .form-textarea {
+    @apply w-full bg-surface-container border border-outline-variant/30 rounded-md px-4 py-3 text-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-outline-variant resize-y min-h-[120px];
+  }
+  
+  .form-label {
+    @apply block text-xs font-bold uppercase tracking-widest text-primary mb-2;
+  }
+
+  .btn-admin {
+    @apply bg-primary text-on-primary font-bold py-3 px-6 rounded-md hover:bg-primary/90 transition-colors cursor-pointer text-sm tracking-wide;
+  }
+  
+  .btn-admin-secondary {
+    @apply bg-surface-container-high border border-outline-variant/30 text-on-surface font-bold py-3 px-6 rounded-md hover:border-primary transition-colors cursor-pointer text-sm tracking-wide;
+  }
 }
