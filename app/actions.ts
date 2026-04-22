@@ -29,7 +29,6 @@ export async function saveProperty(
       .set(payload, { merge: true });
     revalidatePath("/admin/dashboard/properties");
     revalidatePath("/listing");
-    return { success: true };
   } catch (err: any) {
     console.error(err);
     throw new Error(err.message || "Failed to save property");
@@ -41,7 +40,6 @@ export async function deleteProperty(id: string) {
     await adminDb.collection("properties").doc(id).delete();
     revalidatePath("/admin/dashboard/properties");
     revalidatePath("/listing");
-    return { success: true };
   } catch (err: any) {
     console.error(err);
     throw new Error(err.message || "Failed to delete property");
@@ -54,7 +52,6 @@ export async function markQueryReplied(id: string) {
       status: "Replied",
     });
     revalidatePath("/admin/dashboard/queries");
-    return { success: true };
   } catch (err: any) {
     console.error(err);
     throw new Error(err.message || "Failed to update query");
@@ -70,7 +67,6 @@ export async function createQuery(data: Partial<Query>) {
     };
     await adminDb.collection("queries").add(payload);
     revalidatePath("/admin/dashboard/queries");
-    return { success: true };
   } catch (err: any) {
     console.error(err);
     throw new Error(err.message || "Failed to submit inquiry");
