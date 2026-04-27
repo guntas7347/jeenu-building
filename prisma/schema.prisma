@@ -11,3 +11,100 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id        String    @id @default(cuid())
+  name      String?
+  email     String    @unique
+  phone     String?
+  image     String?
+  address   String?
+  isAdmin   Boolean   @default(false)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  savedListings SavedListing[]
+  queries       Query[]
+}
+
+model Listing {
+  id String @id @default(cuid())
+
+  // Core Info
+  title        String
+  slug         String  @unique
+  description  String  @db.Text
+  propertyType String
+  status       String  @default("AVAILABLE")
+  badge        String?
+
+  // Location
+  address String
+  city    String
+  state   String
+  country String
+  pincode String
+
+  // Pricing
+  price   BigInt
+  pricing Json? // detailed breakdown (taxes, maintenance, etc.)
+
+  // Media
+  images       String[] // URLs
+  brochureUrl  String?
+  floorPlanUrl String?
+
+  // Property Details (structured basics)
+  beds    Int
+  baths   Int
+  garages Int?
+
+  // Flexible Property Data
+  measurements Json? // { totalSize: ..., builtUp: ..., carpet: ..., others: {...} }
+  features     String[] // tags like "pool", "garden", "corner plot"
+  inclusions   String[] // e.g., "modular kitchen", "wardrobes"
+
+  // Advanced flexible metadata
+  meta Json? // anything extra (future-proofing)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  // Relations
+  savedByUsers SavedListing[]
+  queries      Query[]
+}
+
+// Explicit join table for saved listings to track the exact timestamp
+model SavedListing {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  // Ensure a user can only save a specific listing once
+  @@unique([userId, listingId])
+  @@index([userId])
+  @@index([listingId])
+}
+
+model Query {
+  id        String   @id @default(cuid())
+  userId    String
+  listingId String
+  message   String   @db.Text
+  status    String   @default("PENDING")
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([listingId])
+}

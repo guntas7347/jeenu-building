@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { MapPin, Building2, Banknote, Search, Loader2 } from "lucide-react";
 import { searchLocations } from "@/lib/location";
+import { useRouter } from "next/navigation";
 
 // Define the type based on your lib/location.ts return format
 interface LocationResult {
@@ -12,6 +13,8 @@ interface LocationResult {
 }
 
 const SearchBar = () => {
+  const router = useRouter();
+
   // State for the location search
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
@@ -78,10 +81,40 @@ const SearchBar = () => {
     setIsOpen(false);
   };
 
-  // Handle the final search execution
+  // ... inside your SearchBar component:
+
   const handleSearch = () => {
-    console.log("Searching with:", { query, propertyType, priceRange });
-    // Add your routing logic here, e.g., router.push(`/search?loc=${query}&type=${propertyType}...`)
+    // 1. Translate your price range string into min/max numeric values
+    let minPrice = "";
+    let maxPrice = "";
+
+    // if (priceRange === "$500k - $1M") {
+    //   minPrice = "500000";
+    //   maxPrice = "1000000";
+    // } else if (priceRange === "$1M - $3M") {
+    //   minPrice = "1000000";
+    //   maxPrice = "3000000";
+    // } else if (priceRange === "$3M+") {
+    //   minPrice = "3000000";
+    //   maxPrice = ""; // No maximum
+    // }
+
+    // 2. Safely construct the query string
+    const params = new URLSearchParams();
+
+    if (query) {
+      params.set("city", query);
+    }
+
+    if (propertyType && propertyType !== "All Properties") {
+      params.set("propertyType", propertyType);
+    }
+
+    if (minPrice) params.set("minPrice", minPrice);
+    if (maxPrice) params.set("maxPrice", maxPrice);
+
+    // 3. Push the user to the listings page with the active filters
+    router.push(`/listings?${params.toString()}`);
   };
 
   return (

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Manrope } from "next/font/google";
 import "./globals.css";
-import Header from "@/components/Header";
+import Header from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 const manrope = Manrope({
@@ -28,9 +28,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-on-background transition-colors duration-300">
-        <Header />
         {children}
-        <Footer />
       </body>
     </html>
   );
