@@ -15,7 +15,6 @@ import {
   LayoutGrid,
 } from "lucide-react";
 import Link from "next/link";
-import { getPropertyById } from "@/lib/firebase/services";
 
 // --- DYNAMIC DATA ARRAYS ---
 
@@ -79,7 +78,6 @@ export default async function PropertyDetailPage({
   params: Params;
 }) {
   const { slug } = await params;
-  const property = await getPropertyById(slug);
 
   return (
     <main className="mt-20 max-w-7xl mx-auto px-6 pt-8">

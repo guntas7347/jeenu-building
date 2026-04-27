@@ -5,7 +5,6 @@ import { ArrowLeft, Save, Plus, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Property } from "@/types";
-import { saveProperty } from "@/app/actions";
 
 export default function PropertyForm({
   initialData,
@@ -49,7 +48,7 @@ export default function PropertyForm({
   const handleSave = async () => {
     setSaving(true);
     try {
-      await saveProperty(id, isNew, form);
+      // await saveProperty(id, isNew, form);
       alert("Property saved successfully!");
       router.push("/admin/dashboard/properties");
     } catch (err) {

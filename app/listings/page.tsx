@@ -12,7 +12,6 @@ import {
   Home as HomeIcon,
 } from "lucide-react";
 import Link from "next/link";
-import { getAllProperties } from "@/lib/firebase/services";
 
 // Extracted static data to map over.
 // Once your Firebase data is ready, you can replace this with the 'properties' array.
@@ -117,7 +116,6 @@ const STATIC_PROPERTIES = [
 
 export default async function ListingPage() {
   // You can map over this variable instead once your Firebase schema matches!
-  const properties = await getAllProperties();
 
   return (
     <main className="pt-32 pb-16 max-w-7xl mx-auto px-6">

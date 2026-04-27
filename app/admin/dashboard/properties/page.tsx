@@ -1,10 +1,9 @@
 import Link from "next/link";
 import { Plus, Edit2, Trash2 } from "lucide-react";
-import { deleteProperty } from "@/app/actions";
-import { getAllProperties } from "@/lib/firebase/services";
 
 export default async function AdminPropertiesPage() {
-  const properties = await getAllProperties();
+  // const properties = await getAllProperties();
+  const properties: any = [];
 
   return (
     <div className="space-y-8">
@@ -57,7 +56,7 @@ export default async function AdminPropertiesPage() {
                 </td>
               </tr>
             ) : (
-              properties.map((prop) => (
+              properties.map((prop: any) => (
                 <tr
                   key={prop.id}
                   className="border-b border-outline-variant/5 hover:bg-surface-container-low transition-colors"
@@ -92,7 +91,7 @@ export default async function AdminPropertiesPage() {
                       <Edit2 className="w-4 h-4" />
                     </Link>
                     <form
-                      action={deleteProperty.bind(null, prop.id)}
+                      // action={deleteProperty.bind(null, prop.id)}
                       className="inline"
                     >
                       <button

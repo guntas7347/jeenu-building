@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { createQuery } from "@/app/actions";
 
 export default function InquiryForm({
   propertyId,
@@ -28,7 +27,7 @@ export default function InquiryForm({
     };
 
     try {
-      await createQuery(data);
+      // await createQuery(data);
       setSuccess(true);
       (e.target as HTMLFormElement).reset();
     } catch (err) {

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { Mail, Phone, CornerUpLeft, X } from "lucide-react";
 import { Query } from "@/types";
-import { markQueryReplied } from "@/app/actions";
 
 export default function QueriesClient({
   initialQueries,
@@ -19,7 +18,7 @@ export default function QueriesClient({
     if (!selectedQuery) return;
     setSending(true);
     try {
-      await markQueryReplied(selectedQuery.id);
+      // await markQueryReplied(selectedQuery.id);
       alert(`Reply marked as sent to ${selectedQuery.name}`);
       handleCloseModal();
     } catch (err) {

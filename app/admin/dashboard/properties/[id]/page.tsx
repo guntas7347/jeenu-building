@@ -1,6 +1,5 @@
 import PropertyForm from "./form";
 import { Property } from "@/types";
-import { getPropertyById } from "@/lib/firebase/services";
 
 type Params = Promise<{ id: string }>;
 
@@ -24,10 +23,10 @@ export default async function PropertyEditorPage({
   };
 
   if (!isNew) {
-    const fetched = await getPropertyById(id);
-    if (fetched) {
-      property = fetched;
-    }
+    // const fetched = await getPropertyById(id);
+    // if (fetched) {
+    //   property = fetched;
+    // }
   }
 
   return <PropertyForm initialData={property} id={id} isNew={isNew} />;
