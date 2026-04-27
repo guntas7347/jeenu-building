@@ -23,8 +23,8 @@ export const updateListing = async (id: string, data: any) => {
   revalidatePaths([
     `/dashboard/properties/`,
     `/dashboard/properties/${updatedListing.slug}`,
-    `/properties/${updatedListing.slug}`,
-    `/properties/`,
+    `/listings/${updatedListing.slug}`,
+    `/listings/`,
   ]);
   return updatedListing;
 };
