@@ -72,7 +72,7 @@ const Header = () => {
             href="/"
             onClick={() => setIsMobileMenuOpen(false)}
           >
-            EstateElite
+            Red Owl Homes
           </Link>
 
           <nav className="hidden md:flex gap-8 items-center mx-auto">

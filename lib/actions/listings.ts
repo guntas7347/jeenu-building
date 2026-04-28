@@ -80,15 +80,37 @@ export const createListing = async () => {
   return newListing;
 };
 
-export const getListings = async () => {
-  return await prisma.listing.findMany({
-    where: {
-      status: {
-        not: "DRAFT",
+export const getListings = async (
+  currentPage: number = 1,
+  sizePerPage: number = 10,
+) => {
+  const page = Math.max(currentPage, 1);
+  const size = Math.max(sizePerPage, 1);
+  const skip = (page - 1) * size;
+
+  const [data, total] = await prisma.$transaction([
+    prisma.listing.findMany({
+      where: {
+        status: { not: "DRAFT" },
       },
-    },
-    orderBy: { updatedAt: "desc" },
-  });
+      orderBy: { updatedAt: "desc" },
+      skip,
+      take: size,
+    }),
+    prisma.listing.count({
+      where: {
+        status: { not: "DRAFT" },
+      },
+    }),
+  ]);
+
+  return {
+    data,
+    total,
+    currentPage: page,
+    sizePerPage: size,
+    totalPages: Math.ceil(total / size),
+  };
 };
 
 export const deleteListing = async (id: string) => {

@@ -12,7 +12,7 @@ export function AdminHeader({ setIsOpen }: AdminHeaderProps) {
     <header className="md:hidden fixed top-0 w-full z-20 flex items-center justify-between p-4 bg-white border-b border-slate-200 shadow-sm">
       <Link href="/dashboard" className="flex items-center">
         <span className="text-xl font-black text-slate-900 tracking-tighter">
-          EstateElite <span className="text-blue-600">Admin</span>
+          Red Owl Homes <span className="text-blue-600">Admin</span>
         </span>
       </Link>
       <button

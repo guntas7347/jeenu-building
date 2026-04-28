@@ -807,7 +807,8 @@ export const QueryScalarFieldEnum = {
   userId: 'userId',
   listingId: 'listingId',
   message: 'message',
-  status: 'status',
+  phone: 'phone',
+  markAsRead: 'markAsRead',
   createdAt: 'createdAt'
 } as const
 

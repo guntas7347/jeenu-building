@@ -4,46 +4,60 @@ import { useState, useEffect } from "react";
 import {
   Mail,
   Phone,
-  X,
   MessageSquare,
   Loader2,
   Reply,
   CheckCircle2,
 } from "lucide-react";
-// Assumes you have these exported from your actions file
 import { getQueries, markQueryReplied } from "@/lib/actions/queries";
+import ViewInquiryModal from "@/components/ViewInquiryModal";
+import Pagination from "@/components/Pagination"; // 1. Import your Pagination component
+import { Toggle } from "@/components/Toggle";
 
-// Define the type based on your Prisma Schema relations
 type ExtendedQuery = {
   id: string;
+  userId: string;
+  listingId: string;
   message: string;
-  createdAt: Date;
+  phone: string;
+  markAsRead: boolean;
+  createdAt: string | Date;
   user: {
     name: string | null;
     email: string;
-    phone: string | null;
   };
   listing: {
     title: string;
+    slug: string;
   };
 };
 
 export default function QueriesPage() {
   const [queries, setQueries] = useState<ExtendedQuery[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // 2. Add Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [showRead, setShowRead] = useState(false);
   const [selectedQuery, setSelectedQuery] = useState<ExtendedQuery | null>(
     null,
   );
-  const [sending, setSending] = useState(false);
+  const [isMarking, setIsMarking] = useState(false);
 
+  // 3. Trigger fetch whenever currentPage changes
   useEffect(() => {
-    fetchQueries();
-  }, []);
+    fetchQueries(currentPage);
+  }, [currentPage, showRead]);
 
-  const fetchQueries = async () => {
+  const fetchQueries = async (page: number) => {
+    setLoading(true); // Show loading spinner while changing pages
     try {
-      const data = await getQueries();
-      setQueries(data || []);
+      // Fetching all queries (undefined) for page X, 25 items per page
+      const response: any = await getQueries(showRead, page, 25);
+
+      setQueries(response.data || []);
+      setTotalPages(response.totalPages || 1);
     } catch (error) {
       console.error("Failed to fetch queries:", error);
     } finally {
@@ -51,33 +65,34 @@ export default function QueriesPage() {
     }
   };
 
-  const handleCloseModal = () => {
-    if (!sending) setSelectedQuery(null);
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Optional: Scroll up when page changes
   };
 
-  const handleSendReply = async () => {
+  const handleMarkAsRead = async () => {
     if (!selectedQuery) return;
-    setSending(true);
+
+    setIsMarking(true);
     try {
-      // Execute server action to mark as replied or send email
       await markQueryReplied(selectedQuery.id);
 
-      // Optimistically remove it from the list (or update its status)
-      setQueries((prev) => prev.filter((q) => q.id !== selectedQuery.id));
-
-      alert(
-        `Reply sent to ${selectedQuery.user.name || selectedQuery.user.email}`,
+      setQueries((prev) =>
+        prev.map((q) =>
+          q.id === selectedQuery.id ? { ...q, markAsRead: true } : q,
+        ),
       );
-      handleCloseModal();
+
+      setSelectedQuery(null);
     } catch (err) {
       console.error(err);
-      alert("Error sending reply");
+      alert("Error updating inquiry.");
     } finally {
-      setSending(false);
+      setIsMarking(false);
     }
   };
 
-  const formatDate = (dateString: Date) => {
+  const formatDate = (dateString: string | Date) => {
     const date = new Date(dateString);
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
@@ -87,19 +102,39 @@ export default function QueriesPage() {
     }).format(date);
   };
 
+  const modalInquiryData = selectedQuery
+    ? {
+        name: selectedQuery.user.name || "Unknown Client",
+        email: selectedQuery.user.email,
+        phone: selectedQuery.phone,
+        message: selectedQuery.message,
+        propertyTitle: selectedQuery.listing.title,
+        listingId: selectedQuery.listing.slug,
+        createdAt: selectedQuery.createdAt,
+      }
+    : null;
+
   return (
-    <div className="space-y-8 max-w-7xl mx-auto px-6 py-8 relative pb-20">
-      {/* Header */}
-      <header>
-        <h1 className="text-3xl font-black text-slate-900 tracking-tight">
-          Client Inquiries
-        </h1>
-        <p className="text-slate-500 font-medium mt-1">
-          Manage, review, and respond to property requests.
-        </p>
+    <div className="space-y-8 max-w-7xl mx-auto px-6 py-8 relative pb-20 pt-32">
+      <header className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">
+            Client Inquiries
+          </h1>
+          <p className="text-slate-500 font-medium mt-1">
+            Manage, review, and respond to property requests.
+          </p>
+        </div>
+
+        <div>
+          <Toggle
+            label="Show Read"
+            checked={showRead}
+            onChange={(e) => setShowRead(e.target.checked)}
+          />
+        </div>
       </header>
 
-      {/* Queries Table Container */}
       <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden min-h-[400px] flex flex-col">
         {loading ? (
           <div className="flex-1 flex flex-col items-center justify-center text-slate-400 gap-3 min-h-[400px]">
@@ -116,173 +151,111 @@ export default function QueriesPage() {
                 Inbox Zero
               </p>
               <p className="text-sm font-medium">
-                You have replied to all pending client inquiries.
+                You have no pending client inquiries.
               </p>
             </div>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse whitespace-nowrap">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 rounded-tl-3xl">
-                    Client Details
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Property
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Message Snippet
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right rounded-tr-3xl">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {queries.map((query) => (
-                  <tr
-                    key={query.id}
-                    className="hover:bg-slate-50/50 transition-colors group"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="font-bold text-slate-900">
-                        {query.user.name || "Unknown User"}
-                      </div>
-                      <div className="flex flex-col gap-1 mt-1 text-xs font-medium text-slate-500">
-                        <span className="flex items-center gap-1.5">
-                          <Mail size={12} className="text-blue-600" />{" "}
-                          {query.user.email}
-                        </span>
-                        {query.user.phone && (
-                          <span className="flex items-center gap-1.5">
-                            <Phone size={12} className="text-blue-600" />{" "}
-                            {query.user.phone}
-                          </span>
-                        )}
-                        <span className="text-slate-400 mt-0.5">
-                          {formatDate(query.createdAt)}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg border border-slate-200 truncate max-w-[200px]">
-                        {query.listing.title}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="text-sm text-slate-600 truncate max-w-[250px] italic">
-                        "{query.message}"
-                      </div>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <button
-                        onClick={() => setSelectedQuery(query)}
-                        className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm text-sm font-bold opacity-0 group-hover:opacity-100 focus:opacity-100"
-                      >
-                        <Reply size={16} /> View & Reply
-                      </button>
-                    </td>
+          <>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse whitespace-nowrap">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200">
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Client Details
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Property
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Message Snippet
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {queries.map((query) => (
+                    <tr
+                      key={query.id}
+                      className={`transition-colors group ${
+                        query.markAsRead
+                          ? "hover:bg-slate-50/50"
+                          : "bg-blue-50/30 hover:bg-blue-50/60"
+                      }`}
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={`font-bold ${query.markAsRead ? "text-slate-900" : "text-blue-900"}`}
+                          >
+                            {query.user.name || "Unknown User"}
+                          </span>
+                          {!query.markAsRead && (
+                            <span className="px-2 py-0.5 bg-blue-600 text-white text-[9px] font-bold uppercase tracking-widest rounded-md">
+                              New
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex flex-col gap-1 mt-1 text-xs font-medium text-slate-500">
+                          <span className="flex items-center gap-1.5">
+                            <Mail size={12} className="text-blue-600" />{" "}
+                            {query.user.email}
+                          </span>
+                          {query.phone && (
+                            <span className="flex items-center gap-1.5">
+                              <Phone size={12} className="text-blue-600" />{" "}
+                              {query.phone}
+                            </span>
+                          )}
+                          <span className="text-slate-400 mt-0.5">
+                            {formatDate(query.createdAt)}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span className="inline-flex items-center px-3 py-1 bg-slate-100 text-slate-700 text-xs font-bold rounded-lg border border-slate-200 truncate max-w-[200px]">
+                          {query.listing.title}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="text-sm text-slate-600 truncate max-w-[250px] italic">
+                          "{query.message || "No message attached"}"
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <button
+                          onClick={() => setSelectedQuery(query)}
+                          className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm text-sm font-bold opacity-90 group-hover:opacity-100 focus:opacity-100"
+                        >
+                          <Reply size={16} /> View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
-
-      {/* Reply Modal */}
-      {selectedQuery && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
-            onClick={handleCloseModal}
+      {totalPages > 1 && (
+        <div className="p-6 border-t border-slate-200 bg-slate-50 rounded-b-3xl">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
           />
-
-          <div className="relative w-full max-w-2xl bg-white p-8 rounded-3xl shadow-2xl border border-slate-100 z-10 animate-in fade-in zoom-in-95 duration-200">
-            {/* Modal Header */}
-            <div className="flex justify-between items-start mb-6 border-b border-slate-100 pb-6">
-              <div>
-                <h3 className="text-2xl font-black text-slate-900 tracking-tight">
-                  Respond to {selectedQuery.user.name || "Client"}
-                </h3>
-                <p className="text-sm font-medium text-slate-500 mt-1">
-                  Regarding:{" "}
-                  <span className="text-slate-900 font-bold">
-                    {selectedQuery.listing.title}
-                  </span>
-                </p>
-              </div>
-              <button
-                disabled={sending}
-                onClick={handleCloseModal}
-                className="p-2 bg-slate-50 rounded-xl hover:bg-red-50 hover:text-red-600 transition-colors text-slate-400 disabled:opacity-50"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
-            {/* Original Message */}
-            <div className="mb-6 bg-slate-50 p-5 rounded-2xl border border-slate-100 relative">
-              <div className="absolute top-4 right-4 text-slate-300">
-                <MessageSquare size={24} />
-              </div>
-              <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold mb-2">
-                Original Message
-              </p>
-              <p className="text-sm text-slate-700 leading-relaxed italic">
-                "{selectedQuery.message}"
-              </p>
-            </div>
-
-            {/* Reply Form */}
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-slate-900 font-medium"
-                  defaultValue={`Re: Inquiry about ${selectedQuery.listing.title}`}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-bold text-slate-700 mb-1.5">
-                  Your Message
-                </label>
-                <textarea
-                  className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all text-slate-900 min-h-[160px] leading-relaxed"
-                  placeholder="Type your response here..."
-                  defaultValue={`Dear ${selectedQuery.user.name || "Client"},\n\nThank you for reaching out regarding ${selectedQuery.listing.title}...`}
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-6 border-t border-slate-100 mt-2">
-                <button
-                  disabled={sending}
-                  onClick={handleCloseModal}
-                  className="px-6 py-3 bg-white border border-slate-200 text-slate-700 font-bold rounded-xl hover:bg-slate-50 transition-colors disabled:opacity-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  disabled={sending}
-                  onClick={handleSendReply}
-                  className="px-6 py-3 bg-blue-600 text-white font-bold rounded-xl flex items-center gap-2 hover:bg-blue-700 transition-colors shadow-sm disabled:opacity-50"
-                >
-                  {sending ? (
-                    <Loader2 className="animate-spin" size={18} />
-                  ) : (
-                    <Mail size={18} />
-                  )}
-                  {sending ? "Sending..." : "Send Reply"}
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       )}
+      <ViewInquiryModal
+        isOpen={!!selectedQuery}
+        onClose={() => setSelectedQuery(null)}
+        inquiry={modalInquiryData}
+        onMarkAsRead={handleMarkAsRead}
+        isMarkingRead={isMarking}
+      />
     </div>
   );
 }

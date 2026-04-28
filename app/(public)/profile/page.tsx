@@ -7,6 +7,7 @@ import EditProfileModal from "@/components/EditProfileModal";
 import ListingCard from "@/components/ListingCard";
 import { Loader2, Bookmark, User as UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
+import LoadingProfile from "./LoadingProfile";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -38,12 +39,7 @@ export default function ProfilePage() {
   };
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh]">
-        <Loader2 className="animate-spin text-blue-600 mb-4" size={40} />
-        <p className="text-slate-500 font-medium">Loading your profile...</p>
-      </div>
-    );
+    return <LoadingProfile />;
   }
 
   const savedListings =

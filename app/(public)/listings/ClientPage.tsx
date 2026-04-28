@@ -7,13 +7,20 @@ import Pagination from "@/components/Pagination";
 import ListingCard from "@/components/ListingCard";
 import { Loader2 } from "lucide-react";
 
+// Define the shape of the initial data we expect from the server
+interface PaginatedResponse {
+  data: any[];
+  total: number;
+  currentPage: number;
+  sizePerPage: number;
+  totalPages: number;
+}
+
 export default function ClientListing({
-  initialListings,
-  initialTotalPages = 1,
+  initialData, // 1. Changed from initialListings array to the full object
   savedListingsIds = [],
 }: {
-  initialListings: any[];
-  initialTotalPages?: number;
+  initialData: PaginatedResponse;
   savedListingsIds?: string[];
 }) {
   const savedIdsSet = new Set(savedListingsIds);
@@ -24,13 +31,14 @@ export default function ClientListing({
       saved: savedIdsSet.has(listing.id), // or listing.listingId
     }));
 
-  const [listings, setListings] = useState(enrichListings(initialListings));
-  const [totalCount, setTotalCount] = useState(initialListings.length);
+  // 2. Initialize state using the new initialData object properties
+  const [listings, setListings] = useState(enrichListings(initialData.data));
+  const [totalCount, setTotalCount] = useState(initialData.total);
+  const [totalPages, setTotalPages] = useState(initialData.totalPages);
 
   // UI & Pagination State
   const [isFiltering, setIsFiltering] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(initialTotalPages);
 
   // Filter & Sort State
   const [activeFilters, setActiveFilters] = useState<FilterState | null>(null);
@@ -39,13 +47,15 @@ export default function ClientListing({
   // Effect to refetch whenever page, sort, or filters change
   useEffect(() => {
     const fetchListings = async () => {
+      // 3. Fallback to initial server data to save a request
       if (
         !activeFilters &&
         currentPage === 1 &&
         activeSort === "Newest Listings"
       ) {
-        setListings(enrichListings(initialListings)); // FIX
-        setTotalPages(initialTotalPages);
+        setListings(enrichListings(initialData.data));
+        setTotalPages(initialData.totalPages);
+        setTotalCount(initialData.total);
         return;
       }
 
@@ -58,8 +68,9 @@ export default function ClientListing({
           activeSort,
         );
 
-        setListings(enrichListings(response.data)); // FIX
+        setListings(enrichListings(response.data));
         setTotalPages(response.totalPages);
+        // Ensure this matches whatever your getFilteredListings returns (total or totalCount)
         setTotalCount(response.totalCount);
       } catch (error) {
         console.error("Failed to filter listings", error);
@@ -70,6 +81,7 @@ export default function ClientListing({
 
     fetchListings();
   }, [activeFilters, currentPage, activeSort]);
+
   const handleApplyFilters = (filters: FilterState) => {
     setActiveFilters(filters);
     setCurrentPage(1); // Always reset to page 1 when new filters are applied
@@ -90,7 +102,8 @@ export default function ClientListing({
                 Premium Listings
               </h1>
               <p className="text-slate-500 text-sm mt-1">
-                Showing {listings?.length || 0} properties
+                {/* 4. Display totalCount so the user knows how many exist across all pages */}
+                Showing {totalCount} properties
                 {activeFilters && " (Filtered)"}
               </p>
             </div>

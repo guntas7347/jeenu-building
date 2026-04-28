@@ -12,7 +12,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Luxe Estate",
+  title: "Red Owl Homes",
   description:
     "Curating extraordinary living spaces for the world's most discerning individuals.",
 };

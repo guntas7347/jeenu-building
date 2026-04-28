@@ -96,12 +96,13 @@ model SavedListing {
 }
 
 model Query {
-  id        String   @id @default(cuid())
-  userId    String
-  listingId String
-  message   String   @db.Text
-  status    String   @default("PENDING")
-  createdAt DateTime @default(now())
+  id         String   @id @default(cuid())
+  userId     String
+  listingId  String
+  message    String   @db.Text
+  phone      String?
+  markAsRead Boolean  @default(false)
+  createdAt  DateTime @default(now())
 
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)

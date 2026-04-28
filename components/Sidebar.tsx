@@ -53,7 +53,7 @@ export function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
           <div>
             <Link href="/" className="block" onClick={() => setIsOpen(false)}>
               <span className="text-2xl font-black text-slate-900 tracking-tighter">
-                EstateElite
+                Red Owl Homes
               </span>
             </Link>
             <span className="text-[10px] uppercase tracking-widest font-bold text-slate-400 block mt-1">

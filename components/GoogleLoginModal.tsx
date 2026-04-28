@@ -19,9 +19,7 @@ const GoogleLoginModal = ({
     try {
       setLoading(true);
 
-      await signIn("google", {
-        callbackUrl: "/",
-      });
+      await signIn("google");
     } catch (error) {
       setLoading(false);
     }

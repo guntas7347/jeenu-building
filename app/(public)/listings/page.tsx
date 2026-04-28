@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 import { getSavedListingsIds } from "@/lib/actions/user";
 export const metadata: Metadata = {
-  title: "Premium Real Estate Listings | EstateElite",
+  title: "Premium Real Estate Listings | Red Owl Homes",
   description: "Browse our exclusive collection of luxury properties.",
 };
 
@@ -22,7 +22,7 @@ export default async function ListingPage() {
       }
     >
       <ClientPage
-        initialListings={initialListings}
+        initialData={initialListings}
         savedListingsIds={savedListingsIds}
       />
     </Suspense>

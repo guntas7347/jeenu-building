@@ -29,7 +29,8 @@ export type QueryMinAggregateOutputType = {
   userId: string | null
   listingId: string | null
   message: string | null
-  status: string | null
+  phone: string | null
+  markAsRead: boolean | null
   createdAt: Date | null
 }
 
@@ -38,7 +39,8 @@ export type QueryMaxAggregateOutputType = {
   userId: string | null
   listingId: string | null
   message: string | null
-  status: string | null
+  phone: string | null
+  markAsRead: boolean | null
   createdAt: Date | null
 }
 
@@ -47,7 +49,8 @@ export type QueryCountAggregateOutputType = {
   userId: number
   listingId: number
   message: number
-  status: number
+  phone: number
+  markAsRead: number
   createdAt: number
   _all: number
 }
@@ -58,7 +61,8 @@ export type QueryMinAggregateInputType = {
   userId?: true
   listingId?: true
   message?: true
-  status?: true
+  phone?: true
+  markAsRead?: true
   createdAt?: true
 }
 
@@ -67,7 +71,8 @@ export type QueryMaxAggregateInputType = {
   userId?: true
   listingId?: true
   message?: true
-  status?: true
+  phone?: true
+  markAsRead?: true
   createdAt?: true
 }
 
@@ -76,7 +81,8 @@ export type QueryCountAggregateInputType = {
   userId?: true
   listingId?: true
   message?: true
-  status?: true
+  phone?: true
+  markAsRead?: true
   createdAt?: true
   _all?: true
 }
@@ -158,7 +164,8 @@ export type QueryGroupByOutputType = {
   userId: string
   listingId: string
   message: string
-  status: string
+  phone: string | null
+  markAsRead: boolean
   createdAt: Date
   _count: QueryCountAggregateOutputType | null
   _min: QueryMinAggregateOutputType | null
@@ -188,7 +195,8 @@ export type QueryWhereInput = {
   userId?: Prisma.StringFilter<"Query"> | string
   listingId?: Prisma.StringFilter<"Query"> | string
   message?: Prisma.StringFilter<"Query"> | string
-  status?: Prisma.StringFilter<"Query"> | string
+  phone?: Prisma.StringNullableFilter<"Query"> | string | null
+  markAsRead?: Prisma.BoolFilter<"Query"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Query"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
@@ -199,7 +207,8 @@ export type QueryOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  markAsRead?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
   listing?: Prisma.ListingOrderByWithRelationInput
@@ -213,7 +222,8 @@ export type QueryWhereUniqueInput = Prisma.AtLeast<{
   userId?: Prisma.StringFilter<"Query"> | string
   listingId?: Prisma.StringFilter<"Query"> | string
   message?: Prisma.StringFilter<"Query"> | string
-  status?: Prisma.StringFilter<"Query"> | string
+  phone?: Prisma.StringNullableFilter<"Query"> | string | null
+  markAsRead?: Prisma.BoolFilter<"Query"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Query"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
@@ -224,7 +234,8 @@ export type QueryOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  phone?: Prisma.SortOrderInput | Prisma.SortOrder
+  markAsRead?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.QueryCountOrderByAggregateInput
   _max?: Prisma.QueryMaxOrderByAggregateInput
@@ -239,14 +250,16 @@ export type QueryScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"Query"> | string
   listingId?: Prisma.StringWithAggregatesFilter<"Query"> | string
   message?: Prisma.StringWithAggregatesFilter<"Query"> | string
-  status?: Prisma.StringWithAggregatesFilter<"Query"> | string
+  phone?: Prisma.StringNullableWithAggregatesFilter<"Query"> | string | null
+  markAsRead?: Prisma.BoolWithAggregatesFilter<"Query"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Query"> | Date | string
 }
 
 export type QueryCreateInput = {
   id?: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutQueriesInput
   listing: Prisma.ListingCreateNestedOneWithoutQueriesInput
@@ -257,14 +270,16 @@ export type QueryUncheckedCreateInput = {
   userId: string
   listingId: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
 }
 
 export type QueryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutQueriesNestedInput
   listing?: Prisma.ListingUpdateOneRequiredWithoutQueriesNestedInput
@@ -275,7 +290,8 @@ export type QueryUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   listingId?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -284,14 +300,16 @@ export type QueryCreateManyInput = {
   userId: string
   listingId: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
 }
 
 export type QueryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -300,7 +318,8 @@ export type QueryUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   listingId?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -319,7 +338,8 @@ export type QueryCountOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  markAsRead?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -328,7 +348,8 @@ export type QueryMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  markAsRead?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -337,7 +358,8 @@ export type QueryMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
   message?: Prisma.SortOrder
-  status?: Prisma.SortOrder
+  phone?: Prisma.SortOrder
+  markAsRead?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -428,7 +450,8 @@ export type QueryUncheckedUpdateManyWithoutListingNestedInput = {
 export type QueryCreateWithoutUserInput = {
   id?: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
   listing: Prisma.ListingCreateNestedOneWithoutQueriesInput
 }
@@ -437,7 +460,8 @@ export type QueryUncheckedCreateWithoutUserInput = {
   id?: string
   listingId: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
 }
 
@@ -475,14 +499,16 @@ export type QueryScalarWhereInput = {
   userId?: Prisma.StringFilter<"Query"> | string
   listingId?: Prisma.StringFilter<"Query"> | string
   message?: Prisma.StringFilter<"Query"> | string
-  status?: Prisma.StringFilter<"Query"> | string
+  phone?: Prisma.StringNullableFilter<"Query"> | string | null
+  markAsRead?: Prisma.BoolFilter<"Query"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Query"> | Date | string
 }
 
 export type QueryCreateWithoutListingInput = {
   id?: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutQueriesInput
 }
@@ -491,7 +517,8 @@ export type QueryUncheckedCreateWithoutListingInput = {
   id?: string
   userId: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
 }
 
@@ -525,14 +552,16 @@ export type QueryCreateManyUserInput = {
   id?: string
   listingId: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
 }
 
 export type QueryUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listing?: Prisma.ListingUpdateOneRequiredWithoutQueriesNestedInput
 }
@@ -541,7 +570,8 @@ export type QueryUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   listingId?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -549,7 +579,8 @@ export type QueryUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   listingId?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -557,14 +588,16 @@ export type QueryCreateManyListingInput = {
   id?: string
   userId: string
   message: string
-  status?: string
+  phone?: string | null
+  markAsRead?: boolean
   createdAt?: Date | string
 }
 
 export type QueryUpdateWithoutListingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutQueriesNestedInput
 }
@@ -573,7 +606,8 @@ export type QueryUncheckedUpdateWithoutListingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -581,7 +615,8 @@ export type QueryUncheckedUpdateManyWithoutListingInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   message?: Prisma.StringFieldUpdateOperationsInput | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markAsRead?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -592,7 +627,8 @@ export type QuerySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   userId?: boolean
   listingId?: boolean
   message?: boolean
-  status?: boolean
+  phone?: boolean
+  markAsRead?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
@@ -603,7 +639,8 @@ export type QuerySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   userId?: boolean
   listingId?: boolean
   message?: boolean
-  status?: boolean
+  phone?: boolean
+  markAsRead?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
@@ -614,7 +651,8 @@ export type QuerySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   userId?: boolean
   listingId?: boolean
   message?: boolean
-  status?: boolean
+  phone?: boolean
+  markAsRead?: boolean
   createdAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
@@ -625,11 +663,12 @@ export type QuerySelectScalar = {
   userId?: boolean
   listingId?: boolean
   message?: boolean
-  status?: boolean
+  phone?: boolean
+  markAsRead?: boolean
   createdAt?: boolean
 }
 
-export type QueryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "listingId" | "message" | "status" | "createdAt", ExtArgs["result"]["query"]>
+export type QueryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "listingId" | "message" | "phone" | "markAsRead" | "createdAt", ExtArgs["result"]["query"]>
 export type QueryInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
@@ -654,7 +693,8 @@ export type $QueryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     userId: string
     listingId: string
     message: string
-    status: string
+    phone: string | null
+    markAsRead: boolean
     createdAt: Date
   }, ExtArgs["result"]["query"]>
   composites: {}
@@ -1085,7 +1125,8 @@ export interface QueryFieldRefs {
   readonly userId: Prisma.FieldRef<"Query", 'String'>
   readonly listingId: Prisma.FieldRef<"Query", 'String'>
   readonly message: Prisma.FieldRef<"Query", 'String'>
-  readonly status: Prisma.FieldRef<"Query", 'String'>
+  readonly phone: Prisma.FieldRef<"Query", 'String'>
+  readonly markAsRead: Prisma.FieldRef<"Query", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Query", 'DateTime'>
 }
     

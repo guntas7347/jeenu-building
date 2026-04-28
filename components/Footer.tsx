@@ -47,7 +47,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-start gap-12 mb-12">
           <div className="max-w-sm">
             <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-4">
-              EstateElite
+              Red Owl Homes
             </h2>
             <p className="font-body-md text-slate-500 dark:text-slate-400 mb-6">
               Redefining the real estate journey with transparency, luxury, and
@@ -97,7 +97,7 @@ const Footer = () => {
 
         <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="font-sans text-sm text-slate-500 dark:text-slate-400 opacity-80">
-            © {currentYear} EstateElite. Professional Real Estate Solutions.
+            © {currentYear} Red Owl Homes. Professional Real Estate Solutions.
           </p>
           <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500">
             <Globe size={14} />

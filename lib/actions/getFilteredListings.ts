@@ -7,7 +7,7 @@ import { getSessionUser } from "../auth";
 export async function getFilteredListings(
   filters: FilterState,
   page: number = 1,
-  limit: number = 9,
+  limit: number = 10,
   sortBy: string = "Newest Listings",
 ) {
   try {

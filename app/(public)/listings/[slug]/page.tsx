@@ -18,6 +18,7 @@ import Link from "next/link";
 import PropertyGallery from "./PropertyGallery";
 import { formatPrice } from "@/lib/helpers";
 import MortgageCalculator from "@/components/MorgageCalculator";
+import InquiryForm from "@/components/InquiryForm";
 
 type Params = Promise<{ slug: string }>;
 
@@ -256,9 +257,10 @@ export default async function PropertyDetailPage({
                   <Download size={18} />
                 </Link>
               )}
-              <button className="w-full py-4 bg-slate-900 text-white font-bold rounded-2xl hover:bg-slate-800 transition-colors shadow-sm">
-                Enquire Now
-              </button>
+              <InquiryForm
+                propertyId={listing.id}
+                propertyTitle={listing.title}
+              />
             </div>
             <p className="mt-6 text-[10px] text-slate-400 leading-relaxed italic text-center">
               *Disclaimer: Prices and availability are subject to change.

@@ -19,21 +19,32 @@ import {
 } from "@/lib/actions/listings";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/helpers";
+import Pagination from "@/components/Pagination";
 
 export default function AdminPropertiesPage() {
   const router = useRouter();
   const [properties, setProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: "smooth" }); // Optional: Scroll up when page changes
+  };
+
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProperties();
-  }, []);
+  }, [currentPage]);
 
   const fetchProperties = async () => {
     try {
-      const data = await getListings();
-      setProperties(data || []);
+      const data = await getListings(currentPage);
+      setProperties(data.data || []);
+      setTotalPages(data.totalPages);
     } catch (error) {
       console.error("Failed to fetch properties:", error);
     } finally {
@@ -133,111 +144,122 @@ export default function AdminPropertiesPage() {
             </button>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse whitespace-nowrap">
-              <thead>
-                <tr className="bg-slate-50 border-b border-slate-200">
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 rounded-tl-3xl">
-                    Property
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Location
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Price
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                    Status
-                  </th>
-                  <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right rounded-tr-3xl">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                {properties.map((prop) => (
-                  <tr
-                    key={prop.id}
-                    className="hover:bg-slate-50/50 transition-colors group"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-14 h-14 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
-                          {prop.images?.[0] ? (
-                            <img
-                              src={prop.images[0]}
-                              alt={prop.title}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full flex items-center justify-center text-slate-300">
-                              <Home size={20} />
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-bold text-slate-900 line-clamp-1 max-w-[250px]">
-                            {prop.title}
-                          </p>
-                          <p className="text-xs font-medium text-slate-500 mt-0.5">
-                            ID: {prop.id.slice(-6).toUpperCase()}
-                          </p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600">
-                        <MapPin size={16} className="text-slate-400" />
-                        {prop.city}, {prop.state}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <p className="text-sm font-bold text-slate-900">
-                        {formatPrice(prop.priceInPaisa || prop.price)}
-                      </p>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider border ${getStatusBadge(
-                          prop.status,
-                        )}`}
-                      >
-                        {prop.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
-                        <Link
-                          href={`/admin/properties/${prop.id}`}
-                          className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-colors shadow-sm"
-                          title="Edit Property"
-                        >
-                          <Edit2 size={16} />
-                        </Link>
-                        <button
-                          onClick={() => handleDelete(prop.id)}
-                          disabled={deletingId === prop.id}
-                          className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm disabled:opacity-50"
-                          title="Delete Property"
-                        >
-                          {deletingId === prop.id ? (
-                            <Loader2
-                              size={16}
-                              className="animate-spin text-red-600"
-                            />
-                          ) : (
-                            <Trash2 size={16} />
-                          )}
-                        </button>
-                      </div>
-                    </td>
+          <>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse whitespace-nowrap">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200">
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 rounded-tl-3xl">
+                      Property
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Location
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Price
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
+                      Status
+                    </th>
+                    <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right rounded-tr-3xl">
+                      Actions
+                    </th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {properties.map((prop) => (
+                    <tr
+                      key={prop.id}
+                      className="hover:bg-slate-50/50 transition-colors group"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-4">
+                          <div className="w-14 h-14 rounded-xl bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
+                            {prop.images?.[0] ? (
+                              <img
+                                src={prop.images[0]}
+                                alt={prop.title}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center text-slate-300">
+                                <Home size={20} />
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <p className="text-sm font-bold text-slate-900 line-clamp-1 max-w-[250px]">
+                              {prop.title}
+                            </p>
+                            <p className="text-xs font-medium text-slate-500 mt-0.5">
+                              ID: {prop.id.slice(-6).toUpperCase()}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600">
+                          <MapPin size={16} className="text-slate-400" />
+                          {prop.city}, {prop.state}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <p className="text-sm font-bold text-slate-900">
+                          {formatPrice(prop.priceInPaisa || prop.price)}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider border ${getStatusBadge(
+                            prop.status,
+                          )}`}
+                        >
+                          {prop.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-right">
+                        <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
+                          <Link
+                            href={`/admin/properties/${prop.id}`}
+                            className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-colors shadow-sm"
+                            title="Edit Property"
+                          >
+                            <Edit2 size={16} />
+                          </Link>
+                          <button
+                            onClick={() => handleDelete(prop.id)}
+                            disabled={deletingId === prop.id}
+                            className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-red-600 hover:border-red-200 transition-colors shadow-sm disabled:opacity-50"
+                            title="Delete Property"
+                          >
+                            {deletingId === prop.id ? (
+                              <Loader2
+                                size={16}
+                                className="animate-spin text-red-600"
+                              />
+                            ) : (
+                              <Trash2 size={16} />
+                            )}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
         )}
       </div>
+      {totalPages > 1 && (
+        <div className="p-6 border-t border-slate-200 bg-slate-50 rounded-b-3xl">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        </div>
+      )}
     </div>
   );
 }
