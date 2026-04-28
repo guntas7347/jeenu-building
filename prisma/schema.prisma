@@ -48,8 +48,9 @@ model Listing {
   pincode String
 
   // Pricing
-  price   Int
-  pricing Json? // detailed breakdown (taxes, maintenance, etc.)
+  price        Int
+  weeklyIncome Int?
+  pricing      Json? // detailed breakdown (taxes, maintenance, etc.)
 
   // Media
   images       String[] // URLs

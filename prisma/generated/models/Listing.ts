@@ -28,6 +28,7 @@ export type AggregateListing = {
 
 export type ListingAvgAggregateOutputType = {
   price: number | null
+  weeklyIncome: number | null
   beds: number | null
   baths: number | null
   garages: number | null
@@ -35,6 +36,7 @@ export type ListingAvgAggregateOutputType = {
 
 export type ListingSumAggregateOutputType = {
   price: number | null
+  weeklyIncome: number | null
   beds: number | null
   baths: number | null
   garages: number | null
@@ -54,6 +56,7 @@ export type ListingMinAggregateOutputType = {
   country: string | null
   pincode: string | null
   price: number | null
+  weeklyIncome: number | null
   brochureUrl: string | null
   floorPlanUrl: string | null
   beds: number | null
@@ -78,6 +81,7 @@ export type ListingMaxAggregateOutputType = {
   country: string | null
   pincode: string | null
   price: number | null
+  weeklyIncome: number | null
   brochureUrl: string | null
   floorPlanUrl: string | null
   beds: number | null
@@ -102,6 +106,7 @@ export type ListingCountAggregateOutputType = {
   country: number
   pincode: number
   price: number
+  weeklyIncome: number
   pricing: number
   images: number
   brochureUrl: number
@@ -122,6 +127,7 @@ export type ListingCountAggregateOutputType = {
 
 export type ListingAvgAggregateInputType = {
   price?: true
+  weeklyIncome?: true
   beds?: true
   baths?: true
   garages?: true
@@ -129,6 +135,7 @@ export type ListingAvgAggregateInputType = {
 
 export type ListingSumAggregateInputType = {
   price?: true
+  weeklyIncome?: true
   beds?: true
   baths?: true
   garages?: true
@@ -148,6 +155,7 @@ export type ListingMinAggregateInputType = {
   country?: true
   pincode?: true
   price?: true
+  weeklyIncome?: true
   brochureUrl?: true
   floorPlanUrl?: true
   beds?: true
@@ -172,6 +180,7 @@ export type ListingMaxAggregateInputType = {
   country?: true
   pincode?: true
   price?: true
+  weeklyIncome?: true
   brochureUrl?: true
   floorPlanUrl?: true
   beds?: true
@@ -196,6 +205,7 @@ export type ListingCountAggregateInputType = {
   country?: true
   pincode?: true
   price?: true
+  weeklyIncome?: true
   pricing?: true
   images?: true
   brochureUrl?: true
@@ -313,6 +323,7 @@ export type ListingGroupByOutputType = {
   country: string
   pincode: string
   price: number
+  weeklyIncome: number | null
   pricing: runtime.JsonValue | null
   images: string[]
   brochureUrl: string | null
@@ -366,6 +377,7 @@ export type ListingWhereInput = {
   country?: Prisma.StringFilter<"Listing"> | string
   pincode?: Prisma.StringFilter<"Listing"> | string
   price?: Prisma.IntFilter<"Listing"> | number
+  weeklyIncome?: Prisma.IntNullableFilter<"Listing"> | number | null
   pricing?: Prisma.JsonNullableFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
@@ -398,6 +410,7 @@ export type ListingOrderByWithRelationInput = {
   country?: Prisma.SortOrder
   pincode?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  weeklyIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   pricing?: Prisma.SortOrderInput | Prisma.SortOrder
   images?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -433,6 +446,7 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   country?: Prisma.StringFilter<"Listing"> | string
   pincode?: Prisma.StringFilter<"Listing"> | string
   price?: Prisma.IntFilter<"Listing"> | number
+  weeklyIncome?: Prisma.IntNullableFilter<"Listing"> | number | null
   pricing?: Prisma.JsonNullableFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
@@ -465,6 +479,7 @@ export type ListingOrderByWithAggregationInput = {
   country?: Prisma.SortOrder
   pincode?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  weeklyIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   pricing?: Prisma.SortOrderInput | Prisma.SortOrder
   images?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -503,6 +518,7 @@ export type ListingScalarWhereWithAggregatesInput = {
   country?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   pincode?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   price?: Prisma.IntWithAggregatesFilter<"Listing"> | number
+  weeklyIncome?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   pricing?: Prisma.JsonNullableWithAggregatesFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
@@ -533,6 +549,7 @@ export type ListingCreateInput = {
   country: string
   pincode: string
   price: number
+  weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -565,6 +582,7 @@ export type ListingUncheckedCreateInput = {
   country: string
   pincode: string
   price: number
+  weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -597,6 +615,7 @@ export type ListingUpdateInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -629,6 +648,7 @@ export type ListingUncheckedUpdateInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -661,6 +681,7 @@ export type ListingCreateManyInput = {
   country: string
   pincode: string
   price: number
+  weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -691,6 +712,7 @@ export type ListingUpdateManyMutationInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -721,6 +743,7 @@ export type ListingUncheckedUpdateManyInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -759,6 +782,7 @@ export type ListingCountOrderByAggregateInput = {
   country?: Prisma.SortOrder
   pincode?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  weeklyIncome?: Prisma.SortOrder
   pricing?: Prisma.SortOrder
   images?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrder
@@ -777,6 +801,7 @@ export type ListingCountOrderByAggregateInput = {
 
 export type ListingAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
+  weeklyIncome?: Prisma.SortOrder
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
@@ -796,6 +821,7 @@ export type ListingMaxOrderByAggregateInput = {
   country?: Prisma.SortOrder
   pincode?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  weeklyIncome?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrder
   floorPlanUrl?: Prisma.SortOrder
   beds?: Prisma.SortOrder
@@ -820,6 +846,7 @@ export type ListingMinOrderByAggregateInput = {
   country?: Prisma.SortOrder
   pincode?: Prisma.SortOrder
   price?: Prisma.SortOrder
+  weeklyIncome?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrder
   floorPlanUrl?: Prisma.SortOrder
   beds?: Prisma.SortOrder
@@ -832,6 +859,7 @@ export type ListingMinOrderByAggregateInput = {
 
 export type ListingSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
+  weeklyIncome?: Prisma.SortOrder
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
@@ -862,17 +890,17 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
-export type ListingUpdateimagesInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type ListingUpdateimagesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type ListingUpdatefeaturesInput = {
@@ -927,6 +955,7 @@ export type ListingCreateWithoutSavedByUsersInput = {
   country: string
   pincode: string
   price: number
+  weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -958,6 +987,7 @@ export type ListingUncheckedCreateWithoutSavedByUsersInput = {
   country: string
   pincode: string
   price: number
+  weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -1005,6 +1035,7 @@ export type ListingUpdateWithoutSavedByUsersInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1036,6 +1067,7 @@ export type ListingUncheckedUpdateWithoutSavedByUsersInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1067,6 +1099,7 @@ export type ListingCreateWithoutQueriesInput = {
   country: string
   pincode: string
   price: number
+  weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -1098,6 +1131,7 @@ export type ListingUncheckedCreateWithoutQueriesInput = {
   country: string
   pincode: string
   price: number
+  weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -1145,6 +1179,7 @@ export type ListingUpdateWithoutQueriesInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1176,6 +1211,7 @@ export type ListingUncheckedUpdateWithoutQueriesInput = {
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
   price?: Prisma.IntFieldUpdateOperationsInput | number
+  weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1247,6 +1283,7 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   country?: boolean
   pincode?: boolean
   price?: boolean
+  weeklyIncome?: boolean
   pricing?: boolean
   images?: boolean
   brochureUrl?: boolean
@@ -1280,6 +1317,7 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   country?: boolean
   pincode?: boolean
   price?: boolean
+  weeklyIncome?: boolean
   pricing?: boolean
   images?: boolean
   brochureUrl?: boolean
@@ -1310,6 +1348,7 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   country?: boolean
   pincode?: boolean
   price?: boolean
+  weeklyIncome?: boolean
   pricing?: boolean
   images?: boolean
   brochureUrl?: boolean
@@ -1340,6 +1379,7 @@ export type ListingSelectScalar = {
   country?: boolean
   pincode?: boolean
   price?: boolean
+  weeklyIncome?: boolean
   pricing?: boolean
   images?: boolean
   brochureUrl?: boolean
@@ -1356,7 +1396,7 @@ export type ListingSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "description" | "propertyType" | "status" | "badge" | "address" | "city" | "state" | "country" | "pincode" | "price" | "pricing" | "images" | "brochureUrl" | "floorPlanUrl" | "beds" | "baths" | "garages" | "measurements" | "features" | "inclusions" | "meta" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "description" | "propertyType" | "status" | "badge" | "address" | "city" | "state" | "country" | "pincode" | "price" | "weeklyIncome" | "pricing" | "images" | "brochureUrl" | "floorPlanUrl" | "beds" | "baths" | "garages" | "measurements" | "features" | "inclusions" | "meta" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   savedByUsers?: boolean | Prisma.Listing$savedByUsersArgs<ExtArgs>
   queries?: boolean | Prisma.Listing$queriesArgs<ExtArgs>
@@ -1385,6 +1425,7 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     country: string
     pincode: string
     price: number
+    weeklyIncome: number | null
     pricing: runtime.JsonValue | null
     images: string[]
     brochureUrl: string | null
@@ -1837,6 +1878,7 @@ export interface ListingFieldRefs {
   readonly country: Prisma.FieldRef<"Listing", 'String'>
   readonly pincode: Prisma.FieldRef<"Listing", 'String'>
   readonly price: Prisma.FieldRef<"Listing", 'Int'>
+  readonly weeklyIncome: Prisma.FieldRef<"Listing", 'Int'>
   readonly pricing: Prisma.FieldRef<"Listing", 'Json'>
   readonly images: Prisma.FieldRef<"Listing", 'String[]'>
   readonly brochureUrl: Prisma.FieldRef<"Listing", 'String'>

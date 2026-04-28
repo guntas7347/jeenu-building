@@ -772,6 +772,7 @@ export const ListingScalarFieldEnum = {
   country: 'country',
   pincode: 'pincode',
   price: 'price',
+  weeklyIncome: 'weeklyIncome',
   pricing: 'pricing',
   images: 'images',
   brochureUrl: 'brochureUrl',

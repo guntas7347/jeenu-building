@@ -17,6 +17,7 @@ import {
 import Link from "next/link";
 import PropertyGallery from "./PropertyGallery";
 import { formatPrice } from "@/lib/helpers";
+import MortgageCalculator from "@/components/MorgageCalculator";
 
 type Params = Promise<{ slug: string }>;
 
@@ -92,7 +93,7 @@ export default async function PropertyDetailPage({
       <PropertyGallery images={displayImages} title="Gallery" />
 
       {/* Main Content 2-Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+      <div className="grid grid-cols-1 mt-6 lg:grid-cols-12 gap-12 items-start">
         {/* Left Column: Details */}
         <div className="lg:col-span-8 space-y-12">
           {/* Identity & Header */}
@@ -264,6 +265,11 @@ export default async function PropertyDetailPage({
             </p>
           </div>
 
+          <MortgageCalculator
+            price={listing.price}
+            profitPerWeek={listing.weeklyIncome || 0}
+          />
+
           {/* Floor Plan Section */}
           {listing.floorPlanUrl && (
             <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-hidden">
@@ -287,76 +293,6 @@ export default async function PropertyDetailPage({
               </div>
             </div>
           )}
-
-          {/* Mortgage Calculator */}
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <div className="flex items-center gap-2 mb-6">
-              <Calculator className="text-blue-600" size={24} />
-              <h4 className="font-bold text-slate-900">Mortgage Calculator</h4>
-            </div>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Home Price
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                    $
-                  </span>
-                  <input
-                    className="w-full pl-8 pr-4 py-3 bg-slate-50 border-none outline-none rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-600/20"
-                    type="text"
-                    defaultValue={Number(listing.price) / 100}
-                    readOnly
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                    Down Payment
-                  </label>
-                  <div className="relative">
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-                      %
-                    </span>
-                    <input
-                      className="w-full px-4 py-3 bg-slate-50 border-none outline-none rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-600/20"
-                      type="number"
-                      defaultValue={20}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                    Interest Rate
-                  </label>
-                  <div className="relative">
-                    <span className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
-                      %
-                    </span>
-                    <input
-                      className="w-full px-4 py-3 bg-slate-50 border-none outline-none rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-600/20"
-                      type="number"
-                      step="0.1"
-                      defaultValue={5.8}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
-                  Loan Term
-                </label>
-                <select className="w-full px-4 py-3 bg-slate-50 border-none outline-none rounded-xl text-sm font-semibold focus:ring-2 focus:ring-blue-600/20 appearance-none cursor-pointer">
-                  <option value={30}>30 Years</option>
-                  <option value={25}>25 Years</option>
-                  <option value={20}>20 Years</option>
-                  <option value={15}>15 Years</option>
-                </select>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
 

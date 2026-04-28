@@ -35,6 +35,7 @@ export default function ListingFormPage({ params }: { params: Params }) {
     country: "India",
     pincode: "",
     price: "",
+    weeklyIncome: "",
     images: [] as string[],
     brochureUrl: "",
     floorPlanUrl: "",
@@ -142,6 +143,7 @@ export default function ListingFormPage({ params }: { params: Params }) {
         country: form.country,
         pincode: form.pincode,
         price: Number(form.price),
+        weeklyIncome: Number(form.weeklyIncome),
         images: form.images,
         brochureUrl: form.brochureUrl,
         floorPlanUrl: form.floorPlanUrl,
@@ -268,6 +270,14 @@ export default function ListingFormPage({ params }: { params: Params }) {
               type="number"
               name="price"
               value={form.price}
+              onChange={handleChange}
+              placeholder="e.g. 14500000"
+            />
+            <FormInput
+              label="Weekly Income"
+              type="number"
+              name="weeklyIncome"
+              value={form.weeklyIncome}
               onChange={handleChange}
               placeholder="e.g. 14500000"
             />

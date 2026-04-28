@@ -70,10 +70,25 @@ export default function PropertyGallery({
               <Expand className="w-6 h-6 text-white" />
             </div>
           </div>
+
+          {/* MOBILE ONLY: Floating photos counter (Hidden on desktop) */}
+          {allImages.length > 1 && (
+            <button
+              className="md:hidden absolute bottom-4 right-4 bg-black/60 backdrop-blur-md rounded-xl px-4 py-2 z-10 hover:bg-black/80 transition-colors"
+              onClick={(e) => {
+                e.stopPropagation();
+                setGridOpen(true);
+              }}
+            >
+              <span className="text-white text-xs font-bold tracking-wider">
+                1 / {allImages.length}
+              </span>
+            </button>
+          )}
         </div>
 
-        {/* Side images */}
-        <div className="col-span-12 md:col-span-5 grid grid-rows-2 gap-2">
+        {/* Side images - HIDDEN ON MOBILE (hidden md:grid) */}
+        <div className="hidden md:grid col-span-5 grid-rows-2 gap-2">
           {(sideImages.length === 2
             ? sideImages
             : [
@@ -92,7 +107,8 @@ export default function PropertyGallery({
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300" />
-              {/* "View all photos" overlay on last side image */}
+
+              {/* DESKTOP ONLY: "View all photos" overlay on last side image */}
               {i === 1 && allImages.length > 3 && (
                 <button
                   className="absolute inset-0 flex items-center justify-center"
@@ -101,7 +117,7 @@ export default function PropertyGallery({
                     setGridOpen(true);
                   }}
                 >
-                  <div className="bg-black/50 backdrop-blur-sm rounded-xl px-5 py-3">
+                  <div className="bg-black/50 backdrop-blur-sm rounded-xl px-5 py-3 transition-transform hover:scale-105">
                     <span className="text-white text-sm font-bold tracking-wider">
                       +{allImages.length - 3} Photos
                     </span>

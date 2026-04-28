@@ -7,15 +7,8 @@ export function useTheme() {
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
-    const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)",
-    ).matches;
-    const resolved =
-      saved === "dark" || saved === "light"
-        ? (saved as "light" | "dark")
-        : prefersDark
-          ? "dark"
-          : "light";
+
+    const resolved = saved === "dark" || saved === "light" ? saved : "light";
 
     setTheme(resolved);
     document.documentElement.classList.toggle("dark", resolved === "dark");
