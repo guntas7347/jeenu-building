@@ -2,6 +2,7 @@
 
 import prisma from "@/lib/prisma";
 import { FilterState } from "@/components/PropertyFilters";
+import { getSessionUser } from "../auth";
 
 export async function getFilteredListings(
   filters: FilterState,
@@ -64,12 +65,12 @@ export async function getFilteredListings(
 
     const [listings, totalCount] = await Promise.all([
       prisma.listing.findMany({
-        where,
+        where: { ...where, status: { not: "DRAFT" } },
         orderBy,
         skip,
         take: limit,
       }),
-      prisma.listing.count({ where }),
+      prisma.listing.count({ where: { ...where, status: { not: "DRAFT" } } }),
     ]);
 
     // 4. Serialize BigInts and handle JSON filtering for Area

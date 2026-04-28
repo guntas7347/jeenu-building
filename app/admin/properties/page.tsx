@@ -18,6 +18,7 @@ import {
   createListing,
 } from "@/lib/actions/listings";
 import { useRouter } from "next/navigation";
+import { formatPrice } from "@/lib/helpers";
 
 export default function AdminPropertiesPage() {
   const router = useRouter();
@@ -60,16 +61,6 @@ export default function AdminPropertiesPage() {
     }
   };
 
-  // Automatically convert stored paisa integers to formatted display currency
-  const formatPrice = (paisaValue: string | number | bigint) => {
-    const valueInStandardCurrency = Number(paisaValue) / 100;
-    return new Intl.NumberFormat("en-AU", {
-      style: "currency",
-      currency: "AUD",
-      maximumFractionDigits: 0,
-    }).format(valueInStandardCurrency);
-  };
-
   const getStatusBadge = (status: string) => {
     switch (status?.toUpperCase()) {
       case "AVAILABLE":
@@ -86,7 +77,7 @@ export default function AdminPropertiesPage() {
   const handleCreate = async () => {
     try {
       const data = await createListing();
-      router.push(`/dashboard/properties/${data.id}`);
+      router.push(`/admin/properties/${data.id}`);
     } catch (error) {
       console.error("Failed to create property:", error);
       alert("Failed to create property.");
@@ -217,7 +208,7 @@ export default function AdminPropertiesPage() {
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-2 opacity-80 group-hover:opacity-100 transition-opacity">
                         <Link
-                          href={`/dashboard/properties/${prop.id}`}
+                          href={`/admin/properties/${prop.id}`}
                           className="p-2 bg-white border border-slate-200 rounded-lg text-slate-600 hover:text-blue-600 hover:border-blue-200 transition-colors shadow-sm"
                           title="Edit Property"
                         >

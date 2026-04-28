@@ -1,9 +1,9 @@
 import { getListings } from "@/lib/actions/listings";
 import ClientPage from "./ClientPage";
 import { Metadata } from "next";
-import { Suspense } from "react"; // 1. Import Suspense
-import { Loader2 } from "lucide-react"; // Optional: For a nice fallback
-
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
+import { getSavedListingsIds } from "@/lib/actions/user";
 export const metadata: Metadata = {
   title: "Premium Real Estate Listings | EstateElite",
   description: "Browse our exclusive collection of luxury properties.",
@@ -11,9 +11,8 @@ export const metadata: Metadata = {
 
 export default async function ListingPage() {
   const initialListings = await getListings();
-
+  const savedListingsIds = await getSavedListingsIds();
   return (
-    // 2. Wrap the client component in a Suspense boundary
     <Suspense
       fallback={
         <div className="flex flex-col items-center justify-center min-h-screen">
@@ -22,7 +21,10 @@ export default async function ListingPage() {
         </div>
       }
     >
-      <ClientPage initialListings={initialListings} />
+      <ClientPage
+        initialListings={initialListings}
+        savedListingsIds={savedListingsIds}
+      />
     </Suspense>
   );
 }

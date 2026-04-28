@@ -4,19 +4,27 @@ import { useState, useEffect } from "react";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 import { getFilteredListings } from "@/lib/actions/getFilteredListings";
 import Pagination from "@/components/Pagination";
-import ListingCard from "./ListingCard";
+import ListingCard from "@/components/ListingCard";
 import { Loader2 } from "lucide-react";
-import GoogleLoginModal from "@/components/GoogleLoginModal";
 
 export default function ClientListing({
   initialListings,
   initialTotalPages = 1,
+  savedListingsIds = [],
 }: {
   initialListings: any[];
   initialTotalPages?: number;
+  savedListingsIds?: string[];
 }) {
-  // Data State
-  const [listings, setListings] = useState(initialListings);
+  const savedIdsSet = new Set(savedListingsIds);
+
+  const enrichListings = (data: any[]) =>
+    data.map((listing) => ({
+      ...listing,
+      saved: savedIdsSet.has(listing.id), // or listing.listingId
+    }));
+
+  const [listings, setListings] = useState(enrichListings(initialListings));
   const [totalCount, setTotalCount] = useState(initialListings.length);
 
   // UI & Pagination State
@@ -31,29 +39,26 @@ export default function ClientListing({
   // Effect to refetch whenever page, sort, or filters change
   useEffect(() => {
     const fetchListings = async () => {
-      // If no filters are active and we are on page 1 with default sort,
-      // we can just use the initial SSR data to save a network request!
       if (
         !activeFilters &&
         currentPage === 1 &&
         activeSort === "Newest Listings"
       ) {
-        setListings(initialListings);
+        setListings(enrichListings(initialListings)); // FIX
         setTotalPages(initialTotalPages);
         return;
       }
 
       setIsFiltering(true);
       try {
-        // Pass empty object if activeFilters is null
         const response = await getFilteredListings(
           activeFilters || ({} as FilterState),
           currentPage,
-          9, // 9 items per page fits a 3-column grid perfectly
+          9,
           activeSort,
         );
 
-        setListings(response.data);
+        setListings(enrichListings(response.data)); // FIX
         setTotalPages(response.totalPages);
         setTotalCount(response.totalCount);
       } catch (error) {
@@ -64,8 +69,7 @@ export default function ClientListing({
     };
 
     fetchListings();
-  }, [activeFilters, currentPage, activeSort]); // Dependencies trigger the refetch
-
+  }, [activeFilters, currentPage, activeSort]);
   const handleApplyFilters = (filters: FilterState) => {
     setActiveFilters(filters);
     setCurrentPage(1); // Always reset to page 1 when new filters are applied
@@ -165,7 +169,6 @@ export default function ClientListing({
           )}
         </section>
       </div>
-      <GoogleLoginModal isOpen={false} onClose={() => {}} />
     </main>
   );
 }

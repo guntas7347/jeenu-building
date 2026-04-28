@@ -3,6 +3,7 @@ import { Manrope } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import Providers from "./providers";
 
 const manrope = Manrope({
   subsets: ["latin"],
@@ -28,7 +29,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-on-background transition-colors duration-300">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

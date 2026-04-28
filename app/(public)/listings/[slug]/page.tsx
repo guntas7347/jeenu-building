@@ -16,19 +16,9 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import PropertyGallery from "./PropertyGallery";
+import { formatPrice } from "@/lib/helpers";
 
 type Params = Promise<{ slug: string }>;
-
-// Helper to format the BigInt paisa value back to a standard currency display
-const formatPrice = (paisaValue: bigint | number | string) => {
-  if (paisaValue == null) return "$0";
-  const value = Number(paisaValue) / 100;
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
-};
 
 // Helper to convert camelCase keys (e.g. builtUp) to Title Case (e.g. Built Up)
 const formatLabel = (key: string) => {

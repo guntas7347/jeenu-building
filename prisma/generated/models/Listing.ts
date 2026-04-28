@@ -34,7 +34,7 @@ export type ListingAvgAggregateOutputType = {
 }
 
 export type ListingSumAggregateOutputType = {
-  price: bigint | null
+  price: number | null
   beds: number | null
   baths: number | null
   garages: number | null
@@ -53,7 +53,7 @@ export type ListingMinAggregateOutputType = {
   state: string | null
   country: string | null
   pincode: string | null
-  price: bigint | null
+  price: number | null
   brochureUrl: string | null
   floorPlanUrl: string | null
   beds: number | null
@@ -77,7 +77,7 @@ export type ListingMaxAggregateOutputType = {
   state: string | null
   country: string | null
   pincode: string | null
-  price: bigint | null
+  price: number | null
   brochureUrl: string | null
   floorPlanUrl: string | null
   beds: number | null
@@ -312,7 +312,7 @@ export type ListingGroupByOutputType = {
   state: string
   country: string
   pincode: string
-  price: bigint
+  price: number
   pricing: runtime.JsonValue | null
   images: string[]
   brochureUrl: string | null
@@ -365,7 +365,7 @@ export type ListingWhereInput = {
   state?: Prisma.StringFilter<"Listing"> | string
   country?: Prisma.StringFilter<"Listing"> | string
   pincode?: Prisma.StringFilter<"Listing"> | string
-  price?: Prisma.BigIntFilter<"Listing"> | bigint | number
+  price?: Prisma.IntFilter<"Listing"> | number
   pricing?: Prisma.JsonNullableFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
@@ -432,7 +432,7 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   state?: Prisma.StringFilter<"Listing"> | string
   country?: Prisma.StringFilter<"Listing"> | string
   pincode?: Prisma.StringFilter<"Listing"> | string
-  price?: Prisma.BigIntFilter<"Listing"> | bigint | number
+  price?: Prisma.IntFilter<"Listing"> | number
   pricing?: Prisma.JsonNullableFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
@@ -502,7 +502,7 @@ export type ListingScalarWhereWithAggregatesInput = {
   state?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   country?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   pincode?: Prisma.StringWithAggregatesFilter<"Listing"> | string
-  price?: Prisma.BigIntWithAggregatesFilter<"Listing"> | bigint | number
+  price?: Prisma.IntWithAggregatesFilter<"Listing"> | number
   pricing?: Prisma.JsonNullableWithAggregatesFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
@@ -532,7 +532,7 @@ export type ListingCreateInput = {
   state: string
   country: string
   pincode: string
-  price: bigint | number
+  price: number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -564,7 +564,7 @@ export type ListingUncheckedCreateInput = {
   state: string
   country: string
   pincode: string
-  price: bigint | number
+  price: number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -596,7 +596,7 @@ export type ListingUpdateInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -628,7 +628,7 @@ export type ListingUncheckedUpdateInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -660,7 +660,7 @@ export type ListingCreateManyInput = {
   state: string
   country: string
   pincode: string
-  price: bigint | number
+  price: number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -690,7 +690,7 @@ export type ListingUpdateManyMutationInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -720,7 +720,7 @@ export type ListingUncheckedUpdateManyInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -854,25 +854,17 @@ export type ListingCreateinclusionsInput = {
   set: string[]
 }
 
-export type BigIntFieldUpdateOperationsInput = {
-  set?: bigint | number
-  increment?: bigint | number
-  decrement?: bigint | number
-  multiply?: bigint | number
-  divide?: bigint | number
-}
-
-export type ListingUpdateimagesInput = {
-  set?: string[]
-  push?: string | string[]
-}
-
 export type IntFieldUpdateOperationsInput = {
   set?: number
   increment?: number
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type ListingUpdateimagesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -934,7 +926,7 @@ export type ListingCreateWithoutSavedByUsersInput = {
   state: string
   country: string
   pincode: string
-  price: bigint | number
+  price: number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -965,7 +957,7 @@ export type ListingUncheckedCreateWithoutSavedByUsersInput = {
   state: string
   country: string
   pincode: string
-  price: bigint | number
+  price: number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -1012,7 +1004,7 @@ export type ListingUpdateWithoutSavedByUsersInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1043,7 +1035,7 @@ export type ListingUncheckedUpdateWithoutSavedByUsersInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1074,7 +1066,7 @@ export type ListingCreateWithoutQueriesInput = {
   state: string
   country: string
   pincode: string
-  price: bigint | number
+  price: number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -1105,7 +1097,7 @@ export type ListingUncheckedCreateWithoutQueriesInput = {
   state: string
   country: string
   pincode: string
-  price: bigint | number
+  price: number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
@@ -1152,7 +1144,7 @@ export type ListingUpdateWithoutQueriesInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1183,7 +1175,7 @@ export type ListingUncheckedUpdateWithoutQueriesInput = {
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
   pincode?: Prisma.StringFieldUpdateOperationsInput | string
-  price?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  price?: Prisma.IntFieldUpdateOperationsInput | number
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1392,7 +1384,7 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     state: string
     country: string
     pincode: string
-    price: bigint
+    price: number
     pricing: runtime.JsonValue | null
     images: string[]
     brochureUrl: string | null
@@ -1844,7 +1836,7 @@ export interface ListingFieldRefs {
   readonly state: Prisma.FieldRef<"Listing", 'String'>
   readonly country: Prisma.FieldRef<"Listing", 'String'>
   readonly pincode: Prisma.FieldRef<"Listing", 'String'>
-  readonly price: Prisma.FieldRef<"Listing", 'BigInt'>
+  readonly price: Prisma.FieldRef<"Listing", 'Int'>
   readonly pricing: Prisma.FieldRef<"Listing", 'Json'>
   readonly images: Prisma.FieldRef<"Listing", 'String[]'>
   readonly brochureUrl: Prisma.FieldRef<"Listing", 'String'>

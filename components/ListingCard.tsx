@@ -1,16 +1,11 @@
-import { Bath, Bed, Heart, MapPin, Square } from "lucide-react";
-import Link from "next/link";
+"use client";
 
-// Helper to format currency
-const formatPrice = (paisaValue: bigint | number | string) => {
-  if (paisaValue == null) return "$0";
-  const value = Number(paisaValue) / 100;
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
-};
+import { useState } from "react";
+import { Bath, Bed, Heart, MapPin, Square, Loader2 } from "lucide-react";
+import Link from "next/link";
+import { formatPrice } from "@/lib/helpers";
+import { useAuthModal } from "@/lib/authModalContext";
+import { saveListing, unSaveListing } from "@/lib/actions/user";
 
 const ListingCard = ({
   property,
@@ -21,11 +16,37 @@ const ListingCard = ({
   totalSize: string;
   displayImage: string;
 }) => {
+  const [saved, setSaved] = useState<boolean>(!!property.saved);
+  const [isNavigating, setIsNavigating] = useState(false);
+  const { openLoginModal, session } = useAuthModal();
+
+  const handleSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!session) return openLoginModal();
+    if (saved) {
+      unSaveListing(property.id);
+      setSaved(false);
+    } else {
+      saveListing(property.id);
+      setSaved(true);
+    }
+  };
+
   return (
     <Link
       href={`/listings/${property.slug}`}
-      className="group bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 block"
+      onClick={() => setIsNavigating(true)}
+      className="group relative bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all duration-300 block"
     >
+      {/* Loading Overlay */}
+      {isNavigating && (
+        <div className="absolute inset-0 z-50 bg-white/60 backdrop-blur-[2px] flex items-center justify-center transition-all duration-300">
+          <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
+        </div>
+      )}
+
       <div className="relative aspect-[4/3] overflow-hidden bg-slate-100">
         <img
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
@@ -42,12 +63,13 @@ const ListingCard = ({
           </div>
         )}
 
-        {/* Prevent default so clicking the heart doesn't trigger the Link navigation */}
+        {/* Save/Heart Button */}
         <button
-          // onClick={(e) => e.preventDefault()}
-          className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors shadow-sm"
+          onClick={handleSave}
+          className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur rounded-full flex items-center justify-center text-slate-400 hover:text-red-500 transition-colors shadow-sm z-10"
+          aria-label="Save Property"
         >
-          <Heart size={20} className="fill-current stroke-current" />
+          <Heart size={20} className={saved ? "fill-red-500" : ""} />
         </button>
       </div>
 

@@ -106,9 +106,9 @@ const SearchBar = () => {
       params.set("city", query);
     }
 
-    if (propertyType && propertyType !== "All Properties") {
-      params.set("propertyType", propertyType);
-    }
+    // if (propertyType && propertyType !== "All Properties") {
+    //   params.set("propertyType", propertyType);
+    // }
 
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);

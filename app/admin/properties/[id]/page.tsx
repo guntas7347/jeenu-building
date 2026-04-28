@@ -55,7 +55,7 @@ export default function ListingFormPage({ params }: { params: Params }) {
         // Redirect back if the listing doesn't exist
         if (!data) {
           alert("Listing not found.");
-          router.push("/dashboard/properties");
+          router.push("/admin/properties");
           return;
         }
 
@@ -78,7 +78,7 @@ export default function ListingFormPage({ params }: { params: Params }) {
       } catch (error) {
         console.error("Failed to load listing:", error);
         alert("Failed to load listing details.");
-        router.push("/dashboard/properties");
+        router.push("/admin/properties");
       } finally {
         setLoading(false);
       }
@@ -129,10 +129,6 @@ export default function ListingFormPage({ params }: { params: Params }) {
 
     setSaving(true);
     try {
-      const priceInPaisa = form.price
-        ? Math.round(parseFloat(form.price) * 100).toString()
-        : "0";
-
       const payload = {
         title: form.title,
         slug: form.slug, // Added to payload
@@ -145,7 +141,7 @@ export default function ListingFormPage({ params }: { params: Params }) {
         state: form.state,
         country: form.country,
         pincode: form.pincode,
-        price: priceInPaisa,
+        price: Number(form.price),
         images: form.images,
         brochureUrl: form.brochureUrl,
         floorPlanUrl: form.floorPlanUrl,
@@ -161,7 +157,7 @@ export default function ListingFormPage({ params }: { params: Params }) {
       await updateListing(id, payload);
 
       alert("Listing saved successfully!");
-      router.push("/dashboard/properties");
+      router.push("/admin/properties");
     } catch (err) {
       console.error(err);
       alert("Failed to save listing");
@@ -183,7 +179,7 @@ export default function ListingFormPage({ params }: { params: Params }) {
       <header className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link
-            href="/dashboard/properties"
+            href="/admin/properties"
             className="p-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors text-slate-600"
           >
             <ArrowLeft size={20} />

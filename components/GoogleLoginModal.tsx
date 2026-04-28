@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import GoogleLoginButton from "./GoogleLoginButton";
 import { X } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 const GoogleLoginModal = ({
   isOpen = false,
@@ -12,9 +13,18 @@ const GoogleLoginModal = ({
   // If the modal isn't set to open, don't render anything
   if (!isOpen) return null;
 
-  const handleGoogleClick = () => {
-    console.log("Initiating Google Login...");
-    // Add your real authentication logic here (e.g., Firebase, NextAuth, Supabase)
+  const [loading, setLoading] = useState(false);
+
+  const handleGoogleClick = async () => {
+    try {
+      setLoading(true);
+
+      await signIn("google", {
+        callbackUrl: "/",
+      });
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   return (
@@ -39,7 +49,7 @@ const GoogleLoginModal = ({
             Please sign in to continue.
           </p>
 
-          <GoogleLoginButton onClick={handleGoogleClick} />
+          <GoogleLoginButton onClick={handleGoogleClick} loading={loading} />
         </div>
       </div>
     </div>

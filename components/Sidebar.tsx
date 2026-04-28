@@ -11,11 +11,12 @@ import {
   X,
   LayoutDashboard,
 } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 const SIDEBAR_LINKS = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Properties", href: "/dashboard/properties", icon: Building2 },
-  { name: "Queries", href: "/dashboard/queries", icon: MessageSquare },
+  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+  { name: "Properties", href: "/admin/properties", icon: Building2 },
+  { name: "Queries", href: "/admin/queries", icon: MessageSquare },
 ];
 
 interface AdminSidebarProps {
@@ -25,6 +26,11 @@ interface AdminSidebarProps {
 
 export function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
   const pathname = usePathname();
+
+  const handleLogout = async () => {
+    const confirm = window.confirm("Are you sure you want to logout?");
+    if (confirm) await signOut();
+  };
 
   return (
     <>
@@ -95,13 +101,13 @@ export function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
             <Settings size={18} className="text-slate-400" />
             Settings
           </button>
-          <Link
-            href="/"
+          <button
+            onClick={handleLogout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all text-sm font-semibold text-left"
           >
             <LogOut size={18} className="text-red-500" />
             Log Out
-          </Link>
+          </button>
         </div>
       </aside>
     </>

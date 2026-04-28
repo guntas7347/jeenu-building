@@ -21,8 +21,8 @@ export const updateListing = async (id: string, data: any) => {
     data,
   });
   revalidatePaths([
-    `/dashboard/properties/`,
-    `/dashboard/properties/${updatedListing.slug}`,
+    `/admin/properties/`,
+    `/admin/properties/${updatedListing.id}`,
     `/listings/${updatedListing.slug}`,
     `/listings/`,
   ]);
@@ -33,7 +33,7 @@ export const createListing = async () => {
   // Generate a dynamic title so multiple drafts are easy to identify
   const draftTitle = `Draft Listing - ${new Date().toLocaleDateString()}`;
 
-  return await prisma.listing.create({
+  const newListing = await prisma.listing.create({
     data: {
       title: draftTitle,
       slug: draftTitle.toLowerCase().replace(/\s+/g, "-"),
@@ -74,6 +74,10 @@ export const createListing = async () => {
       meta: {},
     },
   });
+
+  revalidatePaths([`/admin/properties/`, `/admin/properties/${newListing.id}`]);
+
+  return newListing;
 };
 
 export const getListings = async () => {
@@ -83,6 +87,7 @@ export const getListings = async () => {
         not: "DRAFT",
       },
     },
+    orderBy: { updatedAt: "desc" },
   });
 };
 

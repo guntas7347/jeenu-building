@@ -2,8 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-
-
 @theme {
   /* Colors */
   --color-on-tertiary-fixed: #191c1e;
