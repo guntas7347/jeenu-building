@@ -20,6 +20,8 @@ import { formatPrice } from "@/lib/helpers";
 import MortgageCalculator from "@/components/MorgageCalculator";
 import InquiryForm from "@/components/InquiryForm";
 
+export const revalidate = false;
+
 type Params = Promise<{ slug: string }>;
 
 // Helper to convert camelCase keys (e.g. builtUp) to Title Case (e.g. Built Up)

@@ -63,7 +63,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 w-full z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-sm dark:bg-slate-900/95 dark:border-slate-800">
+    <header className="sticky top-0 w-full z-50 border-b border-slate-200 bg-white/95 backdrop-blur-md shadow-sm dark:bg-slate-900/95 dark:border-slate-800">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 h-20">
         {/* Logo & Desktop Nav */}
         <div className="flex items-center gap-10">

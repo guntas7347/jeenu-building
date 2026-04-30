@@ -6,8 +6,8 @@ import { getFilteredListings } from "@/lib/actions/getFilteredListings";
 import Pagination from "@/components/Pagination";
 import ListingCard from "@/components/ListingCard";
 import { Loader2 } from "lucide-react";
+import { getSavedListingsIds } from "@/lib/actions/user";
 
-// Define the shape of the initial data we expect from the server
 interface PaginatedResponse {
   data: any[];
   total: number;
@@ -17,43 +17,46 @@ interface PaginatedResponse {
 }
 
 export default function ClientListing({
-  initialData, // 1. Changed from initialListings array to the full object
-  savedListingsIds = [],
+  initialData,
 }: {
   initialData: PaginatedResponse;
-  savedListingsIds?: string[];
 }) {
+  // Use lowercase 'string' for TS primitives
+  const [savedListingsIds, setSavedListingsIds] = useState<string[]>([]);
   const savedIdsSet = new Set(savedListingsIds);
 
-  const enrichListings = (data: any[]) =>
-    data.map((listing) => ({
-      ...listing,
-      saved: savedIdsSet.has(listing.id), // or listing.listingId
-    }));
-
-  // 2. Initialize state using the new initialData object properties
-  const [listings, setListings] = useState(enrichListings(initialData.data));
+  // Keep the raw data in state without trying to enrich it up front
+  const [listings, setListings] = useState(initialData.data);
   const [totalCount, setTotalCount] = useState(initialData.total);
   const [totalPages, setTotalPages] = useState(initialData.totalPages);
 
-  // UI & Pagination State
   const [isFiltering, setIsFiltering] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-
-  // Filter & Sort State
   const [activeFilters, setActiveFilters] = useState<FilterState | null>(null);
   const [activeSort, setActiveSort] = useState("Newest Listings");
 
-  // Effect to refetch whenever page, sort, or filters change
+  // 1. Fetch saved IDs on mount
+  useEffect(() => {
+    const fetchSaved = async () => {
+      try {
+        const ids = await getSavedListingsIds();
+        setSavedListingsIds(ids);
+      } catch (e) {
+        console.error("Failed to load saved listings");
+      }
+    };
+    fetchSaved();
+  }, []);
+
+  // 2. Fetch filtered listings
   useEffect(() => {
     const fetchListings = async () => {
-      // 3. Fallback to initial server data to save a request
       if (
         !activeFilters &&
         currentPage === 1 &&
         activeSort === "Newest Listings"
       ) {
-        setListings(enrichListings(initialData.data));
+        setListings(initialData.data);
         setTotalPages(initialData.totalPages);
         setTotalCount(initialData.total);
         return;
@@ -68,9 +71,8 @@ export default function ClientListing({
           activeSort,
         );
 
-        setListings(enrichListings(response.data));
+        setListings(response.data);
         setTotalPages(response.totalPages);
-        // Ensure this matches whatever your getFilteredListings returns (total or totalCount)
         setTotalCount(response.totalCount);
       } catch (error) {
         console.error("Failed to filter listings", error);
@@ -80,29 +82,25 @@ export default function ClientListing({
     };
 
     fetchListings();
-  }, [activeFilters, currentPage, activeSort]);
+  }, [activeFilters, currentPage, activeSort, initialData]);
 
   const handleApplyFilters = (filters: FilterState) => {
     setActiveFilters(filters);
-    setCurrentPage(1); // Always reset to page 1 when new filters are applied
+    setCurrentPage(1);
   };
 
   return (
     <main className="pt-32 pb-16 max-w-7xl mx-auto px-6">
       <div className="flex flex-col lg:flex-row gap-8 items-start">
-        {/* Sticky Filters Sidebar */}
         <PropertyFilters onApply={handleApplyFilters} />
 
-        {/* Listings Section */}
         <section className="flex-1 w-full">
-          {/* Sorting & Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">
                 Premium Listings
               </h1>
               <p className="text-slate-500 text-sm mt-1">
-                {/* 4. Display totalCount so the user knows how many exist across all pages */}
                 Showing {totalCount} properties
                 {activeFilters && " (Filtered)"}
               </p>
@@ -115,7 +113,7 @@ export default function ClientListing({
                 value={activeSort}
                 onChange={(e) => {
                   setActiveSort(e.target.value);
-                  setCurrentPage(1); // Reset to page 1 on sort change
+                  setCurrentPage(1);
                 }}
                 className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500/20 outline-none cursor-pointer min-w-[160px]"
               >
@@ -126,7 +124,6 @@ export default function ClientListing({
             </div>
           </div>
 
-          {/* Grid or Loader */}
           {isFiltering ? (
             <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-3xl border border-slate-100 shadow-sm">
               <Loader2 className="animate-spin text-blue-600 mb-4" size={48} />
@@ -143,10 +140,14 @@ export default function ClientListing({
                     property.images?.[0] ||
                     "https://placehold.co/800x600/f8fafc/94a3b8?text=No+Image";
 
+                  // Dynamically inject the 'saved' state right before passing it down!
+                  const isSaved = savedIdsSet.has(property.id);
+                  const enrichedProperty = { ...property, saved: isSaved };
+
                   return (
                     <ListingCard
-                      key={property.id}
-                      property={property}
+                      key={enrichedProperty.id}
+                      property={enrichedProperty}
                       totalSize={totalSize}
                       displayImage={displayImage}
                     />
@@ -169,7 +170,6 @@ export default function ClientListing({
             </div>
           )}
 
-          {/* Pagination */}
           {!isFiltering && totalPages > 1 && (
             <Pagination
               currentPage={currentPage}

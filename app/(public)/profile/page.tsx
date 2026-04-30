@@ -5,7 +5,7 @@ import { getUserProfile } from "@/lib/actions/user";
 import ProfileCard from "@/components/ProfileCard";
 import EditProfileModal from "@/components/EditProfileModal";
 import ListingCard from "@/components/ListingCard";
-import { Loader2, Bookmark, User as UserIcon } from "lucide-react";
+import { Bookmark, User as UserIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LoadingProfile from "./LoadingProfile";
 
