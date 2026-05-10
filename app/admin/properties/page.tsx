@@ -16,6 +16,7 @@ import {
   getListings,
   deleteListing,
   createListing,
+  getListingsAdmin,
 } from "@/lib/actions/listings";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/helpers";
@@ -42,7 +43,7 @@ export default function AdminPropertiesPage() {
 
   const fetchProperties = async () => {
     try {
-      const data = await getListings(currentPage);
+      const data = await getListingsAdmin(currentPage);
       setProperties(data.data || []);
       setTotalPages(data.totalPages);
     } catch (error) {

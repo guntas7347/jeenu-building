@@ -11,7 +11,7 @@ export const getListingById = async (id: string) => {
 
 export const getListingBySlug = async (slug: string) => {
   return await prisma.listing.findUnique({
-    where: { slug, status: { not: "DRAFT" } },
+    where: { slug, isPublished: true },
   });
 };
 
@@ -83,25 +83,68 @@ export const createListing = async () => {
 export const getListings = async (
   currentPage: number = 1,
   sizePerPage: number = 10,
+  featuredOnly = false,
 ) => {
   const page = Math.max(currentPage, 1);
   const size = Math.max(sizePerPage, 1);
   const skip = (page - 1) * size;
 
-  const [data, total] = await prisma.$transaction([
+  const where: any = {
+    isPublished: true,
+  };
+
+  if (featuredOnly) {
+    where.isFeatured = true;
+  }
+
+  const [data, total] = await Promise.all([
     prisma.listing.findMany({
-      where: {
-        status: { not: "DRAFT" },
+      where,
+      orderBy: { updatedAt: "desc" },
+      skip,
+      take: size,
+      select: {
+        id: true,
+        title: true,
+        images: true,
+        badge: true,
+        status: true,
+        slug: true,
+        price: true,
+        city: true,
+        state: true,
+        beds: true,
+        baths: true,
+        measurements: true,
       },
+    }),
+    prisma.listing.count({ where }),
+  ]);
+
+  return {
+    data,
+    total,
+    currentPage: page,
+    sizePerPage: size,
+    totalPages: Math.ceil(total / size),
+  };
+};
+
+export const getListingsAdmin = async (
+  currentPage: number = 1,
+  sizePerPage: number = 10,
+) => {
+  const page = Math.max(currentPage, 1);
+  const size = Math.max(sizePerPage, 1);
+  const skip = (page - 1) * size;
+
+  const [data, total] = await Promise.all([
+    prisma.listing.findMany({
       orderBy: { updatedAt: "desc" },
       skip,
       take: size,
     }),
-    prisma.listing.count({
-      where: {
-        status: { not: "DRAFT" },
-      },
-    }),
+    prisma.listing.count(),
   ]);
 
   return {
@@ -130,7 +173,7 @@ export const createSampleListings = async () => {
       baths: 4,
       garages: 2,
       type: "Villa",
-      sqft: { total: 4500, built: 3800, carpet: 3200 },
+      msq: { total: 4500, built: 3800, carpet: 3200 },
       images: [
         "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
         "https://images.unsplash.com/photo-1564013799919-ab600027ffc6",
@@ -145,7 +188,7 @@ export const createSampleListings = async () => {
       baths: 2,
       garages: 1,
       type: "Apartment",
-      sqft: { total: 1100, built: 950, carpet: 850 },
+      msq: { total: 1100, built: 950, carpet: 850 },
       images: ["https://images.unsplash.com/photo-1493809842364-78817add7ffb"],
     },
     {
@@ -157,7 +200,7 @@ export const createSampleListings = async () => {
       baths: 3,
       garages: 2,
       type: "House",
-      sqft: { total: 3200, built: 2600, carpet: 2200 },
+      msq: { total: 3200, built: 2600, carpet: 2200 },
       images: ["https://images.unsplash.com/photo-1570129477492-45c003edd2be"],
     },
     {
@@ -169,7 +212,7 @@ export const createSampleListings = async () => {
       baths: 2,
       garages: 1,
       type: "Condo",
-      sqft: { total: 1000, built: 880, carpet: 800 },
+      msq: { total: 1000, built: 880, carpet: 800 },
       images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"],
     },
     {
@@ -181,7 +224,7 @@ export const createSampleListings = async () => {
       baths: 3,
       garages: 2,
       type: "House",
-      sqft: { total: 2800, built: 2400, carpet: 2000 },
+      msq: { total: 2800, built: 2400, carpet: 2000 },
       images: ["https://images.unsplash.com/photo-1600585154340-be6161a56a0c"],
     },
     {
@@ -193,7 +236,7 @@ export const createSampleListings = async () => {
       baths: 2,
       garages: 2,
       type: "Townhouse",
-      sqft: { total: 1900, built: 1600, carpet: 1400 },
+      msq: { total: 1900, built: 1600, carpet: 1400 },
       images: ["https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6"],
     },
     {
@@ -205,7 +248,7 @@ export const createSampleListings = async () => {
       baths: 4,
       garages: 3,
       type: "Penthouse",
-      sqft: { total: 4200, built: 3500, carpet: 3000 },
+      msq: { total: 4200, built: 3500, carpet: 3000 },
       images: ["https://images.unsplash.com/photo-1494526585095-c41746248156"],
     },
     {
@@ -217,7 +260,7 @@ export const createSampleListings = async () => {
       baths: 2,
       garages: 1,
       type: "Cottage",
-      sqft: { total: 1500, built: 1300, carpet: 1100 },
+      msq: { total: 1500, built: 1300, carpet: 1100 },
       images: ["https://images.unsplash.com/photo-1441974231531-c6227db76b6e"],
     },
     {
@@ -229,7 +272,7 @@ export const createSampleListings = async () => {
       baths: 3,
       garages: 2,
       type: "Villa",
-      sqft: { total: 2600, built: 2200, carpet: 1800 },
+      msq: { total: 2600, built: 2200, carpet: 1800 },
       images: ["https://images.unsplash.com/photo-1501183638710-841dd1904471"],
     },
     {
@@ -241,7 +284,7 @@ export const createSampleListings = async () => {
       baths: 2,
       garages: 2,
       type: "House",
-      sqft: { total: 2100, built: 1800, carpet: 1500 },
+      msq: { total: 2100, built: 1800, carpet: 1500 },
       images: ["https://images.unsplash.com/photo-1507089947368-19c1da9775ae"],
     },
   ];
@@ -273,9 +316,9 @@ export const createSampleListings = async () => {
           garages: item.garages,
 
           measurements: {
-            totalSize: item.sqft.total.toString(),
-            builtUp: item.sqft.built.toString(),
-            carpet: item.sqft.carpet.toString(),
+            totalSize: item.msq.total.toString(),
+            builtUp: item.msq.built.toString(),
+            carpet: item.msq.carpet.toString(),
           },
 
           features: ["Air Conditioning", "Parking", "Power Backup"],

@@ -32,6 +32,7 @@ export type ListingAvgAggregateOutputType = {
   beds: number | null
   baths: number | null
   garages: number | null
+  totalSize: number | null
 }
 
 export type ListingSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type ListingSumAggregateOutputType = {
   beds: number | null
   baths: number | null
   garages: number | null
+  totalSize: number | null
 }
 
 export type ListingMinAggregateOutputType = {
@@ -62,6 +64,9 @@ export type ListingMinAggregateOutputType = {
   beds: number | null
   baths: number | null
   garages: number | null
+  totalSize: number | null
+  isPublished: boolean | null
+  isFeatured: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -87,6 +92,9 @@ export type ListingMaxAggregateOutputType = {
   beds: number | null
   baths: number | null
   garages: number | null
+  totalSize: number | null
+  isPublished: boolean | null
+  isFeatured: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -114,10 +122,13 @@ export type ListingCountAggregateOutputType = {
   beds: number
   baths: number
   garages: number
+  totalSize: number
   measurements: number
   features: number
   inclusions: number
   meta: number
+  isPublished: number
+  isFeatured: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -131,6 +142,7 @@ export type ListingAvgAggregateInputType = {
   beds?: true
   baths?: true
   garages?: true
+  totalSize?: true
 }
 
 export type ListingSumAggregateInputType = {
@@ -139,6 +151,7 @@ export type ListingSumAggregateInputType = {
   beds?: true
   baths?: true
   garages?: true
+  totalSize?: true
 }
 
 export type ListingMinAggregateInputType = {
@@ -161,6 +174,9 @@ export type ListingMinAggregateInputType = {
   beds?: true
   baths?: true
   garages?: true
+  totalSize?: true
+  isPublished?: true
+  isFeatured?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -186,6 +202,9 @@ export type ListingMaxAggregateInputType = {
   beds?: true
   baths?: true
   garages?: true
+  totalSize?: true
+  isPublished?: true
+  isFeatured?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -213,10 +232,13 @@ export type ListingCountAggregateInputType = {
   beds?: true
   baths?: true
   garages?: true
+  totalSize?: true
   measurements?: true
   features?: true
   inclusions?: true
   meta?: true
+  isPublished?: true
+  isFeatured?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -313,28 +335,31 @@ export type ListingGroupByOutputType = {
   id: string
   title: string
   slug: string
-  description: string
+  description: string | null
   propertyType: string
   status: string
   badge: string | null
-  address: string
-  city: string
+  address: string | null
+  city: string | null
   state: string
   country: string
-  pincode: string
+  pincode: string | null
   price: number
   weeklyIncome: number | null
   pricing: runtime.JsonValue | null
   images: string[]
   brochureUrl: string | null
   floorPlanUrl: string | null
-  beds: number
-  baths: number
+  beds: number | null
+  baths: number | null
   garages: number | null
+  totalSize: number | null
   measurements: runtime.JsonValue | null
   features: string[]
   inclusions: string[]
   meta: runtime.JsonValue | null
+  isPublished: boolean
+  isFeatured: boolean
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -367,28 +392,31 @@ export type ListingWhereInput = {
   id?: Prisma.StringFilter<"Listing"> | string
   title?: Prisma.StringFilter<"Listing"> | string
   slug?: Prisma.StringFilter<"Listing"> | string
-  description?: Prisma.StringFilter<"Listing"> | string
+  description?: Prisma.StringNullableFilter<"Listing"> | string | null
   propertyType?: Prisma.StringFilter<"Listing"> | string
   status?: Prisma.StringFilter<"Listing"> | string
   badge?: Prisma.StringNullableFilter<"Listing"> | string | null
-  address?: Prisma.StringFilter<"Listing"> | string
-  city?: Prisma.StringFilter<"Listing"> | string
+  address?: Prisma.StringNullableFilter<"Listing"> | string | null
+  city?: Prisma.StringNullableFilter<"Listing"> | string | null
   state?: Prisma.StringFilter<"Listing"> | string
   country?: Prisma.StringFilter<"Listing"> | string
-  pincode?: Prisma.StringFilter<"Listing"> | string
+  pincode?: Prisma.StringNullableFilter<"Listing"> | string | null
   price?: Prisma.IntFilter<"Listing"> | number
   weeklyIncome?: Prisma.IntNullableFilter<"Listing"> | number | null
   pricing?: Prisma.JsonNullableFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
   floorPlanUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
-  beds?: Prisma.IntFilter<"Listing"> | number
-  baths?: Prisma.IntFilter<"Listing"> | number
+  beds?: Prisma.IntNullableFilter<"Listing"> | number | null
+  baths?: Prisma.IntNullableFilter<"Listing"> | number | null
   garages?: Prisma.IntNullableFilter<"Listing"> | number | null
+  totalSize?: Prisma.IntNullableFilter<"Listing"> | number | null
   measurements?: Prisma.JsonNullableFilter<"Listing">
   features?: Prisma.StringNullableListFilter<"Listing">
   inclusions?: Prisma.StringNullableListFilter<"Listing">
   meta?: Prisma.JsonNullableFilter<"Listing">
+  isPublished?: Prisma.BoolFilter<"Listing"> | boolean
+  isFeatured?: Prisma.BoolFilter<"Listing"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -400,28 +428,31 @@ export type ListingOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   propertyType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   badge?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  city?: Prisma.SortOrderInput | Prisma.SortOrder
   state?: Prisma.SortOrder
   country?: Prisma.SortOrder
-  pincode?: Prisma.SortOrder
+  pincode?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrder
   weeklyIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   pricing?: Prisma.SortOrderInput | Prisma.SortOrder
   images?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   floorPlanUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  beds?: Prisma.SortOrder
-  baths?: Prisma.SortOrder
+  beds?: Prisma.SortOrderInput | Prisma.SortOrder
+  baths?: Prisma.SortOrderInput | Prisma.SortOrder
   garages?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalSize?: Prisma.SortOrderInput | Prisma.SortOrder
   measurements?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
   inclusions?: Prisma.SortOrder
   meta?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPublished?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -436,28 +467,31 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.ListingWhereInput[]
   NOT?: Prisma.ListingWhereInput | Prisma.ListingWhereInput[]
   title?: Prisma.StringFilter<"Listing"> | string
-  description?: Prisma.StringFilter<"Listing"> | string
+  description?: Prisma.StringNullableFilter<"Listing"> | string | null
   propertyType?: Prisma.StringFilter<"Listing"> | string
   status?: Prisma.StringFilter<"Listing"> | string
   badge?: Prisma.StringNullableFilter<"Listing"> | string | null
-  address?: Prisma.StringFilter<"Listing"> | string
-  city?: Prisma.StringFilter<"Listing"> | string
+  address?: Prisma.StringNullableFilter<"Listing"> | string | null
+  city?: Prisma.StringNullableFilter<"Listing"> | string | null
   state?: Prisma.StringFilter<"Listing"> | string
   country?: Prisma.StringFilter<"Listing"> | string
-  pincode?: Prisma.StringFilter<"Listing"> | string
+  pincode?: Prisma.StringNullableFilter<"Listing"> | string | null
   price?: Prisma.IntFilter<"Listing"> | number
   weeklyIncome?: Prisma.IntNullableFilter<"Listing"> | number | null
   pricing?: Prisma.JsonNullableFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
   floorPlanUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
-  beds?: Prisma.IntFilter<"Listing"> | number
-  baths?: Prisma.IntFilter<"Listing"> | number
+  beds?: Prisma.IntNullableFilter<"Listing"> | number | null
+  baths?: Prisma.IntNullableFilter<"Listing"> | number | null
   garages?: Prisma.IntNullableFilter<"Listing"> | number | null
+  totalSize?: Prisma.IntNullableFilter<"Listing"> | number | null
   measurements?: Prisma.JsonNullableFilter<"Listing">
   features?: Prisma.StringNullableListFilter<"Listing">
   inclusions?: Prisma.StringNullableListFilter<"Listing">
   meta?: Prisma.JsonNullableFilter<"Listing">
+  isPublished?: Prisma.BoolFilter<"Listing"> | boolean
+  isFeatured?: Prisma.BoolFilter<"Listing"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -469,28 +503,31 @@ export type ListingOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   title?: Prisma.SortOrder
   slug?: Prisma.SortOrder
-  description?: Prisma.SortOrder
+  description?: Prisma.SortOrderInput | Prisma.SortOrder
   propertyType?: Prisma.SortOrder
   status?: Prisma.SortOrder
   badge?: Prisma.SortOrderInput | Prisma.SortOrder
-  address?: Prisma.SortOrder
-  city?: Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  city?: Prisma.SortOrderInput | Prisma.SortOrder
   state?: Prisma.SortOrder
   country?: Prisma.SortOrder
-  pincode?: Prisma.SortOrder
+  pincode?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrder
   weeklyIncome?: Prisma.SortOrderInput | Prisma.SortOrder
   pricing?: Prisma.SortOrderInput | Prisma.SortOrder
   images?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   floorPlanUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  beds?: Prisma.SortOrder
-  baths?: Prisma.SortOrder
+  beds?: Prisma.SortOrderInput | Prisma.SortOrder
+  baths?: Prisma.SortOrderInput | Prisma.SortOrder
   garages?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalSize?: Prisma.SortOrderInput | Prisma.SortOrder
   measurements?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
   inclusions?: Prisma.SortOrder
   meta?: Prisma.SortOrderInput | Prisma.SortOrder
+  isPublished?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -508,28 +545,31 @@ export type ListingScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   title?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   slug?: Prisma.StringWithAggregatesFilter<"Listing"> | string
-  description?: Prisma.StringWithAggregatesFilter<"Listing"> | string
+  description?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   propertyType?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   status?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   badge?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
-  address?: Prisma.StringWithAggregatesFilter<"Listing"> | string
-  city?: Prisma.StringWithAggregatesFilter<"Listing"> | string
+  address?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
+  city?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   state?: Prisma.StringWithAggregatesFilter<"Listing"> | string
   country?: Prisma.StringWithAggregatesFilter<"Listing"> | string
-  pincode?: Prisma.StringWithAggregatesFilter<"Listing"> | string
+  pincode?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   price?: Prisma.IntWithAggregatesFilter<"Listing"> | number
   weeklyIncome?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   pricing?: Prisma.JsonNullableWithAggregatesFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
   floorPlanUrl?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
-  beds?: Prisma.IntWithAggregatesFilter<"Listing"> | number
-  baths?: Prisma.IntWithAggregatesFilter<"Listing"> | number
+  beds?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
+  baths?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   garages?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
+  totalSize?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   measurements?: Prisma.JsonNullableWithAggregatesFilter<"Listing">
   features?: Prisma.StringNullableListFilter<"Listing">
   inclusions?: Prisma.StringNullableListFilter<"Listing">
   meta?: Prisma.JsonNullableWithAggregatesFilter<"Listing">
+  isPublished?: Prisma.BoolWithAggregatesFilter<"Listing"> | boolean
+  isFeatured?: Prisma.BoolWithAggregatesFilter<"Listing"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Listing"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Listing"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
@@ -539,28 +579,31 @@ export type ListingCreateInput = {
   id?: string
   title: string
   slug: string
-  description: string
+  description?: string | null
   propertyType: string
   status?: string
   badge?: string | null
-  address: string
-  city: string
+  address?: string | null
+  city?: string | null
   state: string
-  country: string
-  pincode: string
+  country?: string
+  pincode?: string | null
   price: number
   weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
   floorPlanUrl?: string | null
-  beds: number
-  baths: number
+  beds?: number | null
+  baths?: number | null
   garages?: number | null
+  totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
   inclusions?: Prisma.ListingCreateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -572,28 +615,31 @@ export type ListingUncheckedCreateInput = {
   id?: string
   title: string
   slug: string
-  description: string
+  description?: string | null
   propertyType: string
   status?: string
   badge?: string | null
-  address: string
-  city: string
+  address?: string | null
+  city?: string | null
   state: string
-  country: string
-  pincode: string
+  country?: string
+  pincode?: string | null
   price: number
   weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
   floorPlanUrl?: string | null
-  beds: number
-  baths: number
+  beds?: number | null
+  baths?: number | null
   garages?: number | null
+  totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
   inclusions?: Prisma.ListingCreateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -605,28 +651,31 @@ export type ListingUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
-  pincode?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  beds?: Prisma.IntFieldUpdateOperationsInput | number
-  baths?: Prisma.IntFieldUpdateOperationsInput | number
+  beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
   inclusions?: Prisma.ListingUpdateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -638,28 +687,31 @@ export type ListingUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
-  pincode?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  beds?: Prisma.IntFieldUpdateOperationsInput | number
-  baths?: Prisma.IntFieldUpdateOperationsInput | number
+  beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
   inclusions?: Prisma.ListingUpdateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -671,28 +723,31 @@ export type ListingCreateManyInput = {
   id?: string
   title: string
   slug: string
-  description: string
+  description?: string | null
   propertyType: string
   status?: string
   badge?: string | null
-  address: string
-  city: string
+  address?: string | null
+  city?: string | null
   state: string
-  country: string
-  pincode: string
+  country?: string
+  pincode?: string | null
   price: number
   weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
   floorPlanUrl?: string | null
-  beds: number
-  baths: number
+  beds?: number | null
+  baths?: number | null
   garages?: number | null
+  totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
   inclusions?: Prisma.ListingCreateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -702,28 +757,31 @@ export type ListingUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
-  pincode?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  beds?: Prisma.IntFieldUpdateOperationsInput | number
-  baths?: Prisma.IntFieldUpdateOperationsInput | number
+  beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
   inclusions?: Prisma.ListingUpdateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -733,28 +791,31 @@ export type ListingUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
-  pincode?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  beds?: Prisma.IntFieldUpdateOperationsInput | number
-  baths?: Prisma.IntFieldUpdateOperationsInput | number
+  beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
   inclusions?: Prisma.ListingUpdateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -790,10 +851,13 @@ export type ListingCountOrderByAggregateInput = {
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
+  totalSize?: Prisma.SortOrder
   measurements?: Prisma.SortOrder
   features?: Prisma.SortOrder
   inclusions?: Prisma.SortOrder
   meta?: Prisma.SortOrder
+  isPublished?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -805,6 +869,7 @@ export type ListingAvgOrderByAggregateInput = {
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
+  totalSize?: Prisma.SortOrder
 }
 
 export type ListingMaxOrderByAggregateInput = {
@@ -827,6 +892,9 @@ export type ListingMaxOrderByAggregateInput = {
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
+  totalSize?: Prisma.SortOrder
+  isPublished?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -852,6 +920,9 @@ export type ListingMinOrderByAggregateInput = {
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
+  totalSize?: Prisma.SortOrder
+  isPublished?: Prisma.SortOrder
+  isFeatured?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -863,6 +934,7 @@ export type ListingSumOrderByAggregateInput = {
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
+  totalSize?: Prisma.SortOrder
 }
 
 export type ListingScalarRelationFilter = {
@@ -945,28 +1017,31 @@ export type ListingCreateWithoutSavedByUsersInput = {
   id?: string
   title: string
   slug: string
-  description: string
+  description?: string | null
   propertyType: string
   status?: string
   badge?: string | null
-  address: string
-  city: string
+  address?: string | null
+  city?: string | null
   state: string
-  country: string
-  pincode: string
+  country?: string
+  pincode?: string | null
   price: number
   weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
   floorPlanUrl?: string | null
-  beds: number
-  baths: number
+  beds?: number | null
+  baths?: number | null
   garages?: number | null
+  totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
   inclusions?: Prisma.ListingCreateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -977,28 +1052,31 @@ export type ListingUncheckedCreateWithoutSavedByUsersInput = {
   id?: string
   title: string
   slug: string
-  description: string
+  description?: string | null
   propertyType: string
   status?: string
   badge?: string | null
-  address: string
-  city: string
+  address?: string | null
+  city?: string | null
   state: string
-  country: string
-  pincode: string
+  country?: string
+  pincode?: string | null
   price: number
   weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
   floorPlanUrl?: string | null
-  beds: number
-  baths: number
+  beds?: number | null
+  baths?: number | null
   garages?: number | null
+  totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
   inclusions?: Prisma.ListingCreateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1025,28 +1103,31 @@ export type ListingUpdateWithoutSavedByUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
-  pincode?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  beds?: Prisma.IntFieldUpdateOperationsInput | number
-  baths?: Prisma.IntFieldUpdateOperationsInput | number
+  beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
   inclusions?: Prisma.ListingUpdateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1057,28 +1138,31 @@ export type ListingUncheckedUpdateWithoutSavedByUsersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
-  pincode?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  beds?: Prisma.IntFieldUpdateOperationsInput | number
-  baths?: Prisma.IntFieldUpdateOperationsInput | number
+  beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
   inclusions?: Prisma.ListingUpdateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1089,28 +1173,31 @@ export type ListingCreateWithoutQueriesInput = {
   id?: string
   title: string
   slug: string
-  description: string
+  description?: string | null
   propertyType: string
   status?: string
   badge?: string | null
-  address: string
-  city: string
+  address?: string | null
+  city?: string | null
   state: string
-  country: string
-  pincode: string
+  country?: string
+  pincode?: string | null
   price: number
   weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
   floorPlanUrl?: string | null
-  beds: number
-  baths: number
+  beds?: number | null
+  baths?: number | null
   garages?: number | null
+  totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
   inclusions?: Prisma.ListingCreateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1121,28 +1208,31 @@ export type ListingUncheckedCreateWithoutQueriesInput = {
   id?: string
   title: string
   slug: string
-  description: string
+  description?: string | null
   propertyType: string
   status?: string
   badge?: string | null
-  address: string
-  city: string
+  address?: string | null
+  city?: string | null
   state: string
-  country: string
-  pincode: string
+  country?: string
+  pincode?: string | null
   price: number
   weeklyIncome?: number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
   floorPlanUrl?: string | null
-  beds: number
-  baths: number
+  beds?: number | null
+  baths?: number | null
   garages?: number | null
+  totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
   inclusions?: Prisma.ListingCreateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   deletedAt?: Date | string | null
@@ -1169,28 +1259,31 @@ export type ListingUpdateWithoutQueriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
-  pincode?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  beds?: Prisma.IntFieldUpdateOperationsInput | number
-  baths?: Prisma.IntFieldUpdateOperationsInput | number
+  beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
   inclusions?: Prisma.ListingUpdateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1201,28 +1294,31 @@ export type ListingUncheckedUpdateWithoutQueriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   title?: Prisma.StringFieldUpdateOperationsInput | string
   slug?: Prisma.StringFieldUpdateOperationsInput | string
-  description?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   propertyType?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.StringFieldUpdateOperationsInput | string
   badge?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  address?: Prisma.StringFieldUpdateOperationsInput | string
-  city?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   state?: Prisma.StringFieldUpdateOperationsInput | string
   country?: Prisma.StringFieldUpdateOperationsInput | string
-  pincode?: Prisma.StringFieldUpdateOperationsInput | string
+  pincode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.IntFieldUpdateOperationsInput | number
   weeklyIncome?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  beds?: Prisma.IntFieldUpdateOperationsInput | number
-  baths?: Prisma.IntFieldUpdateOperationsInput | number
+  beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
   inclusions?: Prisma.ListingUpdateinclusionsInput | string[]
   meta?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  isPublished?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isFeatured?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1291,10 +1387,13 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   beds?: boolean
   baths?: boolean
   garages?: boolean
+  totalSize?: boolean
   measurements?: boolean
   features?: boolean
   inclusions?: boolean
   meta?: boolean
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1325,10 +1424,13 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   beds?: boolean
   baths?: boolean
   garages?: boolean
+  totalSize?: boolean
   measurements?: boolean
   features?: boolean
   inclusions?: boolean
   meta?: boolean
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1356,10 +1458,13 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   beds?: boolean
   baths?: boolean
   garages?: boolean
+  totalSize?: boolean
   measurements?: boolean
   features?: boolean
   inclusions?: boolean
   meta?: boolean
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -1387,16 +1492,19 @@ export type ListingSelectScalar = {
   beds?: boolean
   baths?: boolean
   garages?: boolean
+  totalSize?: boolean
   measurements?: boolean
   features?: boolean
   inclusions?: boolean
   meta?: boolean
+  isPublished?: boolean
+  isFeatured?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "description" | "propertyType" | "status" | "badge" | "address" | "city" | "state" | "country" | "pincode" | "price" | "weeklyIncome" | "pricing" | "images" | "brochureUrl" | "floorPlanUrl" | "beds" | "baths" | "garages" | "measurements" | "features" | "inclusions" | "meta" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "description" | "propertyType" | "status" | "badge" | "address" | "city" | "state" | "country" | "pincode" | "price" | "weeklyIncome" | "pricing" | "images" | "brochureUrl" | "floorPlanUrl" | "beds" | "baths" | "garages" | "totalSize" | "measurements" | "features" | "inclusions" | "meta" | "isPublished" | "isFeatured" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   savedByUsers?: boolean | Prisma.Listing$savedByUsersArgs<ExtArgs>
   queries?: boolean | Prisma.Listing$queriesArgs<ExtArgs>
@@ -1415,28 +1523,31 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     title: string
     slug: string
-    description: string
+    description: string | null
     propertyType: string
     status: string
     badge: string | null
-    address: string
-    city: string
+    address: string | null
+    city: string | null
     state: string
     country: string
-    pincode: string
+    pincode: string | null
     price: number
     weeklyIncome: number | null
     pricing: runtime.JsonValue | null
     images: string[]
     brochureUrl: string | null
     floorPlanUrl: string | null
-    beds: number
-    baths: number
+    beds: number | null
+    baths: number | null
     garages: number | null
+    totalSize: number | null
     measurements: runtime.JsonValue | null
     features: string[]
     inclusions: string[]
     meta: runtime.JsonValue | null
+    isPublished: boolean
+    isFeatured: boolean
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1886,10 +1997,13 @@ export interface ListingFieldRefs {
   readonly beds: Prisma.FieldRef<"Listing", 'Int'>
   readonly baths: Prisma.FieldRef<"Listing", 'Int'>
   readonly garages: Prisma.FieldRef<"Listing", 'Int'>
+  readonly totalSize: Prisma.FieldRef<"Listing", 'Int'>
   readonly measurements: Prisma.FieldRef<"Listing", 'Json'>
   readonly features: Prisma.FieldRef<"Listing", 'String[]'>
   readonly inclusions: Prisma.FieldRef<"Listing", 'String[]'>
   readonly meta: Prisma.FieldRef<"Listing", 'Json'>
+  readonly isPublished: Prisma.FieldRef<"Listing", 'Boolean'>
+  readonly isFeatured: Prisma.FieldRef<"Listing", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"Listing", 'DateTime'>

@@ -35,17 +35,17 @@ model Listing {
   // Core Info
   title        String
   slug         String  @unique
-  description  String  @db.Text
+  description  String? @db.Text
   propertyType String
   status       String  @default("AVAILABLE")
   badge        String?
 
   // Location
-  address String
-  city    String
+  address String?
+  city    String?
   state   String
-  country String
-  pincode String
+  country String  @default("Australia")
+  pincode String?
 
   // Pricing
   price        Int
@@ -53,22 +53,26 @@ model Listing {
   pricing      Json? // detailed breakdown (taxes, maintenance, etc.)
 
   // Media
-  images       String[] // URLs
+  images       String[] @default([]) // URLs
   brochureUrl  String?
   floorPlanUrl String?
 
   // Property Details (structured basics)
-  beds    Int
-  baths   Int
+  beds    Int?
+  baths   Int?
   garages Int?
 
   // Flexible Property Data
+  totalSize    Int?
   measurements Json? // { totalSize: ..., builtUp: ..., carpet: ..., others: {...} }
-  features     String[] // tags like "pool", "garden", "corner plot"
-  inclusions   String[] // e.g., "modular kitchen", "wardrobes"
+  features     String[] @default([]) // tags like "pool", "garden", "corner plot"
+  inclusions   String[] @default([]) // e.g., "modular kitchen", "wardrobes"
 
   // Advanced flexible metadata
   meta Json? // anything extra (future-proofing)
+
+  isPublished Boolean @default(false)
+  isFeatured  Boolean @default(false)
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

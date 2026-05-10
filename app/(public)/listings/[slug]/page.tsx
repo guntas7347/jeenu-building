@@ -179,7 +179,7 @@ export default async function PropertyDetailPage({
                     <p className="text-2xl font-bold text-slate-900">
                       {metric.value}{" "}
                       <span className="text-sm font-normal text-slate-400">
-                        sqft
+                        m²
                       </span>
                     </p>
                   </div>

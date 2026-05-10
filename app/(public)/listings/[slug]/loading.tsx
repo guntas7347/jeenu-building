@@ -35,7 +35,7 @@ export default function LoadingListingDetails() {
             <div className="h-5 w-1/2 bg-slate-100 rounded"></div>
           </div>
 
-          {/* Key Stats (Beds, Baths, Sqft) */}
+          {/* Key Stats (Beds, Baths, msq) */}
           <div className="flex flex-wrap gap-4 py-6 border-y border-slate-100">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="flex items-center gap-3 w-28">

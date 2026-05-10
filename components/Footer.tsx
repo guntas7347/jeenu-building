@@ -1,41 +1,41 @@
 "use client";
 
 import Link from "next/link";
-import { Globe, MessageCircle, Share2 } from "lucide-react";
+import { Globe, MessageCircle, Phone, Share2 } from "lucide-react";
 
 // 1. Define footer link categories dynamically
 const FOOTER_LINKS = [
-  {
-    title: "Company",
-    links: [
-      { label: "About Us", href: "/about" },
-      { label: "Careers", href: "/careers" },
-      { label: "Press", href: "/press" },
-    ],
-  },
-  {
-    title: "Resources",
-    links: [
-      { label: "Help Center", href: "/help" },
-      { label: "Contact Support", href: "/contact" },
-      { label: "Market Guide", href: "/guide" },
-    ],
-  },
+  // {
+  //   title: "Company",
+  //   links: [
+  //     { label: "About Us", href: "/about" },
+  //     { label: "Careers", href: "/careers" },
+  //     { label: "Press", href: "/press" },
+  //   ],
+  // },
+  // {
+  //   title: "Resources",
+  //   links: [
+  //     { label: "Help Center", href: "/help" },
+  //     { label: "Contact Support", href: "/contact" },
+  //     { label: "Market Guide", href: "/guide" },
+  //   ],
+  // },
   {
     title: "Legal",
     links: [
-      { label: "Privacy Policy", href: "/privacy" },
-      { label: "Terms of Service", href: "/terms" },
-      { label: "Cookie Policy", href: "/cookies" },
+      { label: "Privacy Policy", href: "/privacy-policy" },
+      // { label: "Terms of Service", href: "/terms" },
+      // { label: "Cookie Policy", href: "/cookies" },
     ],
   },
 ];
 
 // 2. Define social links dynamically
 const SOCIAL_LINKS = [
-  { icon: Globe, href: "#", ariaLabel: "Website" },
-  { icon: MessageCircle, href: "#", ariaLabel: "Chat" },
-  { icon: Share2, href: "#", ariaLabel: "Share" },
+  { icon: Phone, href: "tel:0423124851", ariaLabel: "Call" },
+  { icon: MessageCircle, href: "mailto:[EMAIL_ADDRESS]", ariaLabel: "Email" },
+  // { icon: , href: "#", ariaLabel: "Share" },
 ];
 
 const Footer = () => {
@@ -68,6 +68,22 @@ const Footer = () => {
                   </Link>
                 );
               })}
+              <Link
+                href="/privacy-policy"
+                aria-label="Privacy Policy"
+                className="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors border border-slate-100 dark:border-slate-700"
+              >
+                <svg
+                  fill="#000000"
+                  width="800px"
+                  height="800px"
+                  viewBox="0 0 256 256"
+                  id="Flat"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M128,84a44,44,0,1,0,44,44A44.04978,44.04978,0,0,0,128,84Zm0,80a36,36,0,1,1,36-36A36.04061,36.04061,0,0,1,128,164ZM172,32H84A52.059,52.059,0,0,0,32,84v88a52.059,52.059,0,0,0,52,52h88a52.059,52.059,0,0,0,52-52V84A52.059,52.059,0,0,0,172,32Zm44,140a44.04978,44.04978,0,0,1-44,44H84a44.04978,44.04978,0,0,1-44-44V84A44.04978,44.04978,0,0,1,84,40h88a44.04978,44.04978,0,0,1,44,44ZM188,76a8,8,0,1,1-8-8A8.00917,8.00917,0,0,1,188,76Z" />
+                </svg>
+              </Link>
             </div>
           </div>
 
@@ -103,7 +119,7 @@ const Footer = () => {
             <Globe size={14} />
             <span className="font-label-sm">English (US)</span>
             <span className="mx-2 text-slate-200 dark:text-slate-700">|</span>
-            <span className="font-label-sm">USD ($)</span>
+            <span className="font-label-sm">AUD ($)</span>
           </div>
         </div>
       </div>

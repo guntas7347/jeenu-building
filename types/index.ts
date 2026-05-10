@@ -6,7 +6,7 @@ export interface Property {
   status: "Active" | "Featured" | "Sold" | "Draft";
   beds: number;
   baths: number;
-  sqft: string; // e.g "12,400"
+  msq: string; // e.g "12,400"
   description: string;
   images: string[];
   createdAt: string;

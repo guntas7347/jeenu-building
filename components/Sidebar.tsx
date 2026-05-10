@@ -97,10 +97,13 @@ export function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
 
         {/* Footer Actions */}
         <div className="p-4 border-t border-slate-100 space-y-1.5">
-          <button className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all text-sm font-semibold text-left">
-            <Settings size={18} className="text-slate-400" />
-            Settings
-          </button>
+          <Link
+            href="/"
+            className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-all text-sm font-semibold text-left"
+          >
+            <Home size={18} className="text-slate-400" />
+            Go to Home
+          </Link>
           <button
             onClick={handleLogout}
             className="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-all text-sm font-semibold text-left"

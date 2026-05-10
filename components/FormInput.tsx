@@ -1,7 +1,7 @@
 const FormInput = ({
   label,
   ...props
-}: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) => (
+}: React.InputHTMLAttributes<HTMLInputElement> & { label?: string }) => (
   <div>
     <label className="block text-sm font-bold text-slate-700 mb-1.5">
       {label}

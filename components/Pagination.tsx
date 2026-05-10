@@ -68,7 +68,7 @@ export default function Pagination({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-secondary hover:text-secondary transition-colors disabled:opacity-50 disabled:pointer-events-none"
         >
           <ChevronLeft size={20} />
         </button>
@@ -90,8 +90,8 @@ export default function Pagination({
               onClick={() => onPageChange(page as number)}
               className={`w-10 h-10 flex items-center justify-center rounded-xl font-bold transition-colors ${
                 isActive
-                  ? "bg-blue-600 text-white shadow-sm shadow-blue-600/20"
-                  : "border border-slate-200 text-slate-600 hover:border-blue-600 hover:text-blue-600 hover:bg-blue-50"
+                  ? "bg-secondary text-white shadow-sm shadow-secondary/20"
+                  : "border border-slate-200 text-slate-600 hover:border-secondary hover:text-secondary hover:bg-red-50"
               }`}
             >
               {page}
@@ -102,7 +102,7 @@ export default function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-blue-600 hover:text-blue-600 transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-secondary hover:text-secondary transition-colors disabled:opacity-50 disabled:pointer-events-none"
         >
           <ChevronRight size={20} />
         </button>
@@ -119,7 +119,7 @@ export default function Pagination({
           onChange={(e) => setJumpInputValue(e.target.value)}
           onKeyDown={handleJump}
           placeholder="#"
-          className="w-14 h-10 px-2 text-center text-sm font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 outline-none transition-all placeholder:text-slate-300 placeholder:font-normal"
+          className="w-14 h-10 px-2 text-center text-sm font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary outline-none transition-all placeholder:text-slate-300 placeholder:font-normal"
         />
       </div>
     </div>

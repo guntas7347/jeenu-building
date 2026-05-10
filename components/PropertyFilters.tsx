@@ -3,9 +3,11 @@
 import { useState, useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { MapPin, Filter, X, RotateCcw } from "lucide-react";
+import { AUSTRALIAN_STATES, PROPERTY_TYPES } from "@/lib/config";
 
 export type FilterState = {
   location: string;
+  state: string;
   propertyType: string;
   minPrice: string;
   maxPrice: string;
@@ -22,6 +24,7 @@ interface PropertyFiltersProps {
 
 const defaultFilters: FilterState = {
   location: "",
+  state: "",
   propertyType: "",
   minPrice: "",
   maxPrice: "",
@@ -43,10 +46,14 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
   useEffect(() => {
     // Check if there are any query parameters in the URL
     if (searchParams.toString().length > 0) {
+      // Helper to clean location (e.g., "Sydney, NSW" -> "Sydney")
+      const rawLocation =
+        searchParams.get("city") || searchParams.get("location") || "";
+      const cleanedLocation = rawLocation.split(",")[0].trim();
+
       const urlFilters: FilterState = {
-        // Accept either ?city= or ?location=
-        location:
-          searchParams.get("city") || searchParams.get("location") || "",
+        location: cleanedLocation,
+        state: searchParams.get("state") || "",
         // Accept either ?type= or ?propertyType=
         propertyType:
           searchParams.get("type") || searchParams.get("propertyType") || "",
@@ -127,7 +134,7 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
       {/* Filter Container (Desktop Sidebar & Mobile Full Screen) */}
       <aside
         className={`
-          fixed inset-0 z-50 bg-white overflow-y-auto transition-transform duration-300 ease-in-out
+          fixed inset-0 z-10 bg-white overflow-y-auto transition-transform duration-300 ease-in-out
           lg:static lg:translate-x-0 lg:w-72 lg:bg-white lg:p-6 lg:rounded-3xl lg:border lg:border-slate-200 lg:shadow-sm lg:h-fit lg:sticky lg:top-28
           ${isMobileOpen ? "translate-x-0 p-6" : "translate-x-full lg:translate-x-0"}
         `}
@@ -158,7 +165,7 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
 
         <div className="space-y-8 lg:space-y-6">
           {/* Location */}
-          <div className="space-y-2.5">
+          {/* <div className="space-y-2.5">
             <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
               Location
             </label>
@@ -175,6 +182,26 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
                 placeholder="City, Neighborhood..."
               />
             </div>
+          </div> */}
+
+          {/* State */}
+          <div className="space-y-2.5">
+            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+              State
+            </label>
+            <select
+              name="state"
+              value={filters.state}
+              onChange={handleChange}
+              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium appearance-none outline-none cursor-pointer transition-all"
+            >
+              <option value="">All States</option>
+              {AUSTRALIAN_STATES.map((state) => (
+                <option key={state} value={state}>
+                  {state}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Property Type */}
@@ -189,11 +216,11 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
               className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium appearance-none outline-none cursor-pointer transition-all"
             >
               <option value="">All Types</option>
-              <option value="Modern Villa">Modern Villa</option>
-              <option value="Apartment">Apartment</option>
-              <option value="Townhouse">Townhouse</option>
-              <option value="Commercial">Commercial</option>
-              <option value="Land">Land</option>
+              {PROPERTY_TYPES.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -243,7 +270,7 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
           {/* Total Area */}
           <div className="space-y-2.5">
             <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              Total Area (SqFt)
+              Total Area (m²)
             </label>
             <div className="flex items-center gap-3">
               <input
@@ -251,7 +278,7 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
                 value={filters.minArea}
                 onChange={handleChange}
                 className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium outline-none transition-all"
-                placeholder="Min SqFt"
+                placeholder="Min msq"
                 type="number"
               />
               <span className="text-slate-300 font-bold">-</span>
@@ -260,7 +287,7 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
                 value={filters.maxArea}
                 onChange={handleChange}
                 className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium outline-none transition-all"
-                placeholder="Max SqFt"
+                placeholder="Max msq"
                 type="number"
               />
             </div>

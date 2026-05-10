@@ -2,6 +2,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html {
+  font-size: 13px;
+}
+
 @theme {
   /* Colors */
   --color-on-tertiary-fixed: #191c1e;
@@ -27,7 +31,7 @@
   --color-surface-container-low: #f2f3ff;
   --color-on-surface-variant: #434654;
   --color-on-tertiary: #ffffff;
-  --color-primary: #003d9b;
+  --color-primary: #852a25;
   --color-surface-dim: #d2d9f4;
   --color-secondary-fixed: #d3e4fe;
   --color-on-secondary-fixed-variant: #38485d;
@@ -39,7 +43,7 @@
   --color-tertiary-container: #585b5d;
   --color-inverse-surface: #283044;
   --color-on-primary-container: #c4d2ff;
-  --color-secondary: #505f76;
+  --color-secondary: #852a25;
   --color-error: #ba1a1a;
   --color-on-error: #ffffff;
   --color-tertiary: #404445;

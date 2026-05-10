@@ -30,11 +30,10 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-on-background transition-colors duration-300">
         <Providers>
-          {" "}
-          <div className="sticky top-0 w-full bg-red-600 uppercase text-white text-sm py-2 px-4 z-10000 text-center">
+          {/* <div className="sticky top-0 w-full bg-red-600 uppercase text-white text-sm py-2 px-4 z-10000 text-center">
             This website is currently under development. Contact:
             admin@rohomes.com.au
-          </div>
+          </div> */}
           {children}
         </Providers>
       </body>

@@ -75,7 +75,7 @@ export async function getFilteredListings(
 
     // 4. Serialize BigInts and handle JSON filtering for Area
     // Note: Because Area is stored inside a JSON string field in your schema,
-    // it's best to filter it in memory after fetching, or add an `areaSqft Int` column for better DB performance.
+    // it's best to filter it in memory after fetching, or add an `areamsq Int` column for better DB performance.
     let serializedListings = listings.map((listing) => ({
       ...listing,
       price: listing.price.toString(), // Convert BigInt to string for Client Components

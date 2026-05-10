@@ -54,7 +54,7 @@ export default function LoadingListings() {
                   {/* Location */}
                   <div className="h-4 w-1/2 bg-slate-100 rounded"></div>
 
-                  {/* Bottom Stats (Bed/Bath/Sqft) */}
+                  {/* Bottom Stats (Bed/Bath/msq) */}
                   <div className="pt-4 border-t border-slate-50">
                     <div className="grid grid-cols-3 gap-4">
                       <div className="h-4 bg-slate-200 rounded"></div>

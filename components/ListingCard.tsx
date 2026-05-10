@@ -43,7 +43,7 @@ const ListingCard = ({
       {/* Loading Overlay */}
       {isNavigating && (
         <div className="absolute inset-0 z-50 bg-white/60 backdrop-blur-[2px] flex items-center justify-center transition-all duration-300">
-          <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
+          <Loader2 className="w-10 h-10 animate-spin text-secondary" />
         </div>
       )}
 
@@ -57,7 +57,7 @@ const ListingCard = ({
         {/* Render badge only if it exists in the data */}
         {property.badge && (
           <div className="absolute top-4 left-4">
-            <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
+            <span className="bg-secondary text-white px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
               {property.badge}
             </span>
           </div>
@@ -75,7 +75,7 @@ const ListingCard = ({
 
       <div className="p-6">
         <div className="flex justify-between items-start mb-2">
-          <h4 className="text-xl font-bold text-blue-700">
+          <h4 className="text-xl font-bold text-primary">
             {formatPrice(property.price)}
           </h4>
           <span className="bg-slate-100 text-slate-600 px-2.5 py-1 rounded-lg text-[10px] font-bold uppercase">
@@ -95,16 +95,16 @@ const ListingCard = ({
         <div className="flex items-center justify-between border-t border-slate-100 pt-4">
           <div className="flex gap-4">
             <div className="flex items-center gap-1.5 text-slate-600">
-              <Bed size={18} className="text-blue-600" />
+              <Bed size={18} className="text-secondary" />
               <span className="text-sm font-semibold">{property.beds}</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-600">
-              <Bath size={18} className="text-blue-600" />
+              <Bath size={18} className="text-secondary" />
               <span className="text-sm font-semibold">{property.baths}</span>
             </div>
             <div className="flex items-center gap-1.5 text-slate-600">
-              <Square size={18} className="text-blue-600" />
-              <span className="text-sm font-semibold">{totalSize} sqft</span>
+              <Square size={18} className="text-secondary" />
+              <span className="text-sm font-semibold">{totalSize} m²</span>
             </div>
           </div>
         </div>

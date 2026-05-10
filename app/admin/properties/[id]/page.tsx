@@ -3,13 +3,24 @@
 import React, { useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Plus, Trash2, Loader2, X } from "lucide-react";
+import {
+  ArrowLeft,
+  Save,
+  Plus,
+  Trash2,
+  Loader2,
+  X,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
 import { getListingById, updateListing } from "@/lib/actions/listings";
 import TagInput from "@/components/InputTag";
 import FormInput from "@/components/FormInput";
 import FormTextarea from "@/components/FormTextarea";
 import FormSelect from "@/components/FormSelect";
 import PricingBreakdownEditor, { PricingItem } from "./PricingBreakdown";
+import CloudinaryUploader from "@/components/CloudinaryUploader";
+import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/config";
 
 type Params = Promise<{ id: string }>;
 
@@ -34,6 +45,8 @@ export default function ListingFormPage({ params }: { params: Params }) {
     state: "",
     country: "India",
     pincode: "",
+    isPublished: false,
+    isFeatured: false,
     price: "",
     weeklyIncome: "",
     images: [] as string[],
@@ -63,6 +76,8 @@ export default function ListingFormPage({ params }: { params: Params }) {
         setForm({
           ...data,
           slug: data.slug || "",
+          isPublished: data.isPublished || false,
+          isFeatured: data.isFeatured || false,
           priceInput: data.priceInPaisa
             ? (Number(data.priceInPaisa) / 100).toString()
             : "",
@@ -143,6 +158,8 @@ export default function ListingFormPage({ params }: { params: Params }) {
         country: form.country,
         pincode: form.pincode,
         price: Number(form.price),
+        isPublished: form.isPublished,
+        isFeatured: form.isFeatured,
         weeklyIncome: Number(form.weeklyIncome),
         images: form.images,
         brochureUrl: form.brochureUrl,
@@ -196,6 +213,20 @@ export default function ListingFormPage({ params }: { params: Params }) {
           </div>
         </div>
         <button
+          onClick={() =>
+            setForm((prev) => ({ ...prev, isPublished: !prev.isPublished }))
+          }
+          className={`px-6 py-3 text-white rounded-xl font-bold flex items-center gap-2 transition-all shadow-sm ${
+            form.isPublished
+              ? "bg-green-600 hover:bg-green-700"
+              : "bg-yellow-500 hover:bg-yellow-600"
+          }`}
+        >
+          {form.isPublished ? <CheckCircle size={18} /> : <XCircle size={18} />}
+
+          {form.isPublished ? "Published" : "Unpublished"}
+        </button>
+        <button
           onClick={handleSave}
           disabled={saving}
           className="px-6 py-3 bg-blue-600 text-white rounded-xl font-bold flex items-center gap-2 hover:bg-blue-700 disabled:opacity-50 transition-all shadow-sm"
@@ -223,14 +254,31 @@ export default function ListingFormPage({ params }: { params: Params }) {
               label="Property Title"
               name="title"
               value={form.title}
-              onChange={handleChange}
+              onChange={(e) => {
+                setForm((prev) => ({ ...prev, title: e.target.value }));
+                setForm((prev) => ({
+                  ...prev,
+                  slug: e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-+|-+$/g, ""),
+                }));
+              }}
               placeholder="e.g. The Obsidian Pavilion"
             />
             <FormInput
               label="Slug (URL Path)"
               name="slug"
               value={form.slug}
-              onChange={handleChange}
+              onChange={(e) =>
+                setForm((prev) => ({
+                  ...prev,
+                  slug: e.target.value
+                    .toLowerCase()
+                    .replace(/[^a-z0-9]+/g, "-")
+                    .replace(/^-+|-+$/g, ""),
+                }))
+              }
               placeholder="e.g. the-obsidian-pavilion"
             />
             <FormSelect
@@ -238,25 +286,14 @@ export default function ListingFormPage({ params }: { params: Params }) {
               name="propertyType"
               value={form.propertyType}
               onChange={handleChange}
-              options={[
-                { value: "Modern Villa", label: "Modern Villa" },
-                { value: "Apartment", label: "Apartment" },
-                { value: "Townhouse", label: "Townhouse" },
-                { value: "Commercial", label: "Commercial" },
-                { value: "Land", label: "Land" },
-              ]}
+              options={PROPERTY_TYPES.map((pt) => ({ value: pt, label: pt }))}
             />
             <FormSelect
               label="Status"
               name="status"
               value={form.status}
               onChange={handleChange}
-              options={[
-                { value: "AVAILABLE", label: "Available" },
-                { value: "PENDING", label: "Pending" },
-                { value: "SOLD", label: "Sold" },
-                { value: "DRAFT", label: "Draft" },
-              ]}
+              options={PROPERTY_STATUS.map((pt) => ({ value: pt, label: pt }))}
             />
             <FormInput
               label="Badge (Optional)"
@@ -289,6 +326,27 @@ export default function ListingFormPage({ params }: { params: Params }) {
                 onChange={handleChange}
                 placeholder="Describe the property..."
               />
+            </div>
+            <div className="flex items-center justify-between px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl">
+              <label className="text-sm font-bold text-slate-700">
+                Featured
+              </label>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setForm({ ...form, isFeatured: !form.isFeatured })
+                }
+                className={`relative w-14 h-8 rounded-full transition-colors ${
+                  form.isFeatured ? "bg-green-600" : "bg-slate-300"
+                }`}
+              >
+                <span
+                  className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform ${
+                    form.isFeatured ? "translate-x-6" : ""
+                  }`}
+                />
+              </button>
             </div>
           </div>
         </section>
@@ -375,21 +433,21 @@ export default function ListingFormPage({ params }: { params: Params }) {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FormInput
-              label="Total Size (sqft)"
+              label="Total Size (msq)"
               name="totalSize"
               value={form.measurements.totalSize}
               onChange={handleMeasurementChange}
               placeholder="e.g. 4500"
             />
             <FormInput
-              label="Built-Up Area (sqft)"
+              label="Built-Up Area (msq)"
               name="builtUp"
               value={form.measurements.builtUp}
               onChange={handleMeasurementChange}
               placeholder="e.g. 3200"
             />
             <FormInput
-              label="Carpet Area (sqft)"
+              label="Carpet Area (msq)"
               name="carpet"
               value={form.measurements.carpet}
               onChange={handleMeasurementChange}
@@ -443,55 +501,39 @@ export default function ListingFormPage({ params }: { params: Params }) {
                 onChange={handleChange}
                 placeholder="https://..."
               />
-              <FormInput
-                label="Floor Plan URL"
-                name="floorPlanUrl"
-                value={form.floorPlanUrl}
-                onChange={handleChange}
-                placeholder="https://..."
-              />
+              <div>
+                <label className="block text-sm font-bold text-slate-700 mb-1.5">
+                  Floor Plan
+                </label>{" "}
+                <CloudinaryUploader
+                  onUpload={(url: string) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      floorPlanUrl: url,
+                    }))
+                  }
+                />
+                <FormInput
+                  name="floorPlanUrl"
+                  value={form.floorPlanUrl}
+                  onChange={handleChange}
+                  placeholder="https://..."
+                />
+              </div>
             </div>
 
             <div>
               <label className="block text-sm font-bold text-slate-700 mb-1.5">
                 Gallery Images (URLs)
               </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 outline-none"
-                  placeholder="https://example.com/image.jpg"
-                  value={imageUrlInput}
-                  onChange={(e) => setImageUrlInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      if (imageUrlInput) {
-                        setForm((prev) => ({
-                          ...prev,
-                          images: [...prev.images, imageUrlInput],
-                        }));
-                        setImageUrlInput("");
-                      }
-                    }
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (imageUrlInput) {
-                      setForm((prev) => ({
-                        ...prev,
-                        images: [...prev.images, imageUrlInput],
-                      }));
-                      setImageUrlInput("");
-                    }
-                  }}
-                  className="px-6 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors font-bold"
-                >
-                  Add
-                </button>
-              </div>
+              <CloudinaryUploader
+                onUpload={(url: string) =>
+                  setForm((prev) => ({
+                    ...prev,
+                    images: [...prev.images, url],
+                  }))
+                }
+              />
 
               {form.images.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
