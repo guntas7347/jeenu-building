@@ -79,3 +79,26 @@ html {
   --font-body-lg: "Inter", sans-serif;
   --font-caps-xs: "Inter", sans-serif;
 }
+
+@layer utilities {
+  .liquid-glass {
+    /* Base Glass Styles */
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Light Mode: Milky white glass */
+    background: rgba(255, 255, 255, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Dark Mode: Deep obsidian glass
+  :global(.dark) .liquid-glass {
+    background: rgba(15, 15, 20, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  } */
+}

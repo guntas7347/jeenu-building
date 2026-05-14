@@ -55,12 +55,13 @@ model Listing {
   // Media
   images       String[] @default([]) // URLs
   brochureUrl  String?
-  floorPlanUrl String?
+  floorPlanUrl String[] @default([])
 
   // Property Details (structured basics)
-  beds    Int?
-  baths   Int?
-  garages Int?
+  beds         Int?
+  baths        Int?
+  garages      Int?
+  registerDate DateTime?
 
   // Flexible Property Data
   totalSize    Int?

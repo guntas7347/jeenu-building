@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { MapPin, Filter, X, RotateCcw } from "lucide-react";
+import { Filter, X, RotateCcw } from "lucide-react";
 import { AUSTRALIAN_STATES, PROPERTY_TYPES } from "@/lib/config";
+import { Select } from "./SelectInput";
 
 export type FilterState = {
   location: string;
@@ -18,110 +19,111 @@ export type FilterState = {
   status: string;
 };
 
-interface PropertyFiltersProps {
-  onApply: (filters: FilterState) => void;
-}
+// Define constants for the slider maximums
+const MAX_PRICE_VALUE = "5000000";
+const MAX_AREA_VALUE = "2000";
 
-const defaultFilters: FilterState = {
-  location: "",
-  state: "",
-  propertyType: "",
-  minPrice: "",
-  maxPrice: "",
-  beds: "",
-  baths: "",
-  minArea: "",
-  maxArea: "",
-  status: "AVAILABLE",
-};
-
-export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
+export default function PropertyFilters() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [filters, setFilters] = useState<FilterState>(defaultFilters);
+  const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
-  // 1. Extract URL Parameters on Mount
+  // 1. Internal state for the UI (immediate feedback)
+  const [filters, setFilters] = useState<FilterState>({
+    location: searchParams.get("location") || "",
+    state: searchParams.get("state") || "",
+    propertyType: searchParams.get("propertyType") || searchParams.get("type") || "",
+    minPrice: searchParams.get("minPrice") || "",
+    maxPrice: searchParams.get("maxPrice") || "",
+    beds: searchParams.get("beds") || "",
+    baths: searchParams.get("baths") || "",
+    minArea: searchParams.get("minArea") || "",
+    maxArea: searchParams.get("maxArea") || "",
+    status: searchParams.get("status") || "",
+  });
+
+  // 2. Sync state when URL changes
   useEffect(() => {
-    // Check if there are any query parameters in the URL
-    if (searchParams.toString().length > 0) {
-      // Helper to clean location (e.g., "Sydney, NSW" -> "Sydney")
-      const rawLocation =
-        searchParams.get("city") || searchParams.get("location") || "";
-      const cleanedLocation = rawLocation.split(",")[0].trim();
+    setFilters({
+      location: searchParams.get("location") || "",
+      state: searchParams.get("state") || "",
+      propertyType: searchParams.get("propertyType") || searchParams.get("type") || "",
+      minPrice: searchParams.get("minPrice") || "",
+      maxPrice: searchParams.get("maxPrice") || "",
+      beds: searchParams.get("beds") || "",
+      baths: searchParams.get("baths") || "",
+      minArea: searchParams.get("minArea") || "",
+      maxArea: searchParams.get("maxArea") || "",
+      status: searchParams.get("status") || "",
+    });
+  }, [searchParams]);
 
-      const urlFilters: FilterState = {
-        location: cleanedLocation,
-        state: searchParams.get("state") || "",
-        // Accept either ?type= or ?propertyType=
-        propertyType:
-          searchParams.get("type") || searchParams.get("propertyType") || "",
-        minPrice: searchParams.get("minPrice") || "",
-        maxPrice: searchParams.get("maxPrice") || "",
-        beds: searchParams.get("beds") || "",
-        baths: searchParams.get("baths") || "",
-        minArea: searchParams.get("minArea") || "",
-        maxArea: searchParams.get("maxArea") || "",
-        status: searchParams.get("status") || "AVAILABLE",
-      };
+  // 3. Helper to update the URL
+  const updateQuery = (newFilters: Partial<FilterState>) => {
+    const params = new URLSearchParams(searchParams.toString());
+    
+    Object.entries(newFilters).forEach(([key, value]) => {
+      // Logic: Only apply if value is present AND not the "No Limit" indicator
+      const isNoLimit = (key === "maxPrice" && value === MAX_PRICE_VALUE) || 
+                        (key === "maxArea" && value === MAX_AREA_VALUE) ||
+                        (value === "");
 
-      setFilters(urlFilters);
+      if (value && !isNoLimit) {
+        params.set(key, value);
+      } else {
+        params.delete(key);
+      }
+    });
 
-      // Automatically apply the filters extracted from the URL
-      onApply(urlFilters);
+    // Remove duplicates/consistency
+    if (params.has("type")) {
+      const t = params.get("type");
+      params.delete("type");
+      params.set("propertyType", t!);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on component mount
 
-  // 2. Prevent background scrolling when mobile modal is open
-  useEffect(() => {
-    if (isMobileOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-    return () => {
-      document.body.style.overflow = "unset";
-    };
-  }, [isMobileOpen]);
+    router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+  };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
+  const handleImmediateChange = (newFilters: Partial<FilterState>) => {
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    setFilters(prev => ({ ...prev, ...newFilters }));
+    updateQuery(newFilters);
+  };
+
+  const handleSliderChange = (name: keyof FilterState, value: string) => {
+    setFilters(prev => ({ ...prev, [name]: value }));
+
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      updateQuery({ [name]: value });
+    }, 2000);
   };
 
   const handlePillSelect = (name: "beds" | "baths", value: string) => {
-    setFilters((prev) => ({
-      ...prev,
-      [name]: prev[name] === value ? "" : value, // Toggle off if clicked again
-    }));
-  };
-
-  const handleApply = () => {
-    onApply(filters);
-    setIsMobileOpen(false);
-
-    if (searchParams.toString().length > 0) {
-      router.replace(pathname, { scroll: false });
-    }
+    const newValue = filters[name] === value ? "" : value;
+    handleImmediateChange({ [name]: newValue });
   };
 
   const handleReset = () => {
-    setFilters(defaultFilters);
-    onApply(defaultFilters);
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    router.replace(pathname, { scroll: false });
+    setIsMobileOpen(false);
+  };
 
-    if (searchParams.toString().length > 0) {
-      router.replace(pathname, { scroll: false });
-    }
+  const formatPrice = (price: string) => {
+    if (!price || price === MAX_PRICE_VALUE) return "Any Price";
+    const num = parseInt(price);
+    if (num >= 1000000) return `$${(num / 1000000).toFixed(1)}M`;
+    return `$${(num / 1000).toFixed(0)}k`;
   };
 
   return (
     <>
       {/* Mobile Trigger Button */}
-      <div className="lg:hidden w-full mb-6">
+      <div className="lg:hidden w-full mb-6 px-1">
         <button
           onClick={() => setIsMobileOpen(true)}
           className="w-full flex items-center justify-center gap-2 py-3.5 bg-white border border-slate-200 text-slate-800 font-bold rounded-2xl shadow-sm hover:bg-slate-50 transition-colors"
@@ -131,11 +133,11 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
         </button>
       </div>
 
-      {/* Filter Container (Desktop Sidebar & Mobile Full Screen) */}
+      {/* Filter Container */}
       <aside
         className={`
-          fixed inset-0 z-10 bg-white overflow-y-auto transition-transform duration-300 ease-in-out
-          lg:static lg:translate-x-0 lg:w-72 lg:bg-white lg:p-6 lg:rounded-3xl lg:border lg:border-slate-200 lg:shadow-sm lg:h-fit lg:sticky lg:top-28
+          fixed inset-0 z-[100] bg-white overflow-y-auto transition-transform duration-300 ease-in-out
+          lg:static lg:z-10 lg:translate-x-0 lg:w-72 lg:bg-white lg:p-6 lg:rounded-3xl lg:border lg:border-slate-200 lg:shadow-sm lg:h-fit lg:sticky lg:top-28
           ${isMobileOpen ? "translate-x-0 p-6" : "translate-x-full lg:translate-x-0"}
         `}
       >
@@ -153,7 +155,6 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
             >
               <RotateCcw size={18} />
             </button>
-            {/* Mobile Close Button */}
             <button
               onClick={() => setIsMobileOpen(false)}
               className="lg:hidden p-2 text-slate-400 hover:bg-slate-100 rounded-lg transition-colors"
@@ -164,132 +165,93 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
         </div>
 
         <div className="space-y-8 lg:space-y-6">
-          {/* Location */}
-          {/* <div className="space-y-2.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              Location
-            </label>
-            <div className="relative">
-              <MapPin
-                className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"
-                size={18}
-              />
-              <input
-                name="location"
-                value={filters.location}
-                onChange={handleChange}
-                className="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium outline-none transition-all"
-                placeholder="City, Neighborhood..."
-              />
-            </div>
-          </div> */}
-
           {/* State */}
           <div className="space-y-2.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              State
-            </label>
-            <select
-              name="state"
+            <Select
+              label="State"
               value={filters.state}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium appearance-none outline-none cursor-pointer transition-all"
-            >
-              <option value="">All States</option>
-              {AUSTRALIAN_STATES.map((state) => (
-                <option key={state} value={state}>
-                  {state}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => handleImmediateChange({ state: value })}
+              options={[{ label: "All States", value: "" }, ...AUSTRALIAN_STATES.map((state) => ({
+                value: state,
+                label: state,
+              }))]}
+            />
           </div>
 
           {/* Property Type */}
           <div className="space-y-2.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              Property Type
-            </label>
-            <select
-              name="propertyType"
+            <Select
+              label="Property Type"
               value={filters.propertyType}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium appearance-none outline-none cursor-pointer transition-all"
-            >
-              <option value="">All Types</option>
-              {PROPERTY_TYPES.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => handleImmediateChange({ propertyType: value })}
+              options={[{ label: "All Types", value: "" }, ...PROPERTY_TYPES.map((type) => ({
+                value: type,
+                label: type,
+              }))]}
+            />
           </div>
 
           {/* Status */}
           <div className="space-y-2.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              Status
-            </label>
-            <select
-              name="status"
+            <Select
+              label="Status"
               value={filters.status}
-              onChange={handleChange}
-              className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium appearance-none outline-none cursor-pointer transition-all"
-            >
-              <option value="">Any Status</option>
-              <option value="AVAILABLE">Available</option>
-              <option value="SOLD">Sold</option>
-            </select>
+              onChange={(value) => handleImmediateChange({ status: value })}
+              options={[
+                { value: "", label: "Any Status" },
+                { value: "AVAILABLE", label: "Available" },
+                { value: "SOLD", label: "Sold" },
+              ]}
+            />
           </div>
 
-          {/* Price Range */}
-          <div className="space-y-2.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              Price Range ($)
-            </label>
-            <div className="flex items-center gap-3">
-              <input
-                name="minPrice"
-                value={filters.minPrice}
-                onChange={handleChange}
-                className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium outline-none transition-all"
-                placeholder="Min"
-                type="number"
-              />
-              <span className="text-slate-300 font-bold">-</span>
-              <input
-                name="maxPrice"
-                value={filters.maxPrice}
-                onChange={handleChange}
-                className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium outline-none transition-all"
-                placeholder="Max"
-                type="number"
-              />
+          {/* Price Range Slider */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-end">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                Max Price
+              </label>
+              <span className="text-sm font-black text-blue-600 tabular-nums">
+                {formatPrice(filters.maxPrice)}
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max={MAX_PRICE_VALUE}
+              step="100000"
+              value={filters.maxPrice || MAX_PRICE_VALUE}
+              onChange={(e) => handleSliderChange("maxPrice", e.target.value)}
+              className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            />
+            <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase">
+              <span>$0</span>
+              <span>$5M+</span>
             </div>
           </div>
 
-          {/* Total Area */}
-          <div className="space-y-2.5">
-            <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              Total Area (m²)
-            </label>
-            <div className="flex items-center gap-3">
-              <input
-                name="minArea"
-                value={filters.minArea}
-                onChange={handleChange}
-                className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium outline-none transition-all"
-                placeholder="Min msq"
-                type="number"
-              />
-              <span className="text-slate-300 font-bold">-</span>
-              <input
-                name="maxArea"
-                value={filters.maxArea}
-                onChange={handleChange}
-                className="w-1/2 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 text-sm font-medium outline-none transition-all"
-                placeholder="Max msq"
-                type="number"
-              />
+          {/* Area Slider */}
+          <div className="space-y-4">
+            <div className="flex justify-between items-end">
+              <label className="text-xs font-bold text-slate-500 uppercase tracking-widest">
+                Max Area (m²)
+              </label>
+              <span className="text-sm font-black text-blue-600 tabular-nums">
+                {(!filters.maxArea || filters.maxArea === MAX_AREA_VALUE) ? "Any Size" : `${filters.maxArea} m²`}
+              </span>
+            </div>
+            <input
+              type="range"
+              min="0"
+              max={MAX_AREA_VALUE}
+              step="100"
+              value={filters.maxArea || MAX_AREA_VALUE}
+              onChange={(e) => handleSliderChange("maxArea", e.target.value)}
+              className="w-full h-1.5 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            />
+            <div className="flex justify-between text-[10px] font-bold text-slate-400 uppercase">
+              <span>0</span>
+              <span>2000+</span>
             </div>
           </div>
 
@@ -338,14 +300,10 @@ export default function PropertyFilters({ onApply }: PropertyFiltersProps) {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="mt-10 lg:mt-8 pt-6 border-t border-slate-100 flex gap-3">
-          <button
-            onClick={handleApply}
-            className="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-slate-800 transition-all active:scale-95 shadow-sm"
-          >
-            Show Results
-          </button>
+        <div className="lg:hidden mt-8 py-4 text-center">
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            Updates automatically
+          </p>
         </div>
       </aside>
     </>

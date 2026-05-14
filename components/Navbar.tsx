@@ -12,7 +12,9 @@ import { CONTACT_NUMBER } from "@/lib/config";
 const NAV_LINKS = [
   { title: "Home", href: "/" },
   { title: "Listings", href: "/listings" },
-  { title: "About Us", href: "/about" },
+  // { title: "About Us", href: "/about" },
+
+  //todo copypaste ownest calcuators page
 ];
 
 const Header = () => {
@@ -167,7 +169,7 @@ const Header = () => {
             }`}
             aria-label="contact"
           >
-            <Phone className="w-4 h-4" />
+            <Phone className="w-4 h-4 text-primary" />
           </Link>
           {/* Desktop Auth Button */}
           <div className="hidden md:block">{renderAuthAction()}</div>

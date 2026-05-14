@@ -19,6 +19,7 @@ import PropertyGallery from "./PropertyGallery";
 import { formatPrice } from "@/lib/helpers";
 import MortgageCalculator from "@/components/MorgageCalculator";
 import InquiryForm from "@/components/InquiryForm";
+import FloorPlanGallery from "@/components/FloorPlanGallery";
 
 export const revalidate = false;
 
@@ -63,8 +64,9 @@ export default async function PropertyDetailPage({
     { icon: Car, label: "Garage", value: `${listing.garages} Cars` },
     {
       icon: Calendar,
-      label: "Listed On",
-      value: new Date(listing.createdAt).toLocaleDateString("en-US", {
+      label: "Est. Registration",
+      value: new Date(listing.registerDate || "").toLocaleDateString("en-GB", {
+        day: "2-digit",
         month: "short",
         year: "numeric",
       }),
@@ -276,26 +278,7 @@ export default async function PropertyDetailPage({
 
           {/* Floor Plan Section */}
           {listing.floorPlanUrl && (
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm overflow-hidden">
-              <div className="flex items-center justify-between mb-4">
-                <h4 className="font-bold text-slate-900">Floor Plan</h4>
-                <Link
-                  href={listing.floorPlanUrl}
-                  target="_blank"
-                  className="text-blue-600 text-sm font-bold flex items-center gap-1 hover:underline"
-                >
-                  Full View
-                  <ExternalLink size={16} />
-                </Link>
-              </div>
-              <div className="bg-slate-50 rounded-xl p-4 flex items-center justify-center border border-slate-100 group">
-                <img
-                  alt="Floor Plan Thumbnail"
-                  className="w-full rounded-lg transition-transform duration-300 group-hover:scale-105"
-                  src={listing.floorPlanUrl}
-                />
-              </div>
-            </div>
+            <FloorPlanGallery images={listing.floorPlanUrl} />
           )}
         </div>
       </div>

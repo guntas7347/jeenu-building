@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${manrope.variable} h-full antialiased`}
+      className={`${manrope.variable} antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-on-background transition-colors duration-300">

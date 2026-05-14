@@ -22,7 +22,7 @@ const FeaturedListing = async () => {
               Handpicked Selection
             </span>
             <h2 className="text-3xl font-bold text-slate-900">
-              Featured Luxury Properties
+              Red Owl's top picks
             </h2>
           </div>
           <div className="flex gap-4">

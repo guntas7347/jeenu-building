@@ -60,10 +60,10 @@ export type ListingMinAggregateOutputType = {
   price: number | null
   weeklyIncome: number | null
   brochureUrl: string | null
-  floorPlanUrl: string | null
   beds: number | null
   baths: number | null
   garages: number | null
+  registerDate: Date | null
   totalSize: number | null
   isPublished: boolean | null
   isFeatured: boolean | null
@@ -88,10 +88,10 @@ export type ListingMaxAggregateOutputType = {
   price: number | null
   weeklyIncome: number | null
   brochureUrl: string | null
-  floorPlanUrl: string | null
   beds: number | null
   baths: number | null
   garages: number | null
+  registerDate: Date | null
   totalSize: number | null
   isPublished: boolean | null
   isFeatured: boolean | null
@@ -122,6 +122,7 @@ export type ListingCountAggregateOutputType = {
   beds: number
   baths: number
   garages: number
+  registerDate: number
   totalSize: number
   measurements: number
   features: number
@@ -170,10 +171,10 @@ export type ListingMinAggregateInputType = {
   price?: true
   weeklyIncome?: true
   brochureUrl?: true
-  floorPlanUrl?: true
   beds?: true
   baths?: true
   garages?: true
+  registerDate?: true
   totalSize?: true
   isPublished?: true
   isFeatured?: true
@@ -198,10 +199,10 @@ export type ListingMaxAggregateInputType = {
   price?: true
   weeklyIncome?: true
   brochureUrl?: true
-  floorPlanUrl?: true
   beds?: true
   baths?: true
   garages?: true
+  registerDate?: true
   totalSize?: true
   isPublished?: true
   isFeatured?: true
@@ -232,6 +233,7 @@ export type ListingCountAggregateInputType = {
   beds?: true
   baths?: true
   garages?: true
+  registerDate?: true
   totalSize?: true
   measurements?: true
   features?: true
@@ -349,10 +351,11 @@ export type ListingGroupByOutputType = {
   pricing: runtime.JsonValue | null
   images: string[]
   brochureUrl: string | null
-  floorPlanUrl: string | null
+  floorPlanUrl: string[]
   beds: number | null
   baths: number | null
   garages: number | null
+  registerDate: Date | null
   totalSize: number | null
   measurements: runtime.JsonValue | null
   features: string[]
@@ -406,10 +409,11 @@ export type ListingWhereInput = {
   pricing?: Prisma.JsonNullableFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
-  floorPlanUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
+  floorPlanUrl?: Prisma.StringNullableListFilter<"Listing">
   beds?: Prisma.IntNullableFilter<"Listing"> | number | null
   baths?: Prisma.IntNullableFilter<"Listing"> | number | null
   garages?: Prisma.IntNullableFilter<"Listing"> | number | null
+  registerDate?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   totalSize?: Prisma.IntNullableFilter<"Listing"> | number | null
   measurements?: Prisma.JsonNullableFilter<"Listing">
   features?: Prisma.StringNullableListFilter<"Listing">
@@ -442,10 +446,11 @@ export type ListingOrderByWithRelationInput = {
   pricing?: Prisma.SortOrderInput | Prisma.SortOrder
   images?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  floorPlanUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  floorPlanUrl?: Prisma.SortOrder
   beds?: Prisma.SortOrderInput | Prisma.SortOrder
   baths?: Prisma.SortOrderInput | Prisma.SortOrder
   garages?: Prisma.SortOrderInput | Prisma.SortOrder
+  registerDate?: Prisma.SortOrderInput | Prisma.SortOrder
   totalSize?: Prisma.SortOrderInput | Prisma.SortOrder
   measurements?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
@@ -481,10 +486,11 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   pricing?: Prisma.JsonNullableFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
-  floorPlanUrl?: Prisma.StringNullableFilter<"Listing"> | string | null
+  floorPlanUrl?: Prisma.StringNullableListFilter<"Listing">
   beds?: Prisma.IntNullableFilter<"Listing"> | number | null
   baths?: Prisma.IntNullableFilter<"Listing"> | number | null
   garages?: Prisma.IntNullableFilter<"Listing"> | number | null
+  registerDate?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   totalSize?: Prisma.IntNullableFilter<"Listing"> | number | null
   measurements?: Prisma.JsonNullableFilter<"Listing">
   features?: Prisma.StringNullableListFilter<"Listing">
@@ -517,10 +523,11 @@ export type ListingOrderByWithAggregationInput = {
   pricing?: Prisma.SortOrderInput | Prisma.SortOrder
   images?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  floorPlanUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  floorPlanUrl?: Prisma.SortOrder
   beds?: Prisma.SortOrderInput | Prisma.SortOrder
   baths?: Prisma.SortOrderInput | Prisma.SortOrder
   garages?: Prisma.SortOrderInput | Prisma.SortOrder
+  registerDate?: Prisma.SortOrderInput | Prisma.SortOrder
   totalSize?: Prisma.SortOrderInput | Prisma.SortOrder
   measurements?: Prisma.SortOrderInput | Prisma.SortOrder
   features?: Prisma.SortOrder
@@ -559,10 +566,11 @@ export type ListingScalarWhereWithAggregatesInput = {
   pricing?: Prisma.JsonNullableWithAggregatesFilter<"Listing">
   images?: Prisma.StringNullableListFilter<"Listing">
   brochureUrl?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
-  floorPlanUrl?: Prisma.StringNullableWithAggregatesFilter<"Listing"> | string | null
+  floorPlanUrl?: Prisma.StringNullableListFilter<"Listing">
   beds?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   baths?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   garages?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
+  registerDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
   totalSize?: Prisma.IntNullableWithAggregatesFilter<"Listing"> | number | null
   measurements?: Prisma.JsonNullableWithAggregatesFilter<"Listing">
   features?: Prisma.StringNullableListFilter<"Listing">
@@ -593,10 +601,11 @@ export type ListingCreateInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
-  floorPlanUrl?: string | null
+  floorPlanUrl?: Prisma.ListingCreatefloorPlanUrlInput | string[]
   beds?: number | null
   baths?: number | null
   garages?: number | null
+  registerDate?: Date | string | null
   totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
@@ -629,10 +638,11 @@ export type ListingUncheckedCreateInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
-  floorPlanUrl?: string | null
+  floorPlanUrl?: Prisma.ListingCreatefloorPlanUrlInput | string[]
   beds?: number | null
   baths?: number | null
   garages?: number | null
+  registerDate?: Date | string | null
   totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
@@ -665,10 +675,11 @@ export type ListingUpdateInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floorPlanUrl?: Prisma.ListingUpdatefloorPlanUrlInput | string[]
   beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  registerDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
@@ -701,10 +712,11 @@ export type ListingUncheckedUpdateInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floorPlanUrl?: Prisma.ListingUpdatefloorPlanUrlInput | string[]
   beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  registerDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
@@ -737,10 +749,11 @@ export type ListingCreateManyInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
-  floorPlanUrl?: string | null
+  floorPlanUrl?: Prisma.ListingCreatefloorPlanUrlInput | string[]
   beds?: number | null
   baths?: number | null
   garages?: number | null
+  registerDate?: Date | string | null
   totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
@@ -771,10 +784,11 @@ export type ListingUpdateManyMutationInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floorPlanUrl?: Prisma.ListingUpdatefloorPlanUrlInput | string[]
   beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  registerDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
@@ -805,10 +819,11 @@ export type ListingUncheckedUpdateManyInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floorPlanUrl?: Prisma.ListingUpdatefloorPlanUrlInput | string[]
   beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  registerDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
@@ -851,6 +866,7 @@ export type ListingCountOrderByAggregateInput = {
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
+  registerDate?: Prisma.SortOrder
   totalSize?: Prisma.SortOrder
   measurements?: Prisma.SortOrder
   features?: Prisma.SortOrder
@@ -888,10 +904,10 @@ export type ListingMaxOrderByAggregateInput = {
   price?: Prisma.SortOrder
   weeklyIncome?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrder
-  floorPlanUrl?: Prisma.SortOrder
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
+  registerDate?: Prisma.SortOrder
   totalSize?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
@@ -916,10 +932,10 @@ export type ListingMinOrderByAggregateInput = {
   price?: Prisma.SortOrder
   weeklyIncome?: Prisma.SortOrder
   brochureUrl?: Prisma.SortOrder
-  floorPlanUrl?: Prisma.SortOrder
   beds?: Prisma.SortOrder
   baths?: Prisma.SortOrder
   garages?: Prisma.SortOrder
+  registerDate?: Prisma.SortOrder
   totalSize?: Prisma.SortOrder
   isPublished?: Prisma.SortOrder
   isFeatured?: Prisma.SortOrder
@@ -943,6 +959,10 @@ export type ListingScalarRelationFilter = {
 }
 
 export type ListingCreateimagesInput = {
+  set: string[]
+}
+
+export type ListingCreatefloorPlanUrlInput = {
   set: string[]
 }
 
@@ -971,6 +991,11 @@ export type NullableIntFieldUpdateOperationsInput = {
 }
 
 export type ListingUpdateimagesInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type ListingUpdatefloorPlanUrlInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -1031,10 +1056,11 @@ export type ListingCreateWithoutSavedByUsersInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
-  floorPlanUrl?: string | null
+  floorPlanUrl?: Prisma.ListingCreatefloorPlanUrlInput | string[]
   beds?: number | null
   baths?: number | null
   garages?: number | null
+  registerDate?: Date | string | null
   totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
@@ -1066,10 +1092,11 @@ export type ListingUncheckedCreateWithoutSavedByUsersInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
-  floorPlanUrl?: string | null
+  floorPlanUrl?: Prisma.ListingCreatefloorPlanUrlInput | string[]
   beds?: number | null
   baths?: number | null
   garages?: number | null
+  registerDate?: Date | string | null
   totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
@@ -1117,10 +1144,11 @@ export type ListingUpdateWithoutSavedByUsersInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floorPlanUrl?: Prisma.ListingUpdatefloorPlanUrlInput | string[]
   beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  registerDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
@@ -1152,10 +1180,11 @@ export type ListingUncheckedUpdateWithoutSavedByUsersInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floorPlanUrl?: Prisma.ListingUpdatefloorPlanUrlInput | string[]
   beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  registerDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
@@ -1187,10 +1216,11 @@ export type ListingCreateWithoutQueriesInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
-  floorPlanUrl?: string | null
+  floorPlanUrl?: Prisma.ListingCreatefloorPlanUrlInput | string[]
   beds?: number | null
   baths?: number | null
   garages?: number | null
+  registerDate?: Date | string | null
   totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
@@ -1222,10 +1252,11 @@ export type ListingUncheckedCreateWithoutQueriesInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingCreateimagesInput | string[]
   brochureUrl?: string | null
-  floorPlanUrl?: string | null
+  floorPlanUrl?: Prisma.ListingCreatefloorPlanUrlInput | string[]
   beds?: number | null
   baths?: number | null
   garages?: number | null
+  registerDate?: Date | string | null
   totalSize?: number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingCreatefeaturesInput | string[]
@@ -1273,10 +1304,11 @@ export type ListingUpdateWithoutQueriesInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floorPlanUrl?: Prisma.ListingUpdatefloorPlanUrlInput | string[]
   beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  registerDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
@@ -1308,10 +1340,11 @@ export type ListingUncheckedUpdateWithoutQueriesInput = {
   pricing?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   images?: Prisma.ListingUpdateimagesInput | string[]
   brochureUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  floorPlanUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  floorPlanUrl?: Prisma.ListingUpdatefloorPlanUrlInput | string[]
   beds?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   baths?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   garages?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  registerDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   totalSize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   measurements?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   features?: Prisma.ListingUpdatefeaturesInput | string[]
@@ -1387,6 +1420,7 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   beds?: boolean
   baths?: boolean
   garages?: boolean
+  registerDate?: boolean
   totalSize?: boolean
   measurements?: boolean
   features?: boolean
@@ -1424,6 +1458,7 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   beds?: boolean
   baths?: boolean
   garages?: boolean
+  registerDate?: boolean
   totalSize?: boolean
   measurements?: boolean
   features?: boolean
@@ -1458,6 +1493,7 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   beds?: boolean
   baths?: boolean
   garages?: boolean
+  registerDate?: boolean
   totalSize?: boolean
   measurements?: boolean
   features?: boolean
@@ -1492,6 +1528,7 @@ export type ListingSelectScalar = {
   beds?: boolean
   baths?: boolean
   garages?: boolean
+  registerDate?: boolean
   totalSize?: boolean
   measurements?: boolean
   features?: boolean
@@ -1504,7 +1541,7 @@ export type ListingSelectScalar = {
   deletedAt?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "description" | "propertyType" | "status" | "badge" | "address" | "city" | "state" | "country" | "pincode" | "price" | "weeklyIncome" | "pricing" | "images" | "brochureUrl" | "floorPlanUrl" | "beds" | "baths" | "garages" | "totalSize" | "measurements" | "features" | "inclusions" | "meta" | "isPublished" | "isFeatured" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "slug" | "description" | "propertyType" | "status" | "badge" | "address" | "city" | "state" | "country" | "pincode" | "price" | "weeklyIncome" | "pricing" | "images" | "brochureUrl" | "floorPlanUrl" | "beds" | "baths" | "garages" | "registerDate" | "totalSize" | "measurements" | "features" | "inclusions" | "meta" | "isPublished" | "isFeatured" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   savedByUsers?: boolean | Prisma.Listing$savedByUsersArgs<ExtArgs>
   queries?: boolean | Prisma.Listing$queriesArgs<ExtArgs>
@@ -1537,10 +1574,11 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     pricing: runtime.JsonValue | null
     images: string[]
     brochureUrl: string | null
-    floorPlanUrl: string | null
+    floorPlanUrl: string[]
     beds: number | null
     baths: number | null
     garages: number | null
+    registerDate: Date | null
     totalSize: number | null
     measurements: runtime.JsonValue | null
     features: string[]
@@ -1993,10 +2031,11 @@ export interface ListingFieldRefs {
   readonly pricing: Prisma.FieldRef<"Listing", 'Json'>
   readonly images: Prisma.FieldRef<"Listing", 'String[]'>
   readonly brochureUrl: Prisma.FieldRef<"Listing", 'String'>
-  readonly floorPlanUrl: Prisma.FieldRef<"Listing", 'String'>
+  readonly floorPlanUrl: Prisma.FieldRef<"Listing", 'String[]'>
   readonly beds: Prisma.FieldRef<"Listing", 'Int'>
   readonly baths: Prisma.FieldRef<"Listing", 'Int'>
   readonly garages: Prisma.FieldRef<"Listing", 'Int'>
+  readonly registerDate: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly totalSize: Prisma.FieldRef<"Listing", 'Int'>
   readonly measurements: Prisma.FieldRef<"Listing", 'Json'>
   readonly features: Prisma.FieldRef<"Listing", 'String[]'>

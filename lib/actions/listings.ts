@@ -56,7 +56,7 @@ export const createListing = async () => {
         "https://placehold.co/800x600/f8fafc/94a3b8?text=Property+Placeholder",
       ],
       brochureUrl: "",
-      floorPlanUrl: "",
+      floorPlanUrl: [""],
 
       beds: 1,
       baths: 1,
@@ -86,11 +86,12 @@ export const getListings = async (
   featuredOnly = false,
 ) => {
   const page = Math.max(currentPage, 1);
-  const size = Math.max(sizePerPage, 1);
+  const size = Math.max(sizePerPage, 9);
   const skip = (page - 1) * size;
 
   const where: any = {
     isPublished: true,
+    status: { not: "DRAFT" },
   };
 
   if (featuredOnly) {
@@ -115,6 +116,7 @@ export const getListings = async (
         state: true,
         beds: true,
         baths: true,
+        garages: true,
         measurements: true,
       },
     }),
@@ -167,12 +169,12 @@ export const createSampleListings = async () => {
     {
       title: "Bondi Beachfront Villa",
       city: "Sydney",
-      state: "NSW",
+      state: "New South Wales",
       price: 4200000,
       beds: 5,
       baths: 4,
       garages: 2,
-      type: "Villa",
+      type: "House",
       msq: { total: 4500, built: 3800, carpet: 3200 },
       images: [
         "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
@@ -182,19 +184,19 @@ export const createSampleListings = async () => {
     {
       title: "Melbourne CBD Apartment",
       city: "Melbourne",
-      state: "VIC",
+      state: "Queensland",
       price: 950000,
       beds: 2,
       baths: 2,
       garages: 1,
-      type: "Apartment",
+      type: "Dual Key",
       msq: { total: 1100, built: 950, carpet: 850 },
       images: ["https://images.unsplash.com/photo-1493809842364-78817add7ffb"],
     },
     {
       title: "Brisbane Riverside House",
       city: "Brisbane",
-      state: "QLD",
+      state: "Queensland",
       price: 1800000,
       beds: 4,
       baths: 3,
@@ -206,19 +208,19 @@ export const createSampleListings = async () => {
     {
       title: "Perth Modern Condo",
       city: "Perth",
-      state: "WA",
+      state: "South Australia",
       price: 780000,
       beds: 2,
       baths: 2,
       garages: 1,
-      type: "Condo",
+      type: "Duplex",
       msq: { total: 1000, built: 880, carpet: 800 },
       images: ["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267"],
     },
     {
       title: "Adelaide Family Home",
       city: "Adelaide",
-      state: "SA",
+      state: "South Australia",
       price: 1250000,
       beds: 4,
       baths: 3,
@@ -230,64 +232,65 @@ export const createSampleListings = async () => {
     {
       title: "Canberra Executive Townhouse",
       city: "Canberra",
-      state: "ACT",
+      state: "New South Wales",
       price: 990000,
       beds: 3,
       baths: 2,
       garages: 2,
-      type: "Townhouse",
+      type: "Dual Key",
       msq: { total: 1900, built: 1600, carpet: 1400 },
       images: ["https://images.unsplash.com/photo-1502005229762-cf1b2da7c5d6"],
     },
     {
       title: "Gold Coast Luxury Penthouse",
       city: "Gold Coast",
-      state: "QLD",
+      state: "Queensland",
       price: 3500000,
       beds: 4,
       baths: 4,
       garages: 3,
-      type: "Penthouse",
+      type: "Duplex",
       msq: { total: 4200, built: 3500, carpet: 3000 },
       images: ["https://images.unsplash.com/photo-1494526585095-c41746248156"],
     },
     {
       title: "Hobart Waterfront Cottage",
       city: "Hobart",
-      state: "TAS",
+      state: "South Australia",
       price: 870000,
       beds: 3,
       baths: 2,
       garages: 1,
-      type: "Cottage",
+      type: "House",
       msq: { total: 1500, built: 1300, carpet: 1100 },
       images: ["https://images.unsplash.com/photo-1441974231531-c6227db76b6e"],
     },
     {
       title: "Darwin Tropical Villa",
       city: "Darwin",
-      state: "NT",
+      state: "Queensland",
       price: 1100000,
       beds: 4,
       baths: 3,
       garages: 2,
-      type: "Villa",
+      type: "Dual Key",
       msq: { total: 2600, built: 2200, carpet: 1800 },
       images: ["https://images.unsplash.com/photo-1501183638710-841dd1904471"],
     },
     {
       title: "Newcastle Suburban Home",
       city: "Newcastle",
-      state: "NSW",
+      state: "New South Wales",
       price: 980000,
       beds: 3,
       baths: 2,
       garages: 2,
-      type: "House",
+      type: "Duplex",
       msq: { total: 2100, built: 1800, carpet: 1500 },
       images: ["https://images.unsplash.com/photo-1507089947368-19c1da9775ae"],
     },
   ];
+
   return await Promise.all(
     listings.map((item) =>
       prisma.listing.create({
@@ -309,7 +312,9 @@ export const createSampleListings = async () => {
 
           images: item.images,
           brochureUrl: "",
-          floorPlanUrl: "",
+          floorPlanUrl: [
+            "https://img.magnific.com/free-photo/floor-plan-with-furniture-blueprint-illustration_53876-103043.jpg",
+          ],
 
           beds: item.beds,
           baths: item.baths,
@@ -320,6 +325,7 @@ export const createSampleListings = async () => {
             builtUp: item.msq.built.toString(),
             carpet: item.msq.carpet.toString(),
           },
+          isPublished: true,
 
           features: ["Air Conditioning", "Parking", "Power Backup"],
           inclusions: ["Modular Kitchen", "Wardrobes"],

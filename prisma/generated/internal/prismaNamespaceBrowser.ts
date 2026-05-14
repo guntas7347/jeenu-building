@@ -111,6 +111,7 @@ export const ListingScalarFieldEnum = {
   beds: 'beds',
   baths: 'baths',
   garages: 'garages',
+  registerDate: 'registerDate',
   totalSize: 'totalSize',
   measurements: 'measurements',
   features: 'features',

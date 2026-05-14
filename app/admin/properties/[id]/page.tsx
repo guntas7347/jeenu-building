@@ -20,7 +20,11 @@ import FormTextarea from "@/components/FormTextarea";
 import FormSelect from "@/components/FormSelect";
 import PricingBreakdownEditor, { PricingItem } from "./PricingBreakdown";
 import CloudinaryUploader from "@/components/CloudinaryUploader";
-import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/config";
+import {
+  AUSTRALIAN_STATES,
+  PROPERTY_STATUS,
+  PROPERTY_TYPES,
+} from "@/lib/config";
 
 type Params = Promise<{ id: string }>;
 
@@ -43,7 +47,7 @@ export default function ListingFormPage({ params }: { params: Params }) {
     address: "",
     city: "",
     state: "",
-    country: "India",
+    country: "Australia",
     pincode: "",
     isPublished: false,
     isFeatured: false,
@@ -51,10 +55,11 @@ export default function ListingFormPage({ params }: { params: Params }) {
     weeklyIncome: "",
     images: [] as string[],
     brochureUrl: "",
-    floorPlanUrl: "",
+    floorPlanUrl: [] as string[],
     beds: 0,
     baths: 0,
     garages: 0,
+    registerDate: "",
     features: [] as string[],
     inclusions: [] as string[],
     measurements: { totalSize: "", builtUp: "", carpet: "" },
@@ -82,6 +87,18 @@ export default function ListingFormPage({ params }: { params: Params }) {
             ? (Number(data.priceInPaisa) / 100).toString()
             : "",
           images: data.images || [],
+          floorPlanUrl: Array.isArray(data.floorPlanUrl)
+            ? data.floorPlanUrl
+            : data.floorPlanUrl
+              ? [data.floorPlanUrl]
+              : [],
+          registerDate: data.registerDate
+            ? new Date(
+                new Date(data.registerDate).getTime() + 10 * 60 * 60 * 1000,
+              )
+                .toISOString()
+                .split("T")[0]
+            : "",
           features: data.features || [],
           inclusions: data.inclusions || [],
           measurements: (data.measurements as any) || {
@@ -167,6 +184,9 @@ export default function ListingFormPage({ params }: { params: Params }) {
         beds: Number(form.beds),
         baths: Number(form.baths),
         garages: Number(form.garages),
+        registerDate: form.registerDate
+          ? new Date(form.registerDate + "T00:00:00+10:00")
+          : null,
         features: form.features,
         inclusions: form.inclusions,
         measurements: form.measurements,
@@ -318,6 +338,13 @@ export default function ListingFormPage({ params }: { params: Params }) {
               onChange={handleChange}
               placeholder="e.g. 14500000"
             />
+            <FormInput
+              label="Register Date (UTC+10)"
+              type="date"
+              name="registerDate"
+              value={form.registerDate}
+              onChange={handleChange}
+            />
             <div className="md:col-span-2">
               <FormTextarea
                 label="Full Description"
@@ -376,12 +403,15 @@ export default function ListingFormPage({ params }: { params: Params }) {
               onChange={handleChange}
               placeholder="Los Angeles"
             />
-            <FormInput
+            <FormSelect
               label="State"
               name="state"
               value={form.state}
               onChange={handleChange}
-              placeholder="CA"
+              options={AUSTRALIAN_STATES.map((pt) => ({
+                value: pt,
+                label: pt,
+              }))}
             />
             <FormInput
               label="Country"
@@ -501,24 +531,56 @@ export default function ListingFormPage({ params }: { params: Params }) {
                 onChange={handleChange}
                 placeholder="https://..."
               />
-              <div>
+              <div className="md:col-span-2 space-y-4">
                 <label className="block text-sm font-bold text-slate-700 mb-1.5">
-                  Floor Plan
-                </label>{" "}
+                  Floor Plans
+                </label>
                 <CloudinaryUploader
                   onUpload={(url: string) =>
                     setForm((prev) => ({
                       ...prev,
-                      floorPlanUrl: url,
+                      floorPlanUrl: [...prev.floorPlanUrl, url],
                     }))
                   }
                 />
-                <FormInput
-                  name="floorPlanUrl"
-                  value={form.floorPlanUrl}
-                  onChange={handleChange}
-                  placeholder="https://..."
-                />
+
+                {form.floorPlanUrl.length > 0 && (
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                    {form.floorPlanUrl.map((url, idx) => (
+                      <div
+                        key={idx}
+                        className="relative group rounded-xl overflow-hidden bg-slate-100 border border-slate-200"
+                      >
+                        <div className="aspect-video relative">
+                          <img
+                            src={url}
+                            alt={`Floor Plan ${idx}`}
+                            className="w-full h-full object-cover"
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setForm((prev) => ({
+                                ...prev,
+                                floorPlanUrl: prev.floorPlanUrl.filter(
+                                  (_, i) => i !== idx,
+                                ),
+                              }))
+                            }
+                            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                        <div className="p-2 bg-white border-t border-slate-100">
+                          <p className="text-[10px] text-slate-500 font-mono">
+                            {url}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
@@ -540,25 +602,32 @@ export default function ListingFormPage({ params }: { params: Params }) {
                   {form.images.map((url, idx) => (
                     <div
                       key={idx}
-                      className="relative group rounded-xl overflow-hidden bg-slate-100 aspect-video border border-slate-200"
+                      className="relative group rounded-xl overflow-hidden bg-slate-100 border border-slate-200"
                     >
-                      <img
-                        src={url}
-                        alt={`Gallery ${idx}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setForm((prev) => ({
-                            ...prev,
-                            images: prev.images.filter((_, i) => i !== idx),
-                          }))
-                        }
-                        className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <div className="aspect-video relative">
+                        <img
+                          src={url}
+                          alt={`Gallery ${idx}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() =>
+                            setForm((prev) => ({
+                              ...prev,
+                              images: prev.images.filter((_, i) => i !== idx),
+                            }))
+                          }
+                          className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                      <div className="p-2 bg-white border-t border-slate-100">
+                        <p className="text-[10px] text-slate-500 font-mono">
+                          {url}
+                        </p>
+                      </div>
                     </div>
                   ))}
                 </div>

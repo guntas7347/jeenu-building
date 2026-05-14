@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import PropertyFilters, { FilterState } from "@/components/PropertyFilters";
 import { getFilteredListings } from "@/lib/actions/getFilteredListings";
 import Pagination from "@/components/Pagination";
@@ -21,18 +22,19 @@ export default function ClientListing({
 }: {
   initialData: PaginatedResponse;
 }) {
-  // Use lowercase 'string' for TS primitives
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
+
   const [savedListingsIds, setSavedListingsIds] = useState<string[]>([]);
   const savedIdsSet = new Set(savedListingsIds);
 
-  // Keep the raw data in state without trying to enrich it up front
   const [listings, setListings] = useState(initialData.data);
   const [totalCount, setTotalCount] = useState(initialData.total);
   const [totalPages, setTotalPages] = useState(initialData.totalPages);
 
   const [isFiltering, setIsFiltering] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [activeFilters, setActiveFilters] = useState<FilterState | null>(null);
   const [activeSort, setActiveSort] = useState("Newest Listings");
 
   // 1. Fetch saved IDs on mount
@@ -52,7 +54,7 @@ export default function ClientListing({
   useEffect(() => {
     const fetchListings = async () => {
       if (
-        !activeFilters &&
+        searchParams.toString().length === 0 &&
         currentPage === 1 &&
         activeSort === "Newest Listings"
       ) {
@@ -64,8 +66,22 @@ export default function ClientListing({
 
       setIsFiltering(true);
       try {
+        const filters: FilterState = {
+          location: searchParams.get("location") || "",
+          state: searchParams.get("state") || "",
+          propertyType:
+            searchParams.get("type") || searchParams.get("propertyType") || "",
+          minPrice: searchParams.get("minPrice") || "",
+          maxPrice: searchParams.get("maxPrice") || "",
+          beds: searchParams.get("beds") || "",
+          baths: searchParams.get("baths") || "",
+          minArea: searchParams.get("minArea") || "",
+          maxArea: searchParams.get("maxArea") || "",
+          status: searchParams.get("status") || "",
+        };
+
         const response = await getFilteredListings(
-          activeFilters || ({} as FilterState),
+          filters,
           currentPage,
           9,
           activeSort,
@@ -82,27 +98,22 @@ export default function ClientListing({
     };
 
     fetchListings();
-  }, [activeFilters, currentPage, activeSort, initialData]);
-
-  const handleApplyFilters = (filters: FilterState) => {
-    setActiveFilters(filters);
-    setCurrentPage(1);
-  };
+  }, [searchParams, currentPage, activeSort, initialData]);
 
   return (
     <main className="pt-32 pb-16 max-w-7xl mx-auto px-6">
       <div className="flex flex-col lg:flex-row gap-8 items-start">
-        <PropertyFilters onApply={handleApplyFilters} />
+        <PropertyFilters />
 
         <section className="flex-1 w-full">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
               <h1 className="text-3xl font-bold text-slate-900">
-                Premium Listings
+                Build Listings
               </h1>
               <p className="text-slate-500 text-sm mt-1">
                 Showing {totalCount} properties
-                {activeFilters && " (Filtered)"}
+                {Array.from(searchParams.values()).some(v => v !== "") && " (Filtered)"}
               </p>
             </div>
             <div className="flex items-center gap-3 w-full md:w-auto">
@@ -160,7 +171,7 @@ export default function ClientListing({
                   </h3>
                   <p>Try adjusting your filters to see more results.</p>
                   <button
-                    onClick={() => handleApplyFilters({} as FilterState)}
+                    onClick={() => router.push(pathname)}
                     className="mt-6 px-6 py-2.5 bg-blue-50 text-blue-700 font-bold rounded-xl hover:bg-blue-100 transition-colors"
                   >
                     Clear Filters

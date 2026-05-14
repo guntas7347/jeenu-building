@@ -21,6 +21,7 @@ export default function CloudinaryUploader({
   const [loading, setLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [manualUrl, setManualUrl] = useState("");
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -73,15 +74,10 @@ export default function CloudinaryUploader({
       if (!res.ok) throw new Error("Upload failed");
 
       const data = await res.json();
-
-      // Pass the URL to the parent component
       onUpload(data.secure_url);
-
-      // Reset state for a clean UX
       setSuccess(true);
       setImage(null);
 
-      // Optional: clear the file input value so the same file can be selected again
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
@@ -92,6 +88,15 @@ export default function CloudinaryUploader({
     }
   };
 
+  const handleManualSubmit = () => {
+    if (manualUrl.trim()) {
+      onUpload(manualUrl.trim());
+      setManualUrl("");
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 2000);
+    }
+  };
+
   const clearSelection = (e: React.MouseEvent) => {
     e.stopPropagation();
     setImage(null);
@@ -99,8 +104,7 @@ export default function CloudinaryUploader({
   };
 
   return (
-    <div className="w-full max-w-md">
-      {/* Hidden native input */}
+    <div className="w-full">
       <input
         type="file"
         accept="image/*"
@@ -109,88 +113,99 @@ export default function CloudinaryUploader({
         className="hidden"
       />
 
-      {/* Dropzone Area */}
-      <div
-        onClick={() => !loading && !image && fileInputRef.current?.click()}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        className={`relative flex flex-col items-center justify-center p-6 border-2 border-dashed rounded-xl transition-all duration-200 ${
-          isDragging
-            ? "border-blue-500 bg-blue-50/50"
-            : image
-              ? "border-slate-300 bg-slate-50"
-              : success
-                ? "border-green-400 bg-green-50/50"
-                : "border-slate-300 hover:border-slate-400 hover:bg-slate-50 cursor-pointer"
-        }`}
-      >
-        {loading ? (
-          <div className="flex flex-col items-center gap-3 py-4 text-blue-600">
-            <Loader2 className="w-8 h-8 animate-spin" />
-            <p className="text-sm font-medium">Uploading to cloud...</p>
-          </div>
-        ) : success ? (
-          <div className="flex flex-col items-center gap-3 py-4 text-green-600">
-            <CheckCircle2 className="w-8 h-8" />
-            <p className="text-sm font-medium">Upload complete!</p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSuccess(false);
-              }}
-              className="text-xs underline hover:text-green-700 mt-1"
-            >
-              Upload another
-            </button>
-          </div>
-        ) : image ? (
-          <div className="flex flex-col items-center gap-4 w-full">
-            <div className="flex items-center justify-between w-full p-3 bg-white border border-slate-200 rounded-lg shadow-sm">
-              <div className="flex items-center gap-3 overflow-hidden">
-                <div className="p-2 bg-blue-100 text-blue-600 rounded-md shrink-0">
-                  <ImageIcon className="w-5 h-5" />
-                </div>
-                <div className="flex flex-col truncate">
-                  <span className="text-sm font-medium text-slate-700 truncate">
-                    {image.name}
-                  </span>
-                  <span className="text-xs text-slate-500">
-                    {(image.size / 1024 / 1024).toFixed(2)} MB
-                  </span>
-                </div>
-              </div>
+      {/* Single unified card split into two halves */}
+      <div className="flex items-stretch border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm">
+
+        {/* ── Left: Dropzone ── */}
+        <div
+          onClick={() => !loading && !image && fileInputRef.current?.click()}
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={`relative flex flex-1 items-center gap-3 px-4 py-3 transition-all duration-200 ${
+            isDragging
+              ? "bg-blue-50"
+              : image
+                ? "bg-slate-50"
+                : success && !image
+                  ? "bg-green-50"
+                  : "hover:bg-slate-50 cursor-pointer"
+          }`}
+        >
+          {loading ? (
+            <>
+              <Loader2 className="w-4 h-4 text-blue-500 animate-spin shrink-0" />
+              <span className="text-xs font-semibold text-blue-600">Uploading…</span>
+            </>
+          ) : success && !image ? (
+            <>
+              <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0" />
+              <span className="text-xs font-semibold text-green-600 flex-1">Added!</span>
               <button
-                onClick={clearSelection}
-                className="p-1 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-md transition-colors"
+                onClick={(e) => { e.stopPropagation(); setSuccess(false); }}
+                className="text-[10px] font-bold text-slate-400 hover:text-slate-600 underline"
               >
-                <X className="w-4 h-4" />
+                Reset
               </button>
-            </div>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                uploadImage();
-              }}
-              className="w-full py-2.5 px-4 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-lg transition-colors"
-            >
-              Confirm Upload
-            </button>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center gap-3 py-4 text-slate-500">
-            <div className="p-3 bg-slate-100 rounded-full text-slate-600">
-              <UploadCloud className="w-6 h-6" />
-            </div>
-            <div className="text-center">
-              <p className="text-sm font-medium text-slate-700">
-                Click to upload or drag and drop
-              </p>
-              <p className="text-xs mt-1">SVG, PNG, JPG or GIF</p>
-            </div>
-          </div>
-        )}
+            </>
+          ) : image ? (
+            <>
+              <ImageIcon className="w-4 h-4 text-blue-500 shrink-0" />
+              <span className="text-xs font-semibold text-slate-700 truncate flex-1 min-w-0">
+                {image.name}
+              </span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={clearSelection}
+                  className="p-1 rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); uploadImage(); }}
+                  className="px-3 py-1.5 bg-slate-900 hover:bg-slate-700 text-white text-[10px] font-bold tracking-wide rounded-lg transition-colors"
+                >
+                  Upload
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={`p-1.5 rounded-lg shrink-0 transition-colors ${isDragging ? "bg-blue-100 text-blue-600" : "bg-slate-100 text-slate-500"}`}>
+                <UploadCloud className="w-4 h-4" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-slate-700">Upload a file</p>
+                <p className="text-[10px] text-slate-400">Click or drag & drop</p>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* ── Divider ── */}
+        <div className="w-px bg-slate-200 shrink-0" />
+
+        {/* ── Right: Manual URL input with inset button ── */}
+        <div className="flex items-center w-56 lg:w-64 shrink-0 px-2 py-2 gap-2">
+          <input
+            type="text"
+            value={manualUrl}
+            onChange={(e) => setManualUrl(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleManualSubmit()}
+            placeholder="or paste URL…"
+            className="flex-1 min-w-0 text-xs font-medium bg-transparent outline-none placeholder:text-slate-400 text-slate-700"
+          />
+          <button
+            onClick={handleManualSubmit}
+            disabled={!manualUrl.trim()}
+            className="shrink-0 px-3 py-1.5 bg-slate-900 hover:bg-slate-700 disabled:bg-slate-200 disabled:text-slate-400 text-white text-[10px] font-bold tracking-wide rounded-xl transition-all"
+          >
+            Add
+          </button>
+        </div>
+
       </div>
     </div>
   );
 }
+

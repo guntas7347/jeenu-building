@@ -7,16 +7,14 @@ import { getSessionUser } from "../auth";
 export async function getFilteredListings(
   filters: FilterState,
   page: number = 1,
-  limit: number = 10,
+  limit: number = 9,
   sortBy: string = "Newest Listings",
 ) {
   try {
     // 1. Build the dynamic WHERE clause
-    const where: any = {};
-
-    // Exact matches
-    if (filters.propertyType) where.propertyType = filters.propertyType;
-    if (filters.status) where.status = filters.status;
+    const where: any = {
+      isPublished: true,
+    };
 
     // Location (Search across city, state, or address)
     if (filters.location) {
@@ -27,18 +25,25 @@ export async function getFilteredListings(
       ];
     }
 
-    // Price filtering (Convert string inputs to BigInt Paisa)
+    // Exact matches
+    if (filters.state) where.state = filters.state;
+    if (filters.propertyType) where.propertyType = filters.propertyType;
+
+    // Status handling
+    if (filters.status) {
+      where.status = filters.status;
+    } else {
+      where.status = { not: "DRAFT" };
+    }
+
+    // Price filtering (Stored as Int in dollars in schema)
     if (filters.minPrice || filters.maxPrice) {
       where.price = {};
       if (filters.minPrice) {
-        where.price.gte = BigInt(
-          Math.round(parseFloat(filters.minPrice) * 100),
-        );
+        where.price.gte = parseInt(filters.minPrice);
       }
       if (filters.maxPrice) {
-        where.price.lte = BigInt(
-          Math.round(parseFloat(filters.maxPrice) * 100),
-        );
+        where.price.lte = parseInt(filters.maxPrice);
       }
     }
 
@@ -65,12 +70,12 @@ export async function getFilteredListings(
 
     const [listings, totalCount] = await Promise.all([
       prisma.listing.findMany({
-        where: { ...where, status: { not: "DRAFT" } },
+        where,
         orderBy,
         skip,
         take: limit,
       }),
-      prisma.listing.count({ where: { ...where, status: { not: "DRAFT" } } }),
+      prisma.listing.count({ where }),
     ]);
 
     // 4. Serialize BigInts and handle JSON filtering for Area
@@ -78,7 +83,7 @@ export async function getFilteredListings(
     // it's best to filter it in memory after fetching, or add an `areamsq Int` column for better DB performance.
     let serializedListings = listings.map((listing) => ({
       ...listing,
-      price: listing.price.toString(), // Convert BigInt to string for Client Components
+      price: listing.price.toString(), // Stringify for safe transport
     }));
 
     // In-memory filter for Area (since it's inside a JSON object)

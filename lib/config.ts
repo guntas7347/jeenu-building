@@ -1,4 +1,4 @@
-export const PROPERTY_TYPES = ["House", "Dual Key", "Duplex"];
+export const PROPERTY_TYPES = ["Dual Key", "House", "Duplex"];
 export const AUSTRALIAN_STATES = [
   "New South Wales",
   // "Victoria",
@@ -12,6 +12,7 @@ export const AUSTRALIAN_STATES = [
 
 export const CONTACT_NUMBER = "0488553500";
 export const CONTACT_EMAIL = "contact@rohomes.com.au";
+export const CONTACT_ADDRESS = "2-8 Brookhollow Ave, Norwest NSW 2153";
 
 export const PROPERTY_STATUS = ["Available", "Sold"];
 
