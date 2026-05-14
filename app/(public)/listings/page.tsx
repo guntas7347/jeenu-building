@@ -7,7 +7,7 @@ import { Loader2 } from "lucide-react";
 export const revalidate = false;
 
 export const metadata: Metadata = {
-  title: "Premium Real Estate Listings | Red Owl Homes",
+  title: "Listings | Red Owl Homes",
   description: "Browse our exclusive collection of luxury properties.",
 };
 

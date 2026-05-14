@@ -20,6 +20,7 @@ import { formatPrice } from "@/lib/helpers";
 import MortgageCalculator from "@/components/MorgageCalculator";
 import InquiryForm from "@/components/InquiryForm";
 import FloorPlanGallery from "@/components/FloorPlanGallery";
+import { Metadata } from "next";
 
 export const revalidate = false;
 
@@ -30,6 +31,35 @@ const formatLabel = (key: string) => {
   const result = key.replace(/([A-Z])/g, " $1");
   return result.charAt(0).toUpperCase() + result.slice(1);
 };
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { slug } = await params;
+
+  const listing = await getListingBySlug(slug);
+
+  if (!listing) {
+    return {
+      title: "Property Not Found | Red Owl Homes",
+    };
+  }
+
+  return {
+    title: listing.title || "Red Owl Homes",
+    description: listing.description || "",
+    openGraph: {
+      title: listing.title || "Red Owl Homes",
+      description: listing.description || "",
+      images: listing.images?.length > 0 ? [listing.images[0]] : [],
+    },
+    icons: {
+      icon: "/logo.png",
+    },
+  };
+}
 
 export default async function PropertyDetailPage({
   params,

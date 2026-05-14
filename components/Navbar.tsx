@@ -12,7 +12,7 @@ import { CONTACT_NUMBER } from "@/lib/config";
 const NAV_LINKS = [
   { title: "Home", href: "/" },
   { title: "Listings", href: "/listings" },
-  // { title: "About Us", href: "/about" },
+  { title: "Calculator", href: "/calculator" },
 
   //todo copypaste ownest calcuators page
 ];
@@ -109,7 +109,7 @@ const Header = () => {
             />
           </div>
           <span
-            className={`text-sm font-bold tracking-tight hidden sm:block transition-colors ${
+            className={`text-sm font-bold tracking-tight transition-colors ${
               scrolled ? "text-gray-900 dark:text-white" : "text-white"
             }`}
           >
@@ -147,7 +147,7 @@ const Header = () => {
           {/* Theme Toggle */}
           <button
             onClick={toggleTheme}
-            className={`flex items-center justify-center w-8 h-8 rounded-xl transition-colors ${
+            className={`hidden md:flex items-center justify-center w-8 h-8 rounded-xl transition-colors ${
               scrolled
                 ? "bg-gray-100/70 dark:bg-white/8 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-white/15"
                 : "bg-white/10 text-white hover:bg-white/20"

@@ -15,6 +15,12 @@ export const metadata: Metadata = {
   title: "Red Owl Homes",
   description:
     "Curating extraordinary living spaces for the world's most discerning individuals.",
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
+    other: [{ url: "/logo.png" }],
+  },
 };
 
 export default function RootLayout({
