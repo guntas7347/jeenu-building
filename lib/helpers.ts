@@ -1,7 +1,10 @@
-// Helper to format currency
 export const formatPrice = (amount: number | string) => {
   if (amount == null) return "$0";
+
   const value = Number(amount);
+
+  if (Number.isNaN(value)) return String(amount);
+
   return new Intl.NumberFormat("en-AU", {
     style: "currency",
     currency: "AUD",

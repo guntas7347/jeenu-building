@@ -3,6 +3,11 @@ import { isAdmin } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import AdminClientLayout from "./AdminClientLayout";
 
+export const metadata = {
+  title: "Admin | RO HOMES",
+  description: "Admin Dashboard for RO Homes",
+};
+
 export default async function AdminLayout({
   children,
 }: {

@@ -87,23 +87,40 @@ export default async function PropertyDetailPage({
     ...Array(3).fill(defaultPlaceholder),
   ].slice(0, 3);
 
-  // 2. Map Key Specs
   const keySpecs = [
-    { icon: BedDouble, label: "Bedrooms", value: `${listing.beds} Beds` },
-    { icon: Bath, label: "Bathrooms", value: `${listing.baths} Baths` },
-    { icon: Car, label: "Garage", value: `${listing.garages} Cars` },
-    {
+    listing.beds && {
+      icon: BedDouble,
+      label: "Bedrooms",
+      value: `${listing.beds} Beds`,
+    },
+
+    listing.baths && {
+      icon: Bath,
+      label: "Bathrooms",
+      value: `${listing.baths} Baths`,
+    },
+
+    listing.garages && {
+      icon: Car,
+      label: "Garage",
+      value: `${listing.garages} Cars`,
+    },
+
+    listing.registerDate && {
       icon: Calendar,
       label: "Est. Registration",
-      value: new Date(listing.registerDate || "").toLocaleDateString("en-GB", {
+      value: new Date(listing.registerDate).toLocaleDateString("en-GB", {
         day: "2-digit",
         month: "short",
         year: "numeric",
       }),
     },
-  ];
+  ].filter(Boolean) as {
+    icon: any;
+    label: string;
+    value: string;
+  }[];
 
-  // 3. Process JSON Measurements safely
   const rawMeasurements =
     typeof listing.measurements === "string"
       ? JSON.parse(listing.measurements)
@@ -271,7 +288,7 @@ export default async function PropertyDetailPage({
                   >
                     <span className="text-slate-500">{item.label}</span>
                     <span className="font-bold text-slate-900">
-                      {item.value}
+                      {formatPrice(item.value)}
                     </span>
                   </div>
                 ))}

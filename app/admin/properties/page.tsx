@@ -160,8 +160,9 @@ export default function AdminPropertiesPage() {
                       Price
                     </th>
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500">
-                      Status
+                      Publish Status
                     </th>
+
                     <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-slate-500 text-right rounded-tr-3xl">
                       Actions
                     </th>
@@ -211,11 +212,13 @@ export default function AdminPropertiesPage() {
                       </td>
                       <td className="px-6 py-4">
                         <span
-                          className={`text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider border ${getStatusBadge(
-                            prop.status,
-                          )}`}
+                          className={`text-[10px] px-2.5 py-1 rounded-lg font-bold uppercase tracking-wider border ${
+                            prop.isPublished
+                              ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                              : "bg-slate-100 text-slate-700 border-slate-200"
+                          }`}
                         >
-                          {prop.status}
+                          {prop.isPublished ? "Published" : "Not Published"}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right">
