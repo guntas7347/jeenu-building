@@ -20,12 +20,7 @@ export const updateListing = async (id: string, data: any) => {
     where: { id },
     data,
   });
-  revalidatePaths([
-    `/admin/properties/`,
-    `/admin/properties/${updatedListing.id}`,
-    `/listings/${updatedListing.slug}`,
-    `/listings/`,
-  ]);
+  revalidatePaths([`/listings/${updatedListing.slug}`, `/listings/`, "/"]);
   return updatedListing;
 };
 
@@ -36,11 +31,14 @@ export const createListing = async () => {
   const newListing = await prisma.listing.create({
     data: {
       title: draftTitle,
-      slug: draftTitle.toLowerCase().replace(/\s+/g, "-"),
+      slug: draftTitle
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, ""),
       description:
         "This is a sample property description. Please update this with the actual details of the estate.",
       propertyType: "Modern Villa",
-      status: "DRAFT", // Keeps it hidden from public view
+      status: "AVAILABLE", // Keeps it hidden from public view
       badge: "New Draft",
       address: "123 Sample Street",
       city: "Sydney",
@@ -91,7 +89,6 @@ export const getListings = async (
 
   const where: any = {
     isPublished: true,
-    status: { not: "DRAFT" },
   };
 
   if (featuredOnly) {
