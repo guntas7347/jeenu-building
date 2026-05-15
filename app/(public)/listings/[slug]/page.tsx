@@ -15,7 +15,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import Link from "next/link";
-import PropertyGallery from "./PropertyGallery";
+import PropertyGallery from "../../../../components/PropertyGallery";
 import { formatPrice } from "@/lib/helpers";
 import MortgageCalculator from "@/components/MorgageCalculator";
 import InquiryForm from "@/components/InquiryForm";
@@ -337,14 +337,15 @@ export default async function PropertyDetailPage({
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
           {/* Dynamic Google Maps Iframe */}
-          <div className="lg:col-span-2 rounded-2xl overflow-hidden h-[400px] border border-slate-200 shadow-sm relative bg-slate-100">
+          <div className="lg:col-span-2 rounded-2xl overflow-hidden h-[400px] border border-slate-200 shadow-sm relative bg-slate-100 z-0">
             <iframe
               src={mapUrl}
-              className="w-full h-full border-0 absolute inset-0 z-10"
+              title={listing.title}
+              className="w-full h-full border-0 absolute inset-0"
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-            ></iframe>
+            />
           </div>
 
           {/* Features Grid */}

@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { X, ChevronLeft, ChevronRight, Grid3x3, Expand } from "lucide-react";
+import { useState, useEffect } from "react";
+import { X, Grid3x3, Expand } from "lucide-react";
+import ImageLightbox from "@/components/ImageLightbox";
 
 export default function PropertyGallery({
   images,
@@ -23,32 +24,12 @@ export default function PropertyGallery({
     setLightboxOpen(true);
   };
 
-  const next = useCallback(
-    () => setActiveIdx((i) => (i + 1) % allImages.length),
-    [allImages.length],
-  );
-  const prev = useCallback(
-    () => setActiveIdx((i) => (i - 1 + allImages.length) % allImages.length),
-    [allImages.length],
-  );
-
   useEffect(() => {
-    if (!lightboxOpen) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightboxOpen(false);
-      if (e.key === "ArrowRight") next();
-      if (e.key === "ArrowLeft") prev();
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, [lightboxOpen, next, prev]);
-
-  useEffect(() => {
-    document.body.style.overflow = lightboxOpen || gridOpen ? "hidden" : "";
+    document.body.style.overflow = gridOpen ? "hidden" : "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [lightboxOpen, gridOpen]);
+  }, [gridOpen]);
 
   return (
     <>
@@ -141,76 +122,14 @@ export default function PropertyGallery({
       </div>
 
       {/* Lightbox */}
-      {lightboxOpen && (
-        <div
-          className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
-          onClick={() => setLightboxOpen(false)}
-        >
-          {/* Close */}
-          <button
-            className="absolute top-6 right-6 z-10 text-white/80 hover:text-white transition-colors bg-white/10 rounded-full p-2"
-            onClick={() => setLightboxOpen(false)}
-          >
-            <X className="w-6 h-6" />
-          </button>
-
-          {/* Counter */}
-          <div className="absolute top-6 left-1/2 -translate-x-1/2 text-white/60 text-sm font-medium tracking-widest">
-            {activeIdx + 1} / {allImages.length}
-          </div>
-
-          {/* Prev */}
-          <button
-            className="absolute left-4 md:left-8 z-10 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-all"
-            onClick={(e) => {
-              e.stopPropagation();
-              prev();
-            }}
-          >
-            <ChevronLeft className="w-7 h-7" />
-          </button>
-
-          {/* Image */}
-          <div
-            className="max-w-5xl max-h-[80vh] w-full px-20"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <img
-              key={activeIdx}
-              src={allImages[activeIdx]}
-              alt={`${title} - photo ${activeIdx + 1}`}
-              className="max-w-full max-h-[80vh] object-contain mx-auto rounded-xl animate-[fadeIn_0.2s_ease]"
-            />
-          </div>
-
-          {/* Next */}
-          <button
-            className="absolute right-4 md:right-8 z-10 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 transition-all"
-            onClick={(e) => {
-              e.stopPropagation();
-              next();
-            }}
-          >
-            <ChevronRight className="w-7 h-7" />
-          </button>
-
-          {/* Thumbnail strip */}
-          <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 px-6 overflow-x-auto">
-            {allImages.map((src, i) => (
-              <button
-                key={i}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setActiveIdx(i);
-                }}
-                className={`flex-shrink-0 w-14 h-10 rounded-md overflow-hidden border-2 transition-all ${i === activeIdx ? "border-primary" : "border-transparent opacity-50 hover:opacity-80"}`}
-              >
-                <img src={src} alt="" className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+      <ImageLightbox
+        images={allImages}
+        currentIndex={activeIdx}
+        onIndexChange={setActiveIdx}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        title={title}
+      />
 
       {/* All Photos Grid Modal */}
       {gridOpen && (

@@ -2,13 +2,11 @@
 
 import React, { useState } from "react";
 import {
-  ExternalLink,
-  X,
+  Maximize2,
   ChevronLeft,
   ChevronRight,
-  Maximize2,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import ImageLightbox from "@/components/ImageLightbox";
 
 interface FloorPlanGalleryProps {
   images: string[];
@@ -43,20 +41,19 @@ const FloorPlanGallery = ({ images }: FloorPlanGalleryProps) => {
         {/* Main Display Area */}
         <div
           onClick={() => setIsModalOpen(true)}
-          className="relative bg-slate-50 rounded-2xl p-4 flex items-center justify-center border border-slate-100 group cursor-zoom-in overflow-hidden aspect-[4/3]"
+          className="relative bg-slate-50 rounded-2xl p-2 md:p-4 flex items-center justify-center border border-slate-100 group cursor-zoom-in overflow-hidden aspect-square md:aspect-[4/3]"
         >
           <img
             alt={`Floor Plan ${activeIndex + 1}`}
-            className="max-w-96 max-h-96 object-contain transition-transform duration-500 group-hover:scale-105"
+            className="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105"
             src={images[activeIndex]}
           />
 
           {/* Hover Overlay */}
-          <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-colors flex items-center justify-center">
-            <Maximize2
-              className="text-white opacity-0 group-hover:opacity-100 transition-opacity drop-shadow-md"
-              size={32}
-            />
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors flex items-center justify-center">
+            <div className="bg-white/90 p-3 rounded-full opacity-0 group-hover:opacity-100 transition-all transform scale-90 group-hover:scale-100 shadow-sm">
+              <Maximize2 className="text-slate-700" size={24} />
+            </div>
           </div>
 
           {/* Navigation Arrows (Only if multiple) */}
@@ -64,15 +61,15 @@ const FloorPlanGallery = ({ images }: FloorPlanGalleryProps) => {
             <>
               <button
                 onClick={prevImage}
-                className="absolute left-4 p-2 rounded-full bg-white/80 hover:bg-white shadow-sm border border-slate-200 transition-all opacity-0 group-hover:opacity-100"
+                className="absolute left-2 md:left-4 p-2 rounded-full bg-white/90 hover:bg-white shadow-md border border-slate-200 transition-all opacity-100 md:opacity-0 group-hover:opacity-100 z-10"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={20} className="text-slate-700" />
               </button>
               <button
                 onClick={nextImage}
-                className="absolute right-4 p-2 rounded-full bg-white/80 hover:bg-white shadow-sm border border-slate-200 transition-all opacity-0 group-hover:opacity-100"
+                className="absolute right-2 md:right-4 p-2 rounded-full bg-white/90 hover:bg-white shadow-md border border-slate-200 transition-all opacity-100 md:opacity-0 group-hover:opacity-100 z-10"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={20} className="text-slate-700" />
               </button>
             </>
           )}
@@ -103,56 +100,14 @@ const FloorPlanGallery = ({ images }: FloorPlanGalleryProps) => {
       </div>
 
       {/* Full Screen Modal */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-white/95 backdrop-blur-sm"
-            />
-
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="relative z-10 max-w-7xl w-full h-full flex items-center justify-center"
-            >
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute -top-12 right-0 text-white hover:text-slate-300 transition-colors flex items-center gap-2 font-bold"
-              >
-                Close <X size={24} />
-              </button>
-
-              <img
-                src={images[activeIndex]}
-                className="max-w-full max-h-full object-contain shadow-2xl"
-                alt="Full View"
-              />
-
-              {images.length > 1 && (
-                <div className="absolute inset-x-0 flex justify-between px-4 pointer-events-none">
-                  <button
-                    onClick={prevImage}
-                    className="pointer-events-auto p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all"
-                  >
-                    <ChevronLeft size={32} />
-                  </button>
-                  <button
-                    onClick={nextImage}
-                    className="pointer-events-auto p-4 rounded-full bg-white/10 hover:bg-white/20 text-white backdrop-blur-md transition-all"
-                  >
-                    <ChevronRight size={32} />
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      <ImageLightbox
+        images={images}
+        currentIndex={activeIndex}
+        onIndexChange={setActiveIndex}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Floor Plan"
+      />
     </>
   );
 };
