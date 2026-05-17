@@ -14,9 +14,21 @@ FROM node:${NODE_VERSION} AS builder
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
+
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
+
+ENV DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy"
+ENV NEXTAUTH_SECRET="dummy"
+ENV GOOGLE_CLIENT_ID="dummy"
+ENV GOOGLE_CLIENT_SECRET="dummy"
+ENV NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME="dummy"
+ENV NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET="dummy"
+ENV NEXT_PUBLIC_LOCATIONIQ_KEY="dummy"
+
 RUN npx prisma generate
+
 RUN --mount=type=cache,target=/app/.next/cache \
     npm run build
 
