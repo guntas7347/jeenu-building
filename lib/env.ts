@@ -10,7 +10,7 @@ function requireEnv(name: string): string {
   return value;
 }
 const env = {
-  NODE_ENV: requireEnv("NODE_ENV"),
+  NODE_ENV: process.env.NODE_ENV || "development",
   DATABASE_URL: requireEnv("DATABASE_URL"),
   NEXTAUTH_SECRET: requireEnv("NEXTAUTH_SECRET"),
   // NEXTAUTH_URL: requireEnv("NEXTAUTH_URL"),

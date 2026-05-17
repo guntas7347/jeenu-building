@@ -9,6 +9,4 @@ const globalForPrisma = global as unknown as { prisma: typeof prisma };
 
 if (env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
 
-console.log(env.DATABASE_URL);
-
 export default prisma;
