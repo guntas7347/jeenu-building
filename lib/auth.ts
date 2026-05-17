@@ -3,6 +3,12 @@
 import { getServerSession } from "next-auth";
 import { getUser } from "./actions/auth-user";
 import { redirect } from "next/navigation";
+import { signOut } from "next-auth/react";
+
+export const clearSession = async () => {
+  await signOut({ redirect: false });
+  redirect("/login");
+}; // this code is broken
 
 export const getSessionUser = async () => {
   const session = await getServerSession();

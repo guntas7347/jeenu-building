@@ -2,13 +2,14 @@
 
 import prisma from "@/lib/prisma";
 import { revalidatePaths } from "../revalidatePath";
-import { getSessionUser, requireAuth } from "../auth";
+import { clearSession, requireAuth } from "../auth";
 
 export async function getUserProfile() {
   try {
     const session = await requireAuth();
 
     if (!session.user) {
+      // await clearSession();
       return null;
     }
 
