@@ -7,8 +7,8 @@ export const authOptions = {
   secret: serverEnv.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
-      clientId: serverEnv.GOOGLE_CLIENT_ID,
-      clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
+      clientId: serverEnv.GOOGLE_CLIENT_ID!,
+      clientSecret: serverEnv.GOOGLE_CLIENT_SECRET!,
     }),
   ],
 
