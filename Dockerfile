@@ -18,10 +18,15 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Generate Prisma Client
+# Build args
+ARG DATABASE_URL
+
+ENV DATABASE_URL=$DATABASE_URL
+
+# Prisma
 RUN npx prisma generate
 
-# Build Next.js app
+# Next build
 RUN npm run build
 
 # ---- Runner ----
@@ -31,23 +36,16 @@ WORKDIR /app
 
 ENV NODE_ENV=production
 
-# Create non-root user
 RUN addgroup -S nodejs && adduser -S nextjs -G nodejs
 
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/public ./public
-
-# Prisma
 COPY --from=builder /app/prisma ./prisma
-
-# Next standalone output
 COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 
 USER nextjs
 
 EXPOSE 3000
-
-ENV PORT=3000
 
 CMD ["node", "server.js"]
