@@ -1,4 +1,4 @@
-import { serverEnv } from "@/lib/env/server.env";
+import { serverEnv } from "./lib/env/server.env";
 import { defineConfig } from "prisma/config";
 
 export default defineConfig({
