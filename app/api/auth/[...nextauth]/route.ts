@@ -1,14 +1,14 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { createUserIfNotExists } from "@/lib/actions/auth-user";
-import env from "@/lib/env";
+import { serverEnv } from "@/lib/env/server.env";
 
 export const authOptions = {
-  secret: env.NEXTAUTH_SECRET,
+  secret: serverEnv.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: serverEnv.GOOGLE_CLIENT_ID,
+      clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
     }),
   ],
 
