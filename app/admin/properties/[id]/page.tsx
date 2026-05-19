@@ -25,6 +25,7 @@ import {
   PROPERTY_STATUS,
   PROPERTY_TYPES,
 } from "@/lib/config";
+import ImagePreviewAdmin from "@/components/ImagePreviewAdmin";
 
 type Params = Promise<{ id: string }>;
 
@@ -547,37 +548,17 @@ export default function ListingFormPage({ params }: { params: Params }) {
                 {form.floorPlanUrl.length > 0 && (
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                     {form.floorPlanUrl.map((url, idx) => (
-                      <div
-                        key={idx}
-                        className="relative group rounded-xl overflow-hidden bg-slate-100 border border-slate-200"
-                      >
-                        <div className="aspect-video relative">
-                          <img
-                            src={url}
-                            alt={`Floor Plan ${idx}`}
-                            className="w-full h-full object-cover"
-                          />
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setForm((prev) => ({
-                                ...prev,
-                                floorPlanUrl: prev.floorPlanUrl.filter(
-                                  (_, i) => i !== idx,
-                                ),
-                              }))
-                            }
-                            className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600"
-                          >
-                            <Trash2 size={16} />
-                          </button>
-                        </div>
-                        <div className="p-2 bg-white border-t border-slate-100">
-                          <p className="text-[10px] text-slate-500 font-mono">
-                            {url}
-                          </p>
-                        </div>
-                      </div>
+                      <ImagePreviewAdmin
+                        url={url}
+                        onDelete={() =>
+                          setForm((prev) => ({
+                            ...prev,
+                            floorPlanUrl: prev.floorPlanUrl.filter(
+                              (_, i) => i !== idx,
+                            ),
+                          }))
+                        }
+                      />
                     ))}
                   </div>
                 )}
@@ -600,35 +581,15 @@ export default function ListingFormPage({ params }: { params: Params }) {
               {form.images.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
                   {form.images.map((url, idx) => (
-                    <div
-                      key={idx}
-                      className="relative group rounded-xl overflow-hidden bg-slate-100 border border-slate-200"
-                    >
-                      <div className="aspect-video relative">
-                        <img
-                          src={url}
-                          alt={`Gallery ${idx}`}
-                          className="w-full h-full object-cover"
-                        />
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setForm((prev) => ({
-                              ...prev,
-                              images: prev.images.filter((_, i) => i !== idx),
-                            }))
-                          }
-                          className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity shadow-md hover:bg-red-600"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                      <div className="p-2 bg-white border-t border-slate-100">
-                        <p className="text-[10px] text-slate-500 font-mono">
-                          {url}
-                        </p>
-                      </div>
-                    </div>
+                    <ImagePreviewAdmin
+                      url={url}
+                      onDelete={() =>
+                        setForm((prev) => ({
+                          ...prev,
+                          images: prev.images.filter((_, i) => i !== idx),
+                        }))
+                      }
+                    />
                   ))}
                 </div>
               )}
