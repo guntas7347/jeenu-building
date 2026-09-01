@@ -1,6 +1,8 @@
 import HeroSection from "@/components/Hero";
 import FeaturedListing from "@/components/FeaturedListing";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <main className="relative">
