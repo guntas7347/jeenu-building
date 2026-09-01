@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import { getListings } from "@/lib/actions/listings";
 import ClientPage from "./ClientPage";
 import { Metadata } from "next";
