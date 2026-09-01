@@ -1,5 +1,6 @@
 import { getListings } from "@/lib/actions/listings";
 import { Bath, Bed, Heart, MapPin, Square } from "lucide-react";
+import Link from "next/link";
 
 // Helper function to format the price
 const formatPrice = (price: number) => {
@@ -37,8 +38,9 @@ const FeaturedListing = async () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {data.map((property) => (
-            <div
+            <Link
               key={property.id}
+              href={`/properties/${property.id}`}
               className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-slate-100 group"
             >
               <div className="relative h-64 overflow-hidden bg-slate-100">
@@ -102,7 +104,7 @@ const FeaturedListing = async () => {
                   </div>
                 </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
         <div className="text-center mt-16">
