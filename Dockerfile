@@ -23,9 +23,6 @@ COPY . .
 RUN npx prisma generate
 RUN npm run build
 
-RUN apk add --no-cache postgresql-client
-RUN psql "$DATABASE_URL" -c "SELECT 1;"
-
 # Production image
 FROM node:22-alpine AS runner
 
