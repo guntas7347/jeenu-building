@@ -1,12 +1,10 @@
-export const dynamic = "force-dynamic";
-
 import { getListings } from "@/lib/actions/listings";
 import ClientPage from "./ClientPage";
 import { Metadata } from "next";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
-export const revalidate = false;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Listings | Red Owl Homes",
