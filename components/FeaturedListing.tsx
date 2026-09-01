@@ -40,7 +40,7 @@ const FeaturedListing = async () => {
           {data.map((property) => (
             <Link
               key={property.id}
-              href={`/properties/${property.id}`}
+              href={`/listings/${property.slug}`}
               className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-slate-100 group"
             >
               <div className="relative h-64 overflow-hidden bg-slate-100">
