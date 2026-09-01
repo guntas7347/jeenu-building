@@ -5,11 +5,6 @@ WORKDIR /app
 
 ARG DATABASE_URL
 ENV DATABASE_URL=$DATABASE_URL
-RUN if [ -n "$DATABASE_URL" ]; then \
-      echo "DATABASE_URL: SET"; \
-    else \
-      echo "DATABASE_URL: NOT SET"; \
-    fi
 
 COPY package.json package-lock.json ./
 RUN npm ci
@@ -27,6 +22,9 @@ COPY . .
 
 RUN npx prisma generate
 RUN npm run build
+
+RUN apk add --no-cache postgresql-client
+RUN psql "$DATABASE_URL" -c "SELECT 1;"
 
 # Production image
 FROM node:22-alpine AS runner
