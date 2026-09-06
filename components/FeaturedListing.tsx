@@ -1,117 +1,107 @@
 import { getListings } from "@/lib/actions/listings";
 import { Bath, Bed, Heart, MapPin, Square } from "lucide-react";
 import Link from "next/link";
-
-// Helper function to format the price
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat("en-AU", {
-    style: "currency",
-    currency: "AUD",
-    maximumFractionDigits: 0,
-  }).format(price);
-};
+import { formatPrice } from "@/lib/helpers";
 
 const FeaturedListing = async () => {
-  const { data } = await getListings(1, 4, true);
+  const { data } = await getListings(1, 6, true);
 
   return (
-    <section className="py-24 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
-          <div>
-            <span className="text-blue-600 font-bold text-xs mb-2 block uppercase tracking-widest">
-              Handpicked Selection
-            </span>
-            <h2 className="text-3xl font-bold text-slate-900">
-              Red Owl's top picks
-            </h2>
-          </div>
-          <div className="flex gap-4">
-            <button className="px-6 py-2 rounded-full border border-slate-200 text-slate-700 font-semibold text-sm hover:border-blue-600 transition-colors">
-              Newest
-            </button>
-            <button className="px-6 py-2 rounded-full border border-blue-600 bg-blue-50 text-blue-700 font-semibold text-sm">
-              Popular
-            </button>
-          </div>
+    <section className="py-24 px-6 max-w-7xl mx-auto">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
+        <div>
+          <span className="text-primary font-bold text-xs mb-2 block uppercase tracking-widest">
+            Handpicked Selection
+          </span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+            Red Owl's Top Picks
+          </h2>
         </div>
+        <Link
+          href="/listings"
+          className="px-6 py-2.5 rounded-full liquid-glass text-slate-800 dark:text-slate-200 hover:text-primary font-semibold text-xs transition-colors self-start md:self-auto border border-white/70 dark:border-white/10"
+        >
+          View All Listings
+        </Link>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {data.map((property) => (
-            <Link
-              key={property.id}
-              href={`/listings/${property.slug}`}
-              className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-shadow duration-300 border border-slate-100 group"
-            >
-              <div className="relative h-64 overflow-hidden bg-slate-100">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {data.map((property) => (
+          <Link
+            key={property.id}
+            href={`/listings/${property.slug}`}
+            className="liquid-glass-card rounded-[2rem] overflow-hidden group flex flex-col justify-between"
+          >
+            <div>
+              <div className="relative aspect-[16/10] overflow-hidden m-3 rounded-[1.6rem] bg-slate-100 dark:bg-slate-800">
                 <img
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
                   alt={property.title}
-                  src={property.images?.[0] || "/placeholder-image.jpg"} // Safely grab the first image
+                  src={property.images?.[0] || "/placeholder-image.jpg"}
                 />
 
-                {/* Dynamic Badge - Falls back to status if badge is missing */}
+                {/* Dynamic Badge */}
                 {(property.badge || property.status) && (
-                  <div
-                    className={`absolute top-4 left-4 px-3 py-1.5 rounded-xl text-[10px] font-bold tracking-wider shadow-sm uppercase ${
-                      property.badge === "Sample" // You can adjust this condition based on your real data
-                        ? "bg-blue-600 text-white"
-                        : "bg-white/90 backdrop-blur text-blue-700"
-                    }`}
-                  >
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full liquid-glass-pill text-[10px] font-bold tracking-wider uppercase text-slate-900 dark:text-white">
                     {property.badge || property.status}
                   </div>
                 )}
 
-                <button className="absolute top-4 right-4 bg-white/20 hover:bg-white backdrop-blur h-10 w-10 rounded-full flex items-center justify-center text-white hover:text-red-500 transition-all">
-                  <Heart size={20} className="fill-current stroke-current" />
+                <button
+                  aria-label="Save property"
+                  className="absolute top-3 right-3 w-9 h-9 liquid-glass-pill rounded-full flex items-center justify-center text-slate-700 dark:text-white hover:text-red-500 transition-all"
+                >
+                  <Heart size={16} />
                 </button>
               </div>
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-2">
-                  <h3 className="text-xl font-bold text-slate-900 line-clamp-1">
+
+              <div className="p-6 pt-2">
+                <div className="flex justify-between items-baseline mb-2">
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white line-clamp-1 group-hover:text-primary transition-colors">
                     {property.title}
                   </h3>
-                  <span className="text-blue-600 text-xl font-bold ml-4">
+                  <span className="text-primary text-xl font-bold ml-4 shrink-0">
                     {formatPrice(property.price)}
                   </span>
                 </div>
-                <p className="text-slate-500 text-sm flex items-center gap-1.5 mb-6">
-                  <MapPin size={16} className="flex-shrink-0" />
-                  <span className="line-clamp-1">
+
+                <p className="text-slate-500 dark:text-slate-400 text-xs flex items-center gap-1.5 mb-5 font-medium">
+                  <MapPin size={14} className="text-primary shrink-0" />
+                  <span className="truncate">
                     {property.city}, {property.state}
                   </span>
                 </p>
-                <div className="flex justify-between py-4 border-t border-slate-100">
-                  <div className="flex items-center gap-2 text-slate-600">
-                    <Bed size={18} className="text-blue-600" />
-                    <span className="text-sm font-semibold">
-                      {property.beds} Beds
-                    </span>
+
+                <div className="flex justify-between py-3 border-t border-slate-200/50 dark:border-white/5 text-slate-600 dark:text-slate-300">
+                  <div className="flex items-center gap-1.5 text-xs font-semibold">
+                    <Bed size={15} className="text-primary" />
+                    <span>{property.beds} Beds</span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-600">
-                    <Bath size={18} className="text-blue-600" />
-                    <span className="text-sm font-semibold">
-                      {property.baths} Baths
-                    </span>
+                  <div className="flex items-center gap-1.5 text-xs font-semibold">
+                    <Bath size={15} className="text-primary" />
+                    <span>{property.baths} Baths</span>
                   </div>
-                  <div className="flex items-center gap-2 text-slate-600">
-                    <Square size={18} className="text-blue-600" />
-                    <span className="text-sm font-semibold">
-                      {/* @ts-ignore - Assuming Prisma typed JSON, you might need to handle this based on your schema setup */}
-                      {property.measurements?.totalSize || "N/A"} msq
+                  <div className="flex items-center gap-1.5 text-xs font-semibold">
+                    <Square size={15} className="text-primary" />
+                    <span>
+                      {/* @ts-ignore */}
+                      {property.measurements?.totalSize || "N/A"} m²
                     </span>
                   </div>
                 </div>
               </div>
-            </Link>
-          ))}
-        </div>
-        <div className="text-center mt-16">
-          <button className="px-10 py-4 bg-white border border-slate-200 text-slate-800 font-semibold text-sm rounded-2xl hover:bg-slate-50 hover:border-blue-600 transition-all shadow-sm">
-            Show More Properties
-          </button>
-        </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="text-center mt-12">
+        <Link
+          href="/listings"
+          className="inline-flex items-center gap-2 px-8 py-3.5 liquid-glass-elevated text-slate-900 dark:text-white font-bold text-sm rounded-2xl hover:border-primary/40 transition-all shadow-sm"
+        >
+          Show More Properties
+        </Link>
       </div>
     </section>
   );

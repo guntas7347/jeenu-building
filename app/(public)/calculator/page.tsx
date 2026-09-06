@@ -2,19 +2,15 @@
 
 import React, { useState, useMemo, useCallback } from "react";
 import {
-  Calculator,
   Home,
   Car,
   TrendingDown,
   ChevronDown,
   ChevronUp,
-  ArrowRight,
-  Phone,
   Percent,
   DollarSign,
   Clock,
 } from "lucide-react";
-import Link from "next/link";
 
 // ─── Types ──────────────────────────────────────────────────────────────────
 type Tab = "home" | "asset";
@@ -31,7 +27,6 @@ const CONFIG = {
   home: {
     label: "Home Loan",
     icon: Home,
-    accentClass: "text-primary",
     defaultAmount: 600000,
     defaultRate: 6.35,
     defaultTerm: 30,
@@ -41,12 +36,11 @@ const CONFIG = {
     maxTerm: 30,
     minTerm: 5,
     desc: "Standard residential mortgage repayment estimator",
-    color: "#e27b32",
+    color: "#852a25",
   },
   asset: {
     label: "Asset Finance",
     icon: Car,
-    accentClass: "text-blue-500",
     defaultAmount: 50000,
     defaultRate: 7.5,
     defaultTerm: 5,
@@ -56,7 +50,7 @@ const CONFIG = {
     maxTerm: 7,
     minTerm: 1,
     desc: "Vehicles, equipment & marine asset finance estimator",
-    color: "#3b82f6",
+    color: "#0052cc",
   },
 } as const;
 
@@ -95,7 +89,7 @@ function Slider({
   return (
     <div className="space-y-1.5">
       <div className="flex justify-between items-baseline">
-        <label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+        <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
           {label}
         </label>
         <span
@@ -112,10 +106,10 @@ function Slider({
         step={step}
         value={value}
         onChange={(e) => onChange(Number(e.target.value))}
-        className="w-full h-1.5 rounded-full appearance-none cursor-pointer accent-primary bg-gray-200 dark:bg-white/10"
+        className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-slate-200 dark:bg-slate-700"
         style={{ accentColor: accent }}
       />
-      <div className="flex justify-between text-[10px] text-gray-400 font-semibold">
+      <div className="flex justify-between text-[10px] text-slate-400 font-semibold">
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
       </div>
@@ -217,7 +211,7 @@ export default function CalculatorsPage() {
     return (monthly * 12) / n;
   }, [monthly, freq]);
 
-  // Extra repayment savings (simple estimation)
+  // Extra repayment savings
   const savings = useMemo(() => {
     if (extraRepay <= 0) return null;
     const r = rate / 100 / 12;
@@ -250,33 +244,52 @@ export default function CalculatorsPage() {
   const accent = cfg.color;
 
   return (
-    <main className="min-h-screen bg-background-light dark:bg-background-dark">
+    <main className="min-h-screen pt-32 pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* ── Page header ────────────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-[#1a130f] border-b border-gray-100 dark:border-white/8 pt-20 pb-8 px-6">
-        <div className="max-w-5xl mx-auto pt-10">
-          <div className="flex items-start justify-between gap-4 flex-wrap">
-            <div>
-              <h1 className="text-2xl font-extrabold text-gray-900 dark:text-white">
-                Loan Repayment Calculator
-              </h1>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                Visualize repayments, interest costs, and early-payoff savings.
-              </p>
-            </div>
-          </div>
+      <div className="mb-10 text-center max-w-2xl mx-auto">
+        <span className="text-primary font-bold text-xs uppercase tracking-widest mb-2 block">
+          Financial Planning
+        </span>
+        <h1 className="text-3xl sm:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Loan Repayment Calculator
+        </h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+          Visualize repayments, interest costs, and early-payoff savings across turnkey and investment builds.
+        </p>
+
+        {/* Tab switcher */}
+        <div className="flex justify-center gap-2 mt-6 p-1.5 liquid-glass rounded-2xl w-fit mx-auto">
+          {(["home", "asset"] as Tab[]).map((t) => {
+            const Icon = CONFIG[t].icon;
+            const isActive = tab === t;
+            return (
+              <button
+                key={t}
+                onClick={() => switchTab(t)}
+                className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  isActive
+                    ? "bg-primary text-white shadow-md shadow-primary/20 scale-[1.02]"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                }`}
+              >
+                <Icon size={16} />
+                <span>{CONFIG[t].label}</span>
+              </button>
+            );
+          })}
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-6 py-8 space-y-6">
+      <div className="max-w-5xl mx-auto space-y-6">
         {/* ── Main calculator grid ───────────────────────────────────────── */}
-        <div className="grid lg:grid-cols-12 gap-5">
+        <div className="grid lg:grid-cols-12 gap-6">
           {/* Inputs */}
-          <section className="lg:col-span-5 bg-white dark:bg-[#2a1e15] rounded-2xl border border-gray-100 dark:border-white/8 shadow-sm p-6 space-y-6">
+          <section className="lg:col-span-5 liquid-glass-card rounded-3xl p-6 sm:p-8 space-y-6">
             <div>
-              <h2 className="text-sm font-bold text-gray-800 dark:text-white">
-                Loan Details
+              <h2 className="text-base font-extrabold text-slate-900 dark:text-white">
+                Loan Parameters
               </h2>
-              <p className="text-xs text-gray-400 mt-0.5">{cfg.desc}</p>
+              <p className="text-xs text-slate-400 mt-0.5">{cfg.desc}</p>
             </div>
 
             <Slider
@@ -319,17 +332,17 @@ export default function CalculatorsPage() {
             />
 
             {/* Extra repayment */}
-            <div className="space-y-1.5">
+            <div className="space-y-1.5 pt-2 border-t border-slate-200/50 dark:border-white/5">
               <div className="flex justify-between items-baseline">
-                <label className="text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">
+                <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   Extra Repayment / mo
                 </label>
                 <span className="text-[10px] text-emerald-500 font-bold uppercase tracking-wider">
-                  {extraRepay > 0 ? "Savings on!" : "Optional"}
+                  {extraRepay > 0 ? "Savings Active" : "Optional"}
                 </span>
               </div>
               <div className="relative">
-                <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">
                   $
                 </span>
                 <input
@@ -341,26 +354,26 @@ export default function CalculatorsPage() {
                   onChange={(e) =>
                     setExtraRepay(Math.max(0, Number(e.target.value)))
                   }
-                  className="w-full pl-7 pr-4 py-2.5 rounded-xl border border-gray-200 dark:border-white/10 bg-gray-50 dark:bg-white/5 text-sm font-bold text-gray-800 dark:text-white outline-none focus:border-emerald-400 transition-colors"
+                  className="w-full pl-8 pr-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm font-bold text-slate-800 dark:text-white outline-none focus:border-primary transition-colors"
                 />
               </div>
             </div>
           </section>
 
           {/* Results */}
-          <section className="lg:col-span-7 flex flex-col gap-5">
+          <section className="lg:col-span-7 flex flex-col gap-6">
             {/* Repayment frequency + big number */}
-            <div className="bg-white dark:bg-[#2a1e15] rounded-2xl border border-gray-100 dark:border-white/8 shadow-sm p-6">
+            <div className="liquid-glass-elevated rounded-3xl p-6 sm:p-8">
               {/* Freq selector */}
-              <div className="flex items-center gap-1 p-1 bg-gray-100 dark:bg-white/8 rounded-xl w-fit mb-5">
+              <div className="flex items-center gap-1 p-1 liquid-glass rounded-xl w-fit mb-6">
                 {(Object.keys(FREQ) as FreqKey[]).map((f) => (
                   <button
                     key={f}
                     onClick={() => setFreq(f)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+                    className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       freq === f
-                        ? "bg-white dark:bg-white/15 text-gray-900 dark:text-white shadow-sm"
-                        : "text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                        ? "bg-primary text-white shadow-sm"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
                     }`}
                   >
                     {FREQ[f].label}
@@ -368,25 +381,25 @@ export default function CalculatorsPage() {
                 ))}
               </div>
 
-              <div className="flex items-end justify-between gap-4">
+              <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-1">
                     {FREQ[freq].label} Repayment
                   </p>
                   <p
-                    className="text-4xl font-black tabular-nums"
+                    className="text-4xl sm:text-5xl font-extrabold tabular-nums tracking-tight"
                     style={{ color: accent }}
                   >
                     ${fmt(repayment, 0)}
                   </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    incl. principal + interest
+                  <p className="text-xs text-slate-400 mt-1">
+                    Includes principal & interest payments
                   </p>
                 </div>
 
                 {/* Split bar */}
-                <div className="flex-1 max-w-[200px]">
-                  <div className="flex h-2.5 rounded-full overflow-hidden mb-1.5">
+                <div className="w-full sm:max-w-[200px]">
+                  <div className="flex h-3 rounded-full overflow-hidden mb-2 bg-slate-200 dark:bg-slate-800">
                     <div
                       className="h-full transition-all duration-700"
                       style={{
@@ -395,11 +408,11 @@ export default function CalculatorsPage() {
                       }}
                     />
                     <div
-                      className="h-full bg-gray-300 dark:bg-white/20 transition-all duration-700"
+                      className="h-full bg-slate-400 dark:bg-slate-600 transition-all duration-700"
                       style={{ width: `${interestPct}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-[9px] font-bold text-gray-400">
+                  <div className="flex justify-between text-[10px] font-bold text-slate-500 dark:text-slate-400">
                     <span style={{ color: accent }}>
                       Principal {principalPct}%
                     </span>
@@ -410,11 +423,11 @@ export default function CalculatorsPage() {
             </div>
 
             {/* Stat grid */}
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-4">
               {[
                 {
                   icon: DollarSign,
-                  label: "Total Repayment",
+                  label: "Total Payments",
                   value: `$${fmt(totalPayment, 0)}`,
                   sub: "over full term",
                   color: accent,
@@ -423,8 +436,8 @@ export default function CalculatorsPage() {
                   icon: Percent,
                   label: "Total Interest",
                   value: `$${fmt(totalInterest, 0)}`,
-                  sub: `${fmt((totalInterest / amount) * 100, 1)}% of principal`,
-                  color: "#f97316",
+                  sub: `${fmt((totalInterest / amount) * 100, 1)}% of loan`,
+                  color: "#e11d48",
                 },
                 {
                   icon: Clock,
@@ -436,50 +449,44 @@ export default function CalculatorsPage() {
               ].map(({ icon: Icon, label, value, sub, color }) => (
                 <div
                   key={label}
-                  className="bg-white dark:bg-[#2a1e15] rounded-xl border border-gray-100 dark:border-white/8 shadow-sm p-4"
+                  className="liquid-glass rounded-2xl p-4 sm:p-5"
                 >
                   <div
-                    className="w-7 h-7 rounded-lg flex items-center justify-center mb-3"
+                    className="w-8 h-8 rounded-xl flex items-center justify-center mb-3"
                     style={{ backgroundColor: `${color}18` }}
                   >
-                    <Icon className="w-3.5 h-3.5" style={{ color }} />
+                    <Icon className="w-4 h-4" style={{ color }} />
                   </div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-0.5">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400 mb-0.5">
                     {label}
                   </p>
-                  <p className="text-base font-black text-gray-900 dark:text-white tabular-nums">
+                  <p className="text-base sm:text-lg font-black text-slate-900 dark:text-white tabular-nums tracking-tight">
                     {value}
                   </p>
-                  <p className="text-[10px] text-gray-400 mt-0.5">{sub}</p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">{sub}</p>
                 </div>
               ))}
             </div>
 
             {/* Extra repayment savings */}
             {savings && (
-              <div className="bg-emerald-50 dark:bg-emerald-900/10 border border-emerald-200 dark:border-emerald-700/30 rounded-2xl p-5 flex items-start gap-4">
-                <div className="w-8 h-8 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center flex-shrink-0">
-                  <TrendingDown className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <div className="bg-emerald-50/90 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 rounded-2xl p-5 flex items-start gap-4 shadow-sm">
+                <div className="w-9 h-9 rounded-xl bg-emerald-100 dark:bg-emerald-900/60 flex items-center justify-center shrink-0">
+                  <TrendingDown className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-0.5">
+                  <p className="text-xs font-extrabold text-emerald-700 dark:text-emerald-400 uppercase tracking-wider mb-0.5">
                     Extra Repayment Savings
                   </p>
-                  <p className="text-sm text-emerald-800 dark:text-emerald-300">
+                  <p className="text-sm text-emerald-900 dark:text-emerald-200">
                     Paying an extra <strong>${fmt(extraRepay)}/mo</strong> saves{" "}
-                    <strong>${fmt(savings.savedInterest, 0)}</strong> in
-                    interest
+                    <strong>${fmt(savings.savedInterest, 0)}</strong> in interest
                     {savings.savedYears > 0 || savings.savedMonths > 0 ? (
                       <>
-                        {" "}
-                        and cuts your loan by{" "}
+                        {" "}and cuts your loan term by{" "}
                         <strong>
-                          {savings.savedYears > 0
-                            ? `${savings.savedYears}y `
-                            : ""}
-                          {savings.savedMonths > 0
-                            ? `${savings.savedMonths}m`
-                            : ""}
+                          {savings.savedYears > 0 ? `${savings.savedYears}y ` : ""}
+                          {savings.savedMonths > 0 ? `${savings.savedMonths}m` : ""}
                         </strong>
                       </>
                     ) : null}
@@ -492,24 +499,24 @@ export default function CalculatorsPage() {
         </div>
 
         {/* ── Amortization table ─────────────────────────────────────────── */}
-        <section className="bg-white dark:bg-[#2a1e15] rounded-2xl border border-gray-100 dark:border-white/8 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-100 dark:border-white/8 flex items-center justify-between">
+        <section className="liquid-glass-card rounded-3xl overflow-hidden shadow-sm">
+          <div className="px-6 py-5 border-b border-slate-200/60 dark:border-white/10 flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-bold text-gray-900 dark:text-white">
+              <h2 className="text-base font-extrabold text-slate-900 dark:text-white">
                 Yearly Amortization Schedule
               </h2>
-              <p className="text-xs text-gray-400 mt-0.5">
-                How your loan balance reduces year by year
+              <p className="text-xs text-slate-400 mt-0.5">
+                Principal and interest breakdown across the loan duration
               </p>
             </div>
-            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+            <span className="text-[10px] font-bold text-primary bg-primary/10 px-3 py-1 rounded-full uppercase tracking-wider">
               {rows.length} Years
             </span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="bg-gray-50 dark:bg-white/3">
+                <tr className="bg-slate-50/50 dark:bg-white/5">
                   {[
                     "Year",
                     "Opening Balance",
@@ -519,37 +526,37 @@ export default function CalculatorsPage() {
                   ].map((h) => (
                     <th
                       key={h}
-                      className="px-5 py-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider whitespace-nowrap"
+                      className="px-6 py-3.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider whitespace-nowrap"
                     >
                       {h}
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-50 dark:divide-white/5">
+              <tbody className="divide-y divide-slate-200/40 dark:divide-white/5">
                 {displayRows.map((row, i) => (
                   <tr
                     key={row.year}
-                    className={`hover:bg-gray-50 dark:hover:bg-white/3 transition-colors ${
+                    className={`hover:bg-slate-50/70 dark:hover:bg-white/5 transition-colors ${
                       i === 0 ? "font-semibold" : ""
                     }`}
                   >
-                    <td className="px-5 py-3 font-bold text-gray-700 dark:text-gray-200">
-                      {row.year}
+                    <td className="px-6 py-3.5 font-bold text-slate-800 dark:text-slate-200">
+                      Year {row.year}
                     </td>
-                    <td className="px-5 py-3 text-gray-500 dark:text-gray-400 tabular-nums">
+                    <td className="px-6 py-3.5 text-slate-500 dark:text-slate-400 tabular-nums">
                       ${fmt(row.open, 0)}
                     </td>
                     <td
-                      className="px-5 py-3 tabular-nums"
+                      className="px-6 py-3.5 tabular-nums font-semibold"
                       style={{ color: accent }}
                     >
                       ${fmt(row.principal, 0)}
                     </td>
-                    <td className="px-5 py-3 text-orange-500 tabular-nums">
+                    <td className="px-6 py-3.5 text-rose-500 tabular-nums">
                       ${fmt(row.interest, 0)}
                     </td>
-                    <td className="px-5 py-3 text-gray-500 dark:text-gray-400 tabular-nums">
+                    <td className="px-6 py-3.5 text-slate-700 dark:text-slate-300 font-bold tabular-nums">
                       ${fmt(row.close, 0)}
                     </td>
                   </tr>
@@ -560,16 +567,15 @@ export default function CalculatorsPage() {
           {rows.length > 5 && (
             <button
               onClick={() => setShowAllRows(!showAllRows)}
-              className="w-full py-3 text-xs font-bold text-gray-500 hover:text-gray-800 dark:hover:text-white flex items-center justify-center gap-1.5 border-t border-gray-100 dark:border-white/8 hover:bg-gray-50 dark:hover:bg-white/3 transition-colors"
+              className="w-full py-3.5 text-xs font-bold text-primary hover:bg-primary/5 flex items-center justify-center gap-1.5 border-t border-slate-200/60 dark:border-white/10 transition-colors cursor-pointer"
             >
               {showAllRows ? (
                 <>
-                  <ChevronUp className="w-3.5 h-3.5" /> Collapse Table
+                  <ChevronUp className="w-4 h-4" /> Collapse Table
                 </>
               ) : (
                 <>
-                  <ChevronDown className="w-3.5 h-3.5" /> View All {rows.length}{" "}
-                  Years
+                  <ChevronDown className="w-4 h-4" /> View All {rows.length} Years
                 </>
               )}
             </button>

@@ -101,23 +101,23 @@ export default function ClientListing({
   }, [searchParams, currentPage, activeSort, initialData]);
 
   return (
-    <main className="pt-32 pb-16 max-w-7xl mx-auto px-6">
+    <main className="pt-32 pb-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col lg:flex-row gap-8 items-start">
         <PropertyFilters />
 
         <section className="flex-1 w-full">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-slate-900">
+              <h1 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                 Build Listings
               </h1>
-              <p className="text-slate-500 text-sm mt-1">
+              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
                 Showing {totalCount} properties
                 {Array.from(searchParams.values()).some(v => v !== "") && " (Filtered)"}
               </p>
             </div>
             <div className="flex items-center gap-3 w-full md:w-auto">
-              <span className="text-sm font-medium text-slate-500 whitespace-nowrap">
+              <span className="text-sm font-medium text-slate-500 dark:text-slate-400 whitespace-nowrap">
                 Sort by:
               </span>
               <select
@@ -126,7 +126,7 @@ export default function ClientListing({
                   setActiveSort(e.target.value);
                   setCurrentPage(1);
                 }}
-                className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm font-medium focus:ring-2 focus:ring-blue-500/20 outline-none cursor-pointer min-w-[160px]"
+                className="px-4 py-2.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white rounded-xl text-sm font-medium focus:ring-2 focus:ring-primary/20 outline-none cursor-pointer min-w-[160px]"
               >
                 <option value="Newest Listings">Newest Listings</option>
                 <option value="Price: Low to High">Price: Low to High</option>
@@ -136,9 +136,9 @@ export default function ClientListing({
           </div>
 
           {isFiltering ? (
-            <div className="flex flex-col items-center justify-center min-h-[400px] bg-white rounded-3xl border border-slate-100 shadow-sm">
-              <Loader2 className="animate-spin text-blue-600 mb-4" size={48} />
-              <p className="text-slate-500 font-medium">
+            <div className="flex flex-col items-center justify-center min-h-[400px] liquid-glass rounded-3xl border border-slate-200/60 dark:border-white/10 shadow-sm">
+              <Loader2 className="animate-spin text-primary mb-4" size={40} />
+              <p className="text-slate-500 dark:text-slate-400 font-medium text-sm">
                 Finding perfect properties...
               </p>
             </div>
@@ -151,7 +151,6 @@ export default function ClientListing({
                     property.images?.[0] ||
                     "https://placehold.co/800x600/f8fafc/94a3b8?text=No+Image";
 
-                  // Dynamically inject the 'saved' state right before passing it down!
                   const isSaved = savedIdsSet.has(property.id);
                   const enrichedProperty = { ...property, saved: isSaved };
 
@@ -165,14 +164,14 @@ export default function ClientListing({
                   );
                 })
               ) : (
-                <div className="col-span-full py-16 text-center text-slate-500 bg-white rounded-2xl border border-slate-100 shadow-sm">
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">
+                <div className="col-span-full py-16 text-center text-slate-500 dark:text-slate-400 liquid-glass rounded-3xl border border-slate-200/60 dark:border-white/10 shadow-sm p-8">
+                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">
                     No properties found
                   </h3>
-                  <p>Try adjusting your filters to see more results.</p>
+                  <p className="text-sm">Try adjusting your filters to see more results.</p>
                   <button
                     onClick={() => router.push(pathname)}
-                    className="mt-6 px-6 py-2.5 bg-blue-50 text-blue-700 font-bold rounded-xl hover:bg-blue-100 transition-colors"
+                    className="mt-6 px-6 py-2.5 bg-primary/10 text-primary hover:bg-primary/20 font-bold text-sm rounded-xl transition-colors cursor-pointer"
                   >
                     Clear Filters
                   </button>

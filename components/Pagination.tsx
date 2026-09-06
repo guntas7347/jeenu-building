@@ -68,7 +68,8 @@ export default function Pagination({
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-secondary hover:text-secondary transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          aria-label="Previous page"
+          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-800 text-slate-400 hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:pointer-events-none"
         >
           <ChevronLeft size={20} />
         </button>
@@ -88,10 +89,10 @@ export default function Pagination({
             <button
               key={`page-${page}`}
               onClick={() => onPageChange(page as number)}
-              className={`w-10 h-10 flex items-center justify-center rounded-xl font-bold transition-colors ${
+              className={`w-10 h-10 flex items-center justify-center rounded-xl font-bold transition-all ${
                 isActive
-                  ? "bg-secondary text-white shadow-sm shadow-secondary/20"
-                  : "border border-slate-200 text-slate-600 hover:border-secondary hover:text-secondary hover:bg-red-50"
+                  ? "bg-primary text-white shadow-md shadow-primary/25"
+                  : "border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:border-primary hover:text-primary hover:bg-primary/5"
               }`}
             >
               {page}
@@ -102,15 +103,16 @@ export default function Pagination({
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:border-secondary hover:text-secondary transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          aria-label="Next page"
+          className="w-10 h-10 flex items-center justify-center rounded-xl border border-slate-200 dark:border-slate-800 text-slate-400 hover:border-primary hover:text-primary transition-colors disabled:opacity-50 disabled:pointer-events-none"
         >
           <ChevronRight size={20} />
         </button>
       </div>
 
       {/* Jump to Page Input */}
-      <div className="flex items-center gap-2 sm:ml-4 sm:border-l border-slate-200 sm:pl-4">
-        <span className="text-sm font-medium text-slate-500">Go to:</span>
+      <div className="flex items-center gap-2 sm:ml-4 sm:border-l border-slate-200 dark:border-slate-800 sm:pl-4">
+        <span className="text-sm font-medium text-slate-500 dark:text-slate-400">Go to:</span>
         <input
           type="number"
           min={1}
@@ -119,7 +121,7 @@ export default function Pagination({
           onChange={(e) => setJumpInputValue(e.target.value)}
           onKeyDown={handleJump}
           placeholder="#"
-          className="w-14 h-10 px-2 text-center text-sm font-bold text-slate-700 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-secondary/20 focus:border-secondary outline-none transition-all placeholder:text-slate-300 placeholder:font-normal"
+          className="w-14 h-10 px-2 text-center text-sm font-bold text-slate-700 dark:text-white bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
         />
       </div>
     </div>

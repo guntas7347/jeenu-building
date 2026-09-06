@@ -53,7 +53,7 @@ export const Select = ({
       ref={containerRef}
     >
       {label && (
-        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2 ml-1">
+        <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2 ml-1">
           {label}
         </label>
       )}
@@ -64,22 +64,22 @@ export const Select = ({
         onClick={() => setIsOpen(!isOpen)}
         className={`
           w-full flex items-center justify-between px-4 py-3 rounded-xl text-left 
-          bg-white border border-slate-200 transition-all duration-200
-          hover:border-slate-300 active:bg-slate-50
-          ${isOpen ? "ring-2 ring-slate-900/5 border-slate-400" : "shadow-sm"}
+          bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-all duration-200
+          hover:border-slate-300 dark:hover:border-slate-700 active:bg-slate-50 dark:active:bg-slate-800
+          ${isOpen ? "ring-2 ring-primary/20 border-primary dark:border-primary" : "shadow-sm"}
         `}
       >
         <span
           className={`
           block truncate text-sm font-medium
-          ${!selectedOption ? "text-slate-400" : "text-slate-900"}
+          ${!selectedOption ? "text-slate-400 dark:text-slate-500" : "text-slate-900 dark:text-white"}
         `}
         >
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <ChevronDown
           size={16}
-          className={`text-slate-400 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+          className={`text-slate-400 dark:text-slate-500 transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -91,7 +91,7 @@ export const Select = ({
             animate={{ opacity: 1, y: 8 }}
             exit={{ opacity: 0, y: 4 }}
             transition={{ duration: 0.15, ease: "easeOut" }}
-            className="absolute z-[100] w-full bg-white border border-slate-200 rounded-xl shadow-xl py-1.5 mt-1 origin-top"
+            className="absolute z-[100] w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl shadow-xl py-1.5 mt-1 origin-top"
           >
             <div className="max-h-60 overflow-y-auto overflow-x-hidden">
               {normalizedOptions.length > 0 ? (
@@ -104,11 +104,11 @@ export const Select = ({
                       setIsOpen(false);
                     }}
                     className={`
-                      w-full flex items-center justify-between px-4 py-2 text-sm transition-colors
+                      w-full flex items-center justify-between px-4 py-2 text-sm transition-colors cursor-pointer
                       ${
                         value === option.value
-                          ? "bg-slate-50 text-secondary font-semibold"
-                          : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                          ? "bg-primary/10 dark:bg-primary/20 text-primary dark:text-dark-primary font-semibold"
+                          : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white"
                       }
                     `}
                   >

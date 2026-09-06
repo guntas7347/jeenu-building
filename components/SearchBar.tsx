@@ -28,10 +28,10 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-white p-4 rounded-3xl shadow-xl border border-slate-100 flex flex-col md:flex-row gap-4 items-center relative z-50">
+    <div className="w-full max-w-4xl mx-auto liquid-glass-elevated p-3 sm:p-4 rounded-3xl shadow-xl flex flex-col md:flex-row gap-3 sm:gap-4 items-center relative z-50">
       {/* State Selector */}
-      <div className="flex-1 w-full flex items-center gap-3 px-4 py-3 border-r border-slate-100 relative">
-        <MapPin className="text-slate-400 shrink-0" size={24} />
+      <div className="flex-1 w-full flex items-center gap-3 px-3 py-2 border-b md:border-b-0 md:border-r border-slate-200/60 dark:border-white/10 relative">
+        <MapPin className="text-primary shrink-0" size={22} />
         <Select
           label="State"
           placeholder="All States"
@@ -42,8 +42,8 @@ const SearchBar = () => {
       </div>
 
       {/* Property Type Selector */}
-      <div className="flex-1 w-full flex items-center gap-3 px-4 py-3 border-r border-slate-100">
-        <Building2 className="text-slate-400 shrink-0" size={24} />
+      <div className="flex-1 w-full flex items-center gap-3 px-3 py-2 border-b md:border-b-0 md:border-r border-slate-200/60 dark:border-white/10">
+        <Building2 className="text-amber-500 shrink-0" size={22} />
         <Select
           label="Property Type"
           placeholder="All Types"
@@ -56,9 +56,9 @@ const SearchBar = () => {
       {/* Submit Button */}
       <button
         onClick={handleSearch}
-        className="w-full md:w-auto bg-primary text-white px-8 py-4 rounded-2xl font-semibold flex items-center justify-center gap-2 hover:bg-blue-700 transition-all shadow-lg shadow-blue-600/20 active:scale-95 shrink-0"
+        className="w-full md:w-auto bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-2xl font-bold flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/25 active:scale-95 shrink-0 cursor-pointer"
       >
-        <Search size={20} />
+        <Search size={18} />
         Search
       </button>
     </div>

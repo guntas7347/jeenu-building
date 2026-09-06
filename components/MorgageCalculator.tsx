@@ -1,19 +1,18 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Calculator, Wallet, TrendingUp, TrendingDown } from "lucide-react";
+import { Calculator, TrendingUp, TrendingDown } from "lucide-react";
 import { formatPrice } from "@/lib/helpers";
 
 interface MortgageCalculatorProps {
-  price?: number; // Assumes your database sends this in cents/paisa
-  profitPerWeek?: number; // Estimated weekly rental income
+  price?: number;
+  profitPerWeek?: number;
 }
 
 const MortgageCalculator = ({
-  price = 845900, // Default to $845,900.00 (in cents)
-  profitPerWeek = 0, // Default to $800/week rent
+  price = 845900,
+  profitPerWeek = 0,
 }: MortgageCalculatorProps) => {
-  // Convert from cents to standard currency format
   const homePrice = Number(price);
 
   // Controlled Form State
@@ -21,12 +20,9 @@ const MortgageCalculator = ({
   const [interestRate, setInterestRate] = useState<number>(5.8);
   const [loanTerm, setLoanTerm] = useState<number>(30);
 
-  // Perform Calculations (Wrapped in useMemo so it only recalculates when inputs change)
+  // Perform Calculations
   const { weeklyMortgage, outOfPocket, isCashFlowPositive } = useMemo(() => {
-    // 1. Calculate Principal Loan Amount
     const principal = homePrice * (1 - downPaymentPct / 100);
-
-    // 2. Standard Amortization Formula for Monthly Payment
     const monthlyRate = interestRate / 100 / 12;
     const numberOfPayments = loanTerm * 12;
 
@@ -41,30 +37,27 @@ const MortgageCalculator = ({
         (Math.pow(1 + monthlyRate, numberOfPayments) - 1);
     }
 
-    // 3. Convert Monthly Mortgage to Weekly Mortgage
     const weeklyPayment = (monthlyPayment * 12) / 52;
-
-    // 4. Calculate Net Out of Pocket (Mortgage minus Expected Rent)
     const netCost = weeklyPayment - profitPerWeek;
 
     return {
       weeklyMortgage: weeklyPayment,
-      outOfPocket: Math.abs(netCost), // Use absolute value for display purposes
-      isCashFlowPositive: netCost <= 0, // True if rent covers the mortgage
+      outOfPocket: Math.abs(netCost),
+      isCashFlowPositive: netCost <= 0,
     };
   }, [homePrice, downPaymentPct, interestRate, loanTerm, profitPerWeek]);
 
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+    <div className="liquid-glass-card rounded-2xl p-6 shadow-sm">
       <div className="flex items-center gap-2 mb-6">
-        <Calculator className="text-blue-600" size={24} />
-        <h4 className="font-bold text-slate-900">Investment Calculator</h4>
+        <Calculator className="text-primary" size={22} />
+        <h4 className="font-extrabold text-slate-900 dark:text-white">Investment & Mortgage Calculator</h4>
       </div>
 
       <div className="space-y-4">
         {/* Home Price (Read Only) */}
         <div>
-          <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
             Property Value
           </label>
           <div className="relative">
@@ -72,7 +65,7 @@ const MortgageCalculator = ({
               $
             </span>
             <input
-              className="w-full pl-8 pr-4 py-3 bg-slate-50 border-none outline-none rounded-xl text-sm font-bold text-slate-700"
+              className="w-full pl-8 pr-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 outline-none rounded-xl text-sm font-bold text-slate-800 dark:text-white"
               type="text"
               value={homePrice.toLocaleString()}
               readOnly
@@ -83,7 +76,7 @@ const MortgageCalculator = ({
         {/* Down Payment & Interest Rate */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
               Down Payment
             </label>
             <div className="relative">
@@ -91,7 +84,7 @@ const MortgageCalculator = ({
                 %
               </span>
               <input
-                className="w-full px-4 py-3 bg-slate-50 border border-transparent outline-none rounded-xl text-sm font-semibold text-slate-900 focus:bg-white focus:border-blue-200 focus:ring-4 focus:ring-blue-600/10 transition-all"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 outline-none rounded-xl text-sm font-semibold text-slate-900 dark:text-white focus:border-primary transition-all"
                 type="number"
                 min="0"
                 max="100"
@@ -101,7 +94,7 @@ const MortgageCalculator = ({
             </div>
           </div>
           <div>
-            <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
               Interest Rate
             </label>
             <div className="relative">
@@ -109,7 +102,7 @@ const MortgageCalculator = ({
                 %
               </span>
               <input
-                className="w-full px-4 py-3 bg-slate-50 border border-transparent outline-none rounded-xl text-sm font-semibold text-slate-900 focus:bg-white focus:border-blue-200 focus:ring-4 focus:ring-blue-600/10 transition-all"
+                className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 outline-none rounded-xl text-sm font-semibold text-slate-900 dark:text-white focus:border-primary transition-all"
                 type="number"
                 step="0.1"
                 min="0"
@@ -122,13 +115,13 @@ const MortgageCalculator = ({
 
         {/* Loan Term */}
         <div>
-          <label className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1.5">
+          <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1.5">
             Loan Term
           </label>
           <select
             value={loanTerm}
             onChange={(e) => setLoanTerm(Number(e.target.value))}
-            className="w-full px-4 py-3 bg-slate-50 border border-transparent outline-none rounded-xl text-sm font-semibold text-slate-900 focus:bg-white focus:border-blue-200 focus:ring-4 focus:ring-blue-600/10 appearance-none cursor-pointer transition-all"
+            className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 outline-none rounded-xl text-sm font-semibold text-slate-900 dark:text-white focus:border-primary appearance-none cursor-pointer transition-all"
           >
             <option value={30}>30 Years</option>
             <option value={25}>25 Years</option>
@@ -138,21 +131,21 @@ const MortgageCalculator = ({
         </div>
 
         {/* Results Dashboard */}
-        <div className="mt-8 p-5 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
-          <div className="flex justify-between items-center pb-4 border-b border-slate-200/60">
-            <span className="text-sm font-semibold text-slate-500">
+        <div className="mt-8 p-5 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200/60 dark:border-white/5 space-y-4">
+          <div className="flex justify-between items-center pb-4 border-b border-slate-200/60 dark:border-white/5">
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
               Weekly Mortgage
             </span>
-            <span className="text-sm font-bold text-slate-900">
+            <span className="text-sm font-bold text-slate-900 dark:text-white">
               {formatPrice(weeklyMortgage)}
             </span>
           </div>
 
-          <div className="flex justify-between items-center pb-4 border-b border-slate-200/60">
-            <span className="text-sm font-semibold text-slate-500">
+          <div className="flex justify-between items-center pb-4 border-b border-slate-200/60 dark:border-white/5">
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">
               Est. Weekly Rent
             </span>
-            <span className="text-sm font-bold text-emerald-600">
+            <span className="text-sm font-bold text-emerald-600 dark:text-emerald-400">
               +{formatPrice(profitPerWeek)}
             </span>
           </div>
@@ -161,15 +154,15 @@ const MortgageCalculator = ({
           <div
             className={`p-4 rounded-xl flex items-start gap-3 border ${
               isCashFlowPositive
-                ? "bg-emerald-50 border-emerald-100"
-                : "bg-amber-50 border-amber-100"
+                ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-100 dark:border-emerald-800"
+                : "bg-amber-50 dark:bg-amber-950/40 border-amber-100 dark:border-amber-800"
             }`}
           >
             <div
               className={`mt-0.5 p-1.5 rounded-lg ${
                 isCashFlowPositive
-                  ? "bg-emerald-200 text-emerald-700"
-                  : "bg-amber-200 text-amber-700"
+                  ? "bg-emerald-200 dark:bg-emerald-900 text-emerald-700 dark:text-emerald-300"
+                  : "bg-amber-200 dark:bg-amber-900 text-amber-700 dark:text-amber-300"
               }`}
             >
               {isCashFlowPositive ? (
@@ -181,7 +174,7 @@ const MortgageCalculator = ({
             <div>
               <p
                 className={`text-xs font-bold uppercase tracking-widest mb-1 ${
-                  isCashFlowPositive ? "text-emerald-700" : "text-amber-700"
+                  isCashFlowPositive ? "text-emerald-700 dark:text-emerald-300" : "text-amber-700 dark:text-amber-300"
                 }`}
               >
                 {isCashFlowPositive ? "Positive Cashflow" : "Out of Pocket"}
@@ -189,7 +182,7 @@ const MortgageCalculator = ({
               <div className="flex items-baseline gap-1">
                 <span
                   className={`text-2xl font-black tracking-tight ${
-                    isCashFlowPositive ? "text-emerald-700" : "text-amber-700"
+                    isCashFlowPositive ? "text-emerald-700 dark:text-emerald-300" : "text-amber-700 dark:text-amber-300"
                   }`}
                 >
                   {formatPrice(outOfPocket)}
@@ -197,8 +190,8 @@ const MortgageCalculator = ({
                 <span
                   className={`text-sm font-bold ${
                     isCashFlowPositive
-                      ? "text-emerald-600/70"
-                      : "text-amber-600/70"
+                      ? "text-emerald-600/70 dark:text-emerald-400/70"
+                      : "text-amber-600/70 dark:text-amber-400/70"
                   }`}
                 >
                   / week
