@@ -110,6 +110,17 @@ const Footer = () => {
               © {currentYear} Red Owl Homes. Connecting Australians with Quality
               Builds.
             </p>
+            <p className="text-xs font-medium text-slate-400 dark:text-slate-500">
+              Website designed & developed by{" "}
+              <a
+                href="https://guntassandhu.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-gray-500 hover:text-blue-600 dark:hover:text-blue-400 transition-all"
+              >
+                Guntas Sandhu
+              </a>
+            </p>
 
             <div className="flex items-center gap-6 px-4 py-2 rounded-full bg-slate-900/5 dark:bg-white/5 border border-slate-900/5 dark:border-white/5">
               <div className="flex items-center gap-2 text-[10px] font-black text-slate-500 uppercase tracking-widest">
